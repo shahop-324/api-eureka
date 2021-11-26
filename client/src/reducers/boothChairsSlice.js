@@ -24,6 +24,11 @@ const boothChairsSlice = createSlice({
     FetchBoothTableChats(state, action) {
       state.tableChats = action.payload.tableChats;
     },
+    UpdateMsg(state, action) {
+      state.tableChats = state.tableChats.map((chat) =>
+        chat._id === action.payload.msg._id ? action.payload.msg : chat
+      );
+    },
   },
 });
 export const boothChairsActions = boothChairsSlice.actions;

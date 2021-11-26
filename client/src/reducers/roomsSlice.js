@@ -24,6 +24,11 @@ const roomsSlice = createSlice({
     FetchTableChats(state, action) {
       state.tableChats = action.payload.chats;
     },
+    UpdateMsg(state, action) {
+      state.tableChats = state.tableChats.map((chat) =>
+        chat._id === action.payload.msg._id ? action.payload.msg : chat
+      );
+    },
   },
 });
 export const roomsActions = roomsSlice.actions;

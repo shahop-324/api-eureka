@@ -10,6 +10,8 @@ router.get(
   sessionController.getParticularSession
 );
 
+router.patch("/:sessionId/updateSessionPreview", authController.protect, sessionController.updateSessionPreview);
+
 router.get(
   "/:id/getOneSession",
   sessionController.getParticularSession

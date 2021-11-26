@@ -1,11 +1,16 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { fetchEventRegistrations } from "../../../../../actions";
 import PeopleProfile from "../../People/helper/PeopleProfile";
 import VideoCallOptions from "../Sub/VideoCallOptions";
 import IndividualChat from "./IndividualChat";
 import PrivateChatListComponent from "./PrivateChatListComponent";
 
 const PrivateChat = () => {
+  const params = useParams();
+  const eventId = params.eventId;
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
   const [openVideoOptions, setOpenVideoOptions] = useState(false);
@@ -29,6 +34,10 @@ const PrivateChat = () => {
   const { id } = useSelector((state) => state.personalChat);
 
   const bool = id ? true : false; // Flag to detect if we have to show personal chat or not
+
+  useEffect(() => {
+    dispatch(fetchEventRegistrations(eventId));
+  }, []);
 
   return (
     <>

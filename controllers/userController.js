@@ -107,7 +107,8 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
         match: { status: "Active" },
       },
     })
-    .populate("hosts");
+    .populate("hosts")
+    .populate("people");
 
   if (req.body.countAsView) {
     await Event.findByIdAndUpdate(

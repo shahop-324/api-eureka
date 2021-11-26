@@ -11,6 +11,8 @@ const sessionSlice = createSlice({
     isLoadingDetail: true,
     error: false,
     detailError: false,
+    uploadPreviewPercent: 0,
+    highlightedSessions: [],
   },
 
   reducers: {
@@ -115,6 +117,12 @@ const sessionSlice = createSlice({
         (session) => session.id !== action.payload.id
       );
       state.isLoading = false;
+    },
+    SetPeviewUploadPercent(state, action) {
+      state.uploadPreviewPercent = action.payload.percent;
+    },
+    FetchHighlightedSessions(state, action) {
+      state.highlightedSessions = action.payload.sessions;
     },
   },
 });

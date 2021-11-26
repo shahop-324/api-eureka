@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import socket from "./../service/socket";
 import styled from "styled-components";
 import Avatar from "@mui/material/Avatar";
-import Faker from "faker";
 import Chip from "@mui/material/Chip";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -13,8 +13,12 @@ import NoContent from "../NoContent";
 import NoSession from "./../../../assets/images/NoSession.svg";
 import NoSposnors from "./../../../assets/images/NoSponsor.svg";
 import {
+  fetchEvent,
   fetchSessionsForUser,
+  getHighlightedSessions,
   navigationIndexForHostingPlatform,
+  setSessionRoleAndJoinSession,
+  getRTCTokenAndSession,
 } from "../../../actions";
 import { useParams } from "react-router";
 import history from "./../../../history";
@@ -214,37 +218,251 @@ const TierFourGrid = styled.div`
   grid-gap: 24px;
   min-height: 130px;
 `;
-const TierFiveGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-gap: 24px;
-  min-height: 130px;
-`;
-const TierSixGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-gap: 24px;
-  min-height: 130px;
-`;
-const TierSevenGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-gap: 24px;
-  min-height: 130px;
-`;
-const TierEightGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-gap: 24px;
-  min-height: 130px;
-`;
+
+const SessionComponent = ({ session }) => {
+  const params = useParams();
+
+  const eventId = params.eventId;
+  const communityId = params.communityId;
+
+  const dispatch = useDispatch();
+
+  const [channel, setChannel] = useState(`${session._id}`); // Channel to join => defaults to live
+
+  const { eventDetails } = useSelector((state) => state.event);
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userEmail = userDetails.email; // User email
+  const userId = userDetails._id; // User Id
+
+  const speakerEmails = eventDetails.speaker.map((element) => element.email);
+
+  const hostIds = eventDetails.hosts.map((element) => element._id);
+
+  const { role } = useSelector((state) => state.eventAccessToken); // Possible values => "speaker" || "attendee" || "organiser" || "exhibitor"
+
+  let sessionRole;
+
+  if (role === "organiser" || role === "speaker") {
+    if (hostIds.includes(userId) || speakerEmails.includes(userEmail)) {
+      // Set role as host for this session
+      sessionRole = "host";
+    } else {
+      sessionRole = "audience";
+    }
+  } else {
+    sessionRole = "audience";
+  }
+
+  const agoraRole = sessionRole === "host" ? "host" : "audience";
+
+  let sessionStatus = "Upcoming";
+
+  if (new Date(session.startTime) > new Date(Date.now())) {
+    sessionStatus = "Upcoming";
+  }
+  if (
+    new Date(session.startTime) <= new Date(Date.now()) &&
+    new Date(session.endTime) >= new Date(Date.now())
+  ) {
+    sessionStatus = "Ongoing";
+  }
+  if (new Date(session.endTime) < new Date(Date.now())) {
+    sessionStatus = "Ended";
+  }
+  if (session.runningStatus === "Ended") {
+    sessionStatus = "Ended";
+  }
+
+  return (
+    <>
+      <WhatsHappeningBody>
+        <SessionPlaybackPreview>
+          <div>
+            <img
+              src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${session.preview}`}
+              alt="session-playback-preview"
+            />
+          </div>
+
+          <div className="d-flex flex-column justify-content-between p-3">
+            <div>
+              <div className="d-flex flex-row align-items-center mb-3">
+                <SessionName className="me-3">{session.name}</SessionName>
+                <div>
+                  {(() => {
+                    switch (sessionStatus) {
+                      case "Upcoming":
+                        return (
+                          <div className="session-running-status-container px-2 py-2">
+                            <div
+                              className="session-running-status"
+                              style={{ fontWeight: "500" }}
+                            >
+                              Upcoming
+                            </div>
+                          </div>
+                        );
+
+                      case "Ongoing":
+                        return (
+                          <div
+                            className="session-running-status-container px-2 py-2"
+                            style={{ backgroundColor: "#A78B10" }}
+                          >
+                            <div
+                              className="session-running-status"
+                              style={{
+                                backgroundColor: "#A78B10",
+                                fontWeight: "500",
+                              }}
+                            >
+                              Ongoing
+                            </div>
+                          </div>
+                        );
+
+                      case "Ended":
+                        return (
+                          <div
+                            className="session-running-status-container px-2 py-2"
+                            style={{ backgroundColor: "#A72E10" }}
+                          >
+                            <div
+                              className="session-running-status"
+                              style={{
+                                backgroundColor: "#A72E10",
+                                fontWeight: "500",
+                              }}
+                            >
+                              Ended
+                            </div>
+                          </div>
+                        );
+
+                      default:
+                        break;
+                    }
+                  })()}
+                </div>
+              </div>
+              <SessionDescription className="mb-4">
+                {session.description}
+              </SessionDescription>
+
+              <SubHeading className="mb-3">Speakers</SubHeading>
+
+              <div className="d-flex flex-row align-items-center justify-content-start mb-4">
+                <AvatarGroup max={5}>
+                  {typeof session.speaker !== "undefined" &&
+                  session.speaker.length > 0 ? (
+                    renderSpeakers(session.speaker)
+                  ) : (
+                    <Chip
+                      label="No speaker assigned"
+                      color="primary"
+                      style={{ fontWeight: "500" }}
+                    />
+                  )}
+                </AvatarGroup>
+              </div>
+
+              <SubHeading className="mb-3">Attendees</SubHeading>
+
+              <div className="d-flex flex-row align-items-center justify-content-start mb-4">
+                <AvatarGroup max={5}>
+                  {typeof session.people !== "undefined" &&
+                  session.people.length > 0 ? (
+                    renderAttendees(session.people)
+                  ) : (
+                    <Chip
+                      label="Be the first to attend"
+                      color="primary"
+                      style={{ fontWeight: "500" }}
+                    />
+                  )}
+                </AvatarGroup>
+              </div>
+            </div>
+
+<div>
+            <button
+              onClick={() => {
+                // alert(channel)
+                dispatch(
+                  getRTCTokenAndSession(
+                    session._id,
+                    channel,
+                    sessionRole,
+                    eventId,
+                    communityId
+                  )
+                );
+
+                // Join session channel
+
+                socket.emit(
+                  "joinSession",
+                  {
+                    sessionId: session._id,
+                    userId: userId,
+                    sessionRole: sessionRole,
+                    userName: `${userDetails.firstName} ${userDetails.lastName}`,
+                    userEmail: userDetails.email,
+                    userImage: userDetails.image,
+                    userCity: userDetails.city,
+                    userCountry: userDetails.country,
+                    userOrganisation: userDetails.organisation,
+                    userDesignation: userDetails.designation,
+                    roleToBeDisplayed: role,
+                  },
+                  (error) => {
+                    if (error) {
+                      alert(error);
+                    }
+                  }
+                );
+
+                dispatch(setSessionRoleAndJoinSession(sessionRole));
+              }}
+              className="btn btn-outline-text btn-primary"
+              style={{
+                width: "100%",
+              }}
+            >
+              Join
+            </button>
+            </div>
+          </div>
+        </SessionPlaybackPreview>
+      </WhatsHappeningBody>
+    </>
+  );
+};
+
+const renderHisghlightedSessions = (sessions) => {
+  return sessions.map((session) => {
+    return (
+      <>
+        <SessionComponent session={session} />
+      </>
+    );
+  });
+};
 
 const renderSpeakers = (speakers) => {
-  speakers.map((speaker) => {
+  console.log(speakers, "This is the speakers array");
+  return speakers.map((speaker) => {
     return (
       <Avatar
         alt={speaker.name}
-        src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`}
+        src={
+          speaker.image
+            ? speaker.image.startsWith("https://")
+              ? speaker.image
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`
+            : ""
+        }
       />
     );
   });
@@ -252,11 +470,16 @@ const renderSpeakers = (speakers) => {
 
 const renderAttendees = (attendees) => {
   return attendees.map((attendee) => {
-    if (attendee.status !== "Active") return;
     return (
       <Avatar
-        alt={attendee.userName}
-        src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${attendee.userImage}`}
+        alt={attendee.firstName}
+        src={
+          attendee.image
+            ? attendee.image.startsWith("https://")
+              ? attendee.image
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${attendee.image}`
+            : ""
+        }
       />
     );
   });
@@ -276,6 +499,7 @@ const PlatinumSponsors = (sponsors) => {
     );
   });
 };
+
 const DiamondSponsors = (sponsors) => {
   return sponsors.map((sponsor) => {
     if (sponsor.status !== "Diamond") return;
@@ -288,6 +512,7 @@ const DiamondSponsors = (sponsors) => {
     );
   });
 };
+
 const GoldSponsors = (sponsors) => {
   return sponsors.map((sponsor) => {
     if (sponsor.status !== "Gold") return;
@@ -300,6 +525,7 @@ const GoldSponsors = (sponsors) => {
     );
   });
 };
+
 const BronzeSponsors = (sponsors) => {
   return sponsors.map((sponsor) => {
     if (sponsor.status !== "Bronze") return;
@@ -321,30 +547,16 @@ const About = () => {
 
   const { communityDetails } = useSelector((state) => state.community);
   const { eventDetails } = useSelector((state) => state.event);
-  const { sessions } = useSelector((state) => state.session);
+  const { sessions, highlightedSessions } = useSelector(
+    (state) => state.session
+  );
   const { sponsors } = useSelector((state) => state.sponsor);
 
   // fetch all sessions on this page
 
   useEffect(() => {
-    dispatch(fetchSessionsForUser(eventId));
+    dispatch(getHighlightedSessions(eventId));
   }, [dispatch, eventId]);
-
-  let highlightedSessionId;
-
-  if (eventDetails.highlightedSession) {
-    highlightedSessionId = eventDetails.highlightedSession;
-  } else {
-    if (sessions[0]) {
-      highlightedSessionId = sessions[0]._id;
-    }
-  }
-
-  // Now get the document of session that is to be highlighted.
-
-  const requiredSession = sessions.find(
-    (session) => session._id === highlightedSessionId
-  );
 
   if (!communityDetails) {
     return <div>Loading...</div>;
@@ -447,94 +659,15 @@ const About = () => {
             What's happening
           </WhatsHappeningHeading>
 
-          {typeof eventDetails.session !== "undefined" &&
-          eventDetails.session.length > 0 &&
-          requiredSession ? (
-            <WhatsHappeningBody>
-              <SessionPlaybackPreview>
-                <div>
-                  <Chip
-                    label={requiredSession.runningStatus}
-                    color="error"
-                    style={{
-                      position: "absolute",
-                      top: "20px",
-                      left: "20px",
-                      zIndex: "10",
-                      fontWeight: "500",
-                    }}
-                  />
-                  <img
-                    src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${requiredSession.previewImage}`}
-                    alt="session-playback-preview"
-                  />
-                </div>
-
-                <div className="p-3">
-                  <SessionName className="mb-3">
-                    {requiredSession.name}
-                  </SessionName>
-                  <SessionDescription className="mb-4">
-                    {requiredSession.description}
-                  </SessionDescription>
-
-                  <SubHeading className="mb-3">Speakers</SubHeading>
-
-                  <div className="d-flex flex-row align-items-center justify-content-start mb-4">
-                    <AvatarGroup max={5}>
-                      {typeof requiredSession.speaker !== "undefined" &&
-                      requiredSession.speaker.length > 0 ? (
-                        renderSpeakers(requiredSession.speaker)
-                      ) : (
-                        <Chip
-                          label="No speaker assigned"
-                          color="primary"
-                          style={{ fontWeight: "500" }}
-                        />
-                      )}
-                    </AvatarGroup>
-                  </div>
-
-                  <SubHeading className="mb-3">Attendees</SubHeading>
-
-                  <div className="d-flex flex-row align-items-center justify-content-start mb-4">
-                    <AvatarGroup max={5}>
-                      {typeof requiredSession.currentlyInSession !==
-                        "undefined" &&
-                      requiredSession.currentlyInSession.length > 0 ? (
-                        renderAttendees(requiredSession.currentlyInSession)
-                      ) : (
-                        <Chip
-                          label="Be the first to attend"
-                          color="primary"
-                          style={{ fontWeight: "500" }}
-                        />
-                      )}
-                    </AvatarGroup>
-                  </div>
-                  <button
-                    onClick={() => {
-                      dispatch(navigationIndexForHostingPlatform(3));
-                      history.push(
-                        `/community/${communityId}/event/${eventId}/hosting-platform/Sessions`
-                      );
-                    }}
-                    className="btn btn-outline-text btn-primary"
-                    style={{
-                      width: "100%",
-                    }}
-                  >
-                    Join
-                  </button>
-                </div>
-              </SessionPlaybackPreview>
-            </WhatsHappeningBody>
+          {typeof highlightedSessions !== "undefined" &&
+          highlightedSessions.length > 0 ? (
+            <>{renderHisghlightedSessions(highlightedSessions)}</>
           ) : (
             <>
               <NoContent
                 className="mb-4"
                 Image={NoSession}
-                Msg={"There is nothing in agenda."}
+                Msg={"There is nothing happening in this event right now."}
               />
             </>
           )}

@@ -60,10 +60,7 @@ const sessionSchema = new mongoose.Schema(
       type: String,
       enum: ["Session", "Stream"],
     },
-    previewImage: {
-      type: String,
-      default: "pexels-david-yu-2684383.jpg",
-    },
+
     RTMPstreamKey: {
       type: String,
     },
@@ -185,6 +182,19 @@ const sessionSchema = new mongoose.Schema(
     },
     video: {
       type: String,
+    },
+    replay: {
+      type: Boolean,
+      default: false,
+    },
+    preview: {
+      // This is the session preview image
+      type: String,
+      default: "pexels-david-yu-2684383.jpg",
+    },
+    allowEntryBeforeSessionBegin: {
+      type: Boolean,
+      default: false,
     },
   },
   {

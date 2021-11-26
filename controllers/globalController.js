@@ -34,6 +34,10 @@ const Coupon = require("./../models/couponModel");
 const Ticket = require("./../models/ticketModel");
 const Booth = require("./../models/boothModel");
 
+const EventChatMessage = require("./../models/eventChatMessageModel");
+const SessionChats = require("./../models/sessionChatMessageModel");
+const NetworkingRoomChat = require("./../models/NetworkingRoomChatsModel");
+
 const { nanoid } = require("nanoid");
 const random = require("random");
 var btoa = require("btoa");
@@ -1240,7 +1244,7 @@ exports.getRecordingStatus = catchAsync(async (req, res, next) => {
   } else {
     const result = await response.json();
 
-    console.log(result, "This is the result of querying recording status.")
+    console.log(result, "This is the result of querying recording status.");
 
     res.status(200).json({
       status: "success",
@@ -1313,9 +1317,19 @@ exports.getEventSpeakers = catchAsync(async (req, res, next) => {
     eventId: mongoose.Types.ObjectId(eventId),
   });
 
+  let users = [];
+
+  for (let element of speakers) {
+    const userDoc = await User.findOne({ email: element.email });
+    // console.log(element.userId, userDoc, "This is speakers user doc");
+    if (userDoc) {
+      users.push(userDoc);
+    }
+  }
+
   res.status(200).json({
     status: "success",
-    data: speakers,
+    data: users,
   });
 });
 
@@ -2500,5 +2514,71 @@ exports.getEventBooth = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: boothDoc,
+  });
+});
+
+exports.fetchEventReportedMessages = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  // Find all messages which were reported (populate replyTo) and combine in an array
+
+  const eventPersonalChats = await PersonalChat.find({
+    $and: [{ eventId: mongoose.Types.ObjectId(eventId) }, { reported: true }],
+  }).populate("reportedBy");
+  const eventNetworkingChats = await NetworkingRoomChat.find({
+    $and: [{ eventId: mongoose.Types.ObjectId(eventId) }, { reported: true }],
+  }).populate("reportedBy");
+  const eventSessionChats = await SessionChats.find({
+    $and: [{ eventId: mongoose.Types.ObjectId(eventId) }, { reported: true }],
+  }).populate("reportedBy");
+  const eventBoothTableChats = await BoothTableChats.find({
+    $and: [{ eventId: mongoose.Types.ObjectId(eventId) }, { reported: true }],
+  }).populate("reportedBy");
+  const eventBoothChats = await BoothChats.find({
+    $and: [{ eventId: mongoose.Types.ObjectId(eventId) }, { reported: true }],
+  }).populate("reportedBy");
+  const eventTableChats = await TableChats.find({
+    $and: [{ eventId: mongoose.Types.ObjectId(eventId) }, { reported: true }],
+  }).populate("reportedBy");
+  const eventChats = await EventChatMessage.find({
+    $and: [{ eventId: mongoose.Types.ObjectId(eventId) }, { reported: true }],
+  }).populate("reportedBy");
+
+  const allChats = [
+    ...eventPersonalChats,
+    ...eventNetworkingChats,
+    ...eventSessionChats,
+    ...eventBoothTableChats,
+    ...eventBoothChats,
+    ...eventTableChats,
+    ...eventChats,
+  ];
+
+  res.status(200).json({
+    status: "success",
+    data: allChats,
+  });
+});
+
+exports.getHighlightedSessions = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  let sessions = [];
+
+  const eventDoc = await Event.findById(eventId);
+
+  for (let element of eventDoc.highlightedSessions) {
+    const sessionDoc = await Session.findById(element).populate('host').populate('speaker').populate('people');
+    // console.log(sessionDoc, element, "This is my debug log")
+    if (sessionDoc) {
+      sessions.push(sessionDoc);
+    }
+  }
+
+  // console.log(sessions);
+
+  res.status(200).json({
+    status: "success",
+    data: sessions,
   });
 });

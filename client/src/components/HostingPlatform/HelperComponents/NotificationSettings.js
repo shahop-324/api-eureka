@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./../Styles/Settings.scss";
 
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
@@ -11,7 +11,10 @@ import FormGroup from "@material-ui/core/FormGroup";
 import Switch from "@material-ui/core/Switch";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { updateRegistrationSettings } from "./../../../actions";
+import {
+  fetchEventRegistrations,
+  updateRegistrationSettings,
+} from "./../../../actions";
 
 const RoyalBlueSwitch = withStyles({
   switchBase: {
@@ -31,11 +34,15 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
   const dispatch = useDispatch();
   const params = useParams();
 
+  const eventId = params.eventId;
+
+  useEffect(() => {
+    dispatch(fetchEventRegistrations(eventId));
+  }, []);
+
   const { id } = useSelector((state) => state.eventAccessToken);
 
   const userId = id;
-
-  const eventId = params.eventId;
 
   let myRegistration;
 

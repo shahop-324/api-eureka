@@ -27,6 +27,14 @@ const networkingRoomChatsSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  suspended: {
+    type: Boolean,
+    default: false,
+  },
+  warned: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now(),
@@ -60,6 +68,13 @@ const networkingRoomChatsSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  reportReason: {
+    type: String,
+  },
+  reportedBy: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+  }
 });
 
 const NetworkingRoomChats = mongoose.model(

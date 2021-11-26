@@ -1534,3 +1534,101 @@ exports.uploadEventBanner = catchAsync(async (req, res, next) => {
     console.log(error);
   }
 });
+
+exports.showInEventLobby = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  // Add to highlightedSessions and send updated event back as response
+
+  const eventDoc = await Event.findById(eventId);
+
+  // Make sure its not already there
+
+  eventDoc.highlightedSessions = eventDoc.highlightedSessions.filter(
+    (sessionId) => sessionId.toString() !== req.body.sessionId.toString()
+  );
+
+  eventDoc.highlightedSessions.push(req.body.sessionId);
+
+  await eventDoc.save({ new: true, validateModifiedOnly: true });
+
+  const updatedEventDoc = await Event.findById(eventId)
+    .populate({
+      path: "tickets",
+      options: {
+        sort: ["price"],
+      },
+    })
+    .populate("sponsors")
+    .populate("booths")
+    .populate({
+      path: "session",
+      populate: {
+        path: "speaker",
+      },
+    })
+    .populate("speaker")
+    .populate({
+      path: "createdBy",
+      select: "name socialMediaHandles image email superAdmin eventManagers",
+    })
+    .populate({
+      path: "coupon",
+      options: {
+        match: { status: "Active" },
+      },
+    })
+    .populate("hosts");
+
+  res.status(200).json({
+    status: "success",
+    data: updatedEventDoc,
+  });
+});
+
+exports.hideFromEventLobby = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  // Remove from highlightedSessions and send updated event back as response
+
+  const eventDoc = await Event.findById(eventId);
+
+  eventDoc.highlightedSessions = eventDoc.highlightedSessions.filter(
+    (sessionId) => sessionId.toString() !== req.body.sessionId.toString()
+  );
+
+  await eventDoc.save({ new: true, validateModifiedOnly: true });
+
+  const updatedEventDoc = await Event.findById(eventId)
+    .populate({
+      path: "tickets",
+      options: {
+        sort: ["price"],
+      },
+    })
+    .populate("sponsors")
+    .populate("booths")
+    .populate({
+      path: "session",
+      populate: {
+        path: "speaker",
+      },
+    })
+    .populate("speaker")
+    .populate({
+      path: "createdBy",
+      select: "name socialMediaHandles image email superAdmin eventManagers",
+    })
+    .populate({
+      path: "coupon",
+      options: {
+        match: { status: "Active" },
+      },
+    })
+    .populate("hosts");
+
+  res.status(200).json({
+    status: "success",
+    data: updatedEventDoc,
+  });
+});

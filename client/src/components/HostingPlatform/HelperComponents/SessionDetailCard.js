@@ -4,10 +4,10 @@ import "./../../../index.css";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
-import {IconButton} from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
 import dateFormat from "dateformat";
 import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
-import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import {
@@ -19,6 +19,7 @@ import Chip from "@mui/material/Chip";
 import Tooltip from "@mui/material/Tooltip";
 
 import styled from "styled-components";
+import EditSession from "./EditSession";
 
 const useStyles = makeStyles((theme) => ({
   small: {
@@ -116,7 +117,13 @@ const SessionDetailCard = ({
   const eventId = params.eventId;
   const communityId = params.communityId;
 
-  const [channel, setChannel] = useState(`${id}-live`); // Channel to join => defaults to live
+  const [openEdit, setOpenEdit] = useState(false);
+
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  };
+
+  const [channel, setChannel] = useState(`${id}`); // Channel to join => defaults to live
 
   const { userDetails } = useSelector((state) => state.user);
 
@@ -198,8 +205,28 @@ const SessionDetailCard = ({
           </div>
         </div>
         <div className="session-title-short-description-duration-and-speakers d-flex flex-column">
-          <div className="d-flex flex-row align-items-center">
-            <div className="session-title mb-3 me-3">{name}</div>
+          <div className="d-flex flex-row align-items-center  mb-3">
+            <div className="session-title me-3">{name}</div>
+            {hostIds.includes(userId) ? (
+              <Chip
+                color="info"
+                variant="outlined"
+                label="You are host"
+                style={{ fontWeight: "500" }}
+              />
+            ) : (
+              <></>
+            )}
+            {speakerEmails.includes(userEmail) ? (
+              <Chip
+                color="info"
+                variant="outlined"
+                label="You are speaker"
+                style={{ fontWeight: "500" }}
+              />
+            ) : (
+              <></>
+            )}
           </div>
 
           {(() => {
@@ -291,7 +318,11 @@ const SessionDetailCard = ({
           className={`d-flex flex-row justify-content-end align-items-start`}
         >
           <div className="d-flex flex-row justify-content-end align-items-center">
-            <IconButton>
+            <IconButton
+              onClick={() => {
+                setOpenEdit(true);
+              }}
+            >
               <EditRoundedIcon />
             </IconButton>
             <div
@@ -344,6 +375,11 @@ const SessionDetailCard = ({
           </div>
         </div>
       </div>
+      <EditSession
+        open={openEdit}
+        handleClose={handleCloseEdit}
+        sessionId={id}
+      />
     </>
   );
 };

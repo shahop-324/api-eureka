@@ -8,7 +8,21 @@ import ReportActions from "../Sub/ReportActions";
 import WhatsWrong from "../Sub/WhatsWrong";
 import ReportedMsg from "./ReportedMsg";
 
-const ReportedMsgElement = () => {
+const ReportedMsgElement = ({
+  reportedBy,
+  reason,
+  timestamp,
+  name,
+  image,
+  organisation,
+  designation,
+  msg,
+  msgId,
+  warned,
+  removedFromEvent,
+  deleted,
+  senderId,
+}) => {
   const [openActions, setOpenActions] = useState(false);
 
   const [open, setOpen] = useState(false);
@@ -32,22 +46,41 @@ const ReportedMsgElement = () => {
       <div className="reported-msg-container px-4 py-3 mb-3">
         <div className="d-flex flex-row align-items-center mb-4">
           <Avatar
-            src={Faker.image.avatar()}
-            alt="host-name"
+            src={
+              reportedBy
+                ? reportedBy.image
+                  ? reportedBy.image.startsWith("https://")
+                    ? reportedBy.image
+                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${reportedBy.image}`
+                  : ""
+                : ""
+            }
+            alt={reportedBy && reportedBy.firstName}
             variant="rounded"
             className="me-3"
           />
 
           <div className="alert-from-text me-1">
-            {Faker.name.findName()}
+            {`${reportedBy && reportedBy.firstName} ${
+              reportedBy && reportedBy.lastName
+            }`}
 
             <span style={{ fontWeight: "400" }}> reported</span>
           </div>
         </div>
         <ReportedMsg
-          name={Faker.name.findName()}
-          image={Faker.image.avatar()}
-          msgText={"There is something wrong with this message."}
+          timestamp={timestamp}
+          organisation={organisation}
+          designation={designation}
+          name={name}
+          image={
+            image
+              ? image.startsWith("https://")
+                ? image
+                : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${image}`
+              : ""
+          }
+          msgText={msg}
         />
 
         <div className="d-flex flex-row align-items-center">
@@ -72,19 +105,88 @@ const ReportedMsgElement = () => {
         </div>
       </div>
 
-      <WhatsWrong open={open} handleClose={handleClose} />
+      <WhatsWrong
+        open={open}
+        handleClose={handleClose}
+        reason={reason}
+        name={`${reportedBy && reportedBy.firstName} ${
+          reportedBy && reportedBy.lastName
+        }`}
+      />
 
-      <ReportActions open={openActions} handleClose={handleCloseActions} />
+      <ReportActions
+        warned={warned}
+        removedFromEvent={removedFromEvent}
+        deleted={deleted}
+        name={name}
+        image={
+          image
+            ? image.startsWith("https://")
+              ? image
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${image}`
+            : ""
+        }
+        organisation={organisation}
+        designation={designation}
+        msgId={msgId}
+        open={openActions}
+        handleClose={handleCloseActions}
+        senderId={senderId}
+      />
     </>
   );
 };
 
-const ModerationReportedList = () => {
+const renderReports = (reports) => {
+  return reports.map((report) => {
+    if (report.senderId) {
+      // This is a personal message
+      return (
+        <ReportedMsgElement
+          reportedBy={report.reportedBy}
+          reason={report.reportReason}
+          timestamp={report.createdAt}
+          name={report.senderName}
+          image={report.senderImage}
+          organisation={report.senderOrganisation}
+          designation={report.senderDesignation}
+          msg={report.textMessage}
+          msgId={report._id}
+          deleted={report.deleted}
+          warned={report.warned}
+          removedFromEvent={report.suspended}
+          senderId={report.senderId}
+        />
+      );
+    } else {
+      // This is not a personal message
+      return (
+        <ReportedMsgElement
+          reportedBy={report.reportedBy}
+          reason={report.reportReason}
+          timestamp={report.createdAt}
+          name={report.userName}
+          image={report.userImage}
+          organisation={report.userOrganisation}
+          designation={report.userDesignation}
+          msg={report.textMessage}
+          msgId={report._id}
+          deleted={report.deleted}
+          warned={report.warned}
+          removedFromEvent={report.suspended}
+          senderId={report.userId}
+        />
+      );
+    }
+  });
+};
+
+const ModerationReportedList = ({ reports }) => {
   return (
     <>
       <div className="people-container pt-2 px-2" style={{ height: "75vh" }}>
         <div className="scrollable-chat-element-container">
-          <ReportedMsgElement />
+          {renderReports(reports)}
         </div>
       </div>
     </>

@@ -21,7 +21,7 @@ const DeletedOthersMsg = ({
 }) => {
   return (
     <>
-      <div style={{ position: "relative" }}>
+      {/* <div style={{ position: "relative" }}>
         <div
           className=" mb-2"
           style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
@@ -54,7 +54,7 @@ const DeletedOthersMsg = ({
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div
         className=" mb-2"

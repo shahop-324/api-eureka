@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { IconButton } from "@material-ui/core";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 
@@ -6,20 +8,30 @@ import "./../../Styles/root.scss";
 import ModerationPeopleList from "./helper/ModerationPeopleList";
 import ModerationReportedList from "./helper/ModerationReportedList";
 
+import { fetchEventReportedMessages } from "./../../../../actions";
+
 const ModerationMainComponent = (props) => {
+  const params = useParams();
+  const dispatch = useDispatch();
+  const eventId = params.eventId;
   const [selectedTab, setSelectedTab] = useState("reports");
+
+  const { reports } = useSelector((state) => state.reports);
+
+  useEffect(() => {
+    dispatch(fetchEventReportedMessages(eventId));
+  }, []);
 
   return (
     <>
       <div>
         <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between mb-2">
           <div className="d-flex flex-column mb-3">
-          <div className="event-platform-side-drawer-heading">Moderation</div>
-          <div className="setting-tab-sub-text">
-                  Take actions and moderate event activity
-                </div>
+            <div className="event-platform-side-drawer-heading">Moderation</div>
+            <div className="setting-tab-sub-text">
+              Take actions and moderate event activity
+            </div>
           </div>
-          
 
           <div
             onClick={() => {
@@ -61,7 +73,7 @@ const ModerationMainComponent = (props) => {
         {(() => {
           switch (selectedTab) {
             case "reports":
-              return <ModerationReportedList />;
+              return <ModerationReportedList reports={reports} />;
 
             case "people":
               return <ModerationPeopleList />;
@@ -73,8 +85,6 @@ const ModerationMainComponent = (props) => {
 
         {/* here comes all and private chats conditionally */}
       </div>
-
-      
     </>
   );
 };

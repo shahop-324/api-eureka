@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";
 import "./../../../assets/Sass/TopNav.scss";
@@ -6,6 +6,7 @@ import "./../../../assets/Sass/DataGrid.scss";
 import Topnav from "../HelperComponent/TopNav";
 import "./../../../assets/Sass/EditEvent/Basics.scss";
 import SideNavEdit from "../HelperComponent/SideNavEdit";
+import SettingsIcon from "@mui/icons-material/Settings";
 import "./../../../index.css";
 import Sessions from "./Sessions";
 import Speakers from "./Speakers";
@@ -50,6 +51,8 @@ import styled from "styled-components";
 import LiveStream from "./LiveStream";
 import LandingPage from "../HelperComponent/LandingPage";
 
+import EventSettings from "./EventSettings";
+
 const Strip = styled.div`
   background-color: #f75353;
   font-size: 0.8rem;
@@ -63,7 +66,13 @@ const EditEventRoot = () => {
   const params = useParams();
   const eventId = params.id;
 
-  const [openMoreActions, setOpenMoreActions] = React.useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
+
+  const handleCloseSettings = () => {
+    setOpenSettings(false);
+  };
+
+  const [openMoreActions, setOpenMoreActions] = useState(false);
 
   const handleCloseMoreActions = () => {
     setOpenMoreActions(false);
@@ -304,6 +313,14 @@ const EditEventRoot = () => {
               })()}
             </div>
             <div className="d-flex flex-row align-items-center justify-content-end me-3">
+              <IconButton
+                onClick={() => {
+                  setOpenSettings(true);
+                }}
+                className="me-3"
+              >
+                <SettingsIcon />
+              </IconButton>
               <button
                 onClick={() => {
                   setOpenMoreActions(true);
@@ -481,6 +498,7 @@ const EditEventRoot = () => {
           open={openMoreActions}
           handleClose={handleCloseMoreActions}
         />
+        <EventSettings open={openSettings} handleClose={handleCloseSettings} />
       </>
     );
   }

@@ -32,6 +32,11 @@ const eventAlertSlice = createSlice({
       state.eventAlerts.push(action.payload.eventAlert);
       state.isLoading = false;
     },
+    DeleteEventAlert(state, action) {
+      state.eventAlerts = state.eventAlerts.filter(
+        (alert) => alert._id.toString() !== action.payload.alertId.toString()
+      );
+    },
   },
 });
 export const eventAlertActions = eventAlertSlice.actions;

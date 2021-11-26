@@ -4,7 +4,6 @@ import styled from "styled-components";
 import "./../Styles/UpdateEventProfile.scss";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
-import Faker from "faker";
 import { Avatar, IconButton, makeStyles } from "@material-ui/core";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { Field, reduxForm } from "redux-form";

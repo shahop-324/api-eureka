@@ -545,7 +545,7 @@ const eventSchema = new mongoose.Schema(
     },
     boothEnabled: {
       type: Boolean,
-      default: true
+      default: true,
     },
     networkingEnabled: {
       type: Boolean,
@@ -554,14 +554,43 @@ const eventSchema = new mongoose.Schema(
     recording: {
       type: Boolean,
       default: false,
-    }
-    // * Done I have to do research on how recording will work and where it will be stored.
+    },
+    people: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
+    blocked: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
+    reviewedBy: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
+    highlightedSessions: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Session",
+      },
+    ],
   },
   {
+    versionKey: false,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
+
+eventSchema.pre(/^find/, function (next) {
+  this.find({}).populate("people");
+  next();
+});
 
 eventSchema.index({
   eventName: "text",

@@ -24,6 +24,14 @@ const personalChatSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  suspended: {
+    type: Boolean,
+    default: false,
+  },
+  warned: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now(),
@@ -56,6 +64,13 @@ const personalChatSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  reportReason: {
+    type: String,
+  },
+  reportedBy: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+  }
 });
 
 const PersonalChat = mongoose.model("PersonalChat", personalChatSchema);

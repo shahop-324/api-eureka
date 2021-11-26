@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import { IconButton } from "@material-ui/core";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 
@@ -6,7 +7,6 @@ import "./../../Styles/root.scss";
 // import AllChatsComponent from "./helper/AllChatsComponent";
 
 import { Dropdown } from "semantic-ui-react";
-import PeopleGridAvatar from "./helper/peopleGridAvatar";
 import { useSelector } from "react-redux";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 
@@ -14,6 +14,45 @@ import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
 import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
 
 import PeopleList from "./helper/PeopleList";
+import PersonProfile from "./../../../HostingPlatform/PersonProfile";
+
+import { makeStyles } from "@material-ui/core";
+import { useDispatch } from "react-redux";
+
+import Popover from "@mui/material/Popover";
+import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
+import { PersonName } from "./../../../SessionStage/Elements";
+import { Avatar } from "@material-ui/core";
+
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+
+import {
+  setVenueRightDrawerSelectedTab,
+  setChatSelectedTab,
+  setPersonalChatConfig,
+  setOpenVenueRightDrawer,
+} from "./../../../../actions";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+  },
+  small: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+  },
+  medium: {
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+  },
+  large: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+  },
+}));
 
 const DropdownIcon = ({ switchView, view }) => (
   <Dropdown
@@ -53,6 +92,161 @@ const DropdownIcon = ({ switchView, view }) => (
   </Dropdown>
 );
 
+const PopOverBox = styled.div`
+  height: auto;
+  width: 280px;
+  border-radius: 15px;
+  background-color: #ffffff;
+`;
+
+const ChatPopup = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 3px;
+  height: 56px;
+  width: 56px;
+  background-color: #ffffff;
+  z-index: 10000;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PeopleGridComponent = ({ person }) => {
+  const classes = useStyles();
+  const dispatch = useDispatch();
+
+  let isMe = false;
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
+  const [openProfile, setOpenProfile] = useState(false);
+
+  const handleCloseProfile = () => {
+    setOpenProfile(false);
+  };
+
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userId = userDetails._id;
+
+  if (person._id.toString() === userId.toString()) {
+    isMe = true;
+  }
+
+  return (
+    <>
+      <div>
+        {open &&
+          (isMe ? (
+            <ChatPopup
+              onClick={() => {
+                setOpenProfile(true);
+              }}
+              aria-owns={open ? "mouse-over-popover" : undefined}
+              aria-haspopup="true"
+              onMouseEnter={handlePopoverOpen}
+              onMouseLeave={handlePopoverClose}
+            >
+              <PersonRoundedIcon />
+            </ChatPopup>
+          ) : (
+            <ChatPopup
+              onClick={() => {
+                dispatch(setVenueRightDrawerSelectedTab("feed"));
+                dispatch(setChatSelectedTab("private"));
+                dispatch(setPersonalChatConfig(person._id));
+                dispatch(setOpenVenueRightDrawer(true));
+              }}
+              aria-owns={open ? "mouse-over-popover" : undefined}
+              aria-haspopup="true"
+              onMouseEnter={handlePopoverOpen}
+              onMouseLeave={handlePopoverClose}
+            >
+              <ChatRoundedIcon />
+            </ChatPopup>
+          ))}
+
+        <Avatar
+          aria-owns={open ? "mouse-over-popover" : undefined}
+          aria-haspopup="true"
+          onMouseEnter={handlePopoverOpen}
+          onMouseLeave={handlePopoverClose}
+          src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`}
+          alt={`${person.firstName} ${person.lastName}`}
+          variant="rounded"
+          className={classes.large}
+        />
+      </div>
+
+      {/*  */}
+      <Popover
+        id="mouse-over-popover"
+        sx={{
+          pointerEvents: "none",
+        }}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        onClose={handlePopoverClose}
+        disableRestoreFocus
+      >
+        <PopOverBox className="px-3 py-2">
+          <div className="d-flex flex-row align-items-top mb-3">
+            <Avatar
+              className={classes.medium}
+              variant="rounded"
+              src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`}
+            />
+            <div className="ms-3">
+              <PersonName className="mb-2">{`${person.firstName} ${person.lastName}`}</PersonName>
+              <PersonName
+                style={{ color: "#6D6D6D" }}
+              >{`${person.designation} ${person.organisation}`}</PersonName>
+            </div>
+          </div>
+        </PopOverBox>
+      </Popover>
+      <PersonProfile
+        open={openProfile}
+        userId={person._id}
+        handleClose={handleCloseProfile}
+        person={person}
+      />
+    </>
+  );
+};
+
+const renderPeopleGrid = (people, classes) => {
+  return people.map((person) => {
+    return <PeopleGridComponent person={person} />;
+  });
+};
+
 const MainPeopleComponent = (props) => {
   const [view, setView] = useState("grid");
 
@@ -60,26 +254,13 @@ const MainPeopleComponent = (props) => {
     setView(view);
   };
 
-  const currentlyInEvent = useSelector((state) => state.user.peopleInThisEvent);
+  const { eventDetails } = useSelector((state) => state.event);
 
-  const renderPeopleList = (people) => {
-    return people.map((person) => {
-      return (
-        <PeopleGridAvatar
-          image={
-            person.userImage.startsWith("https://")
-              ? person.userImage
-              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.userImage}`
-          }
-          name={person.userName}
-          designation={person.userDesignation}
-          organisation={person.userOrganisation}
-          city={person.userCity}
-          country={person.userCountry}
-        />
-      );
-    });
-  };
+  let people = [];
+
+  if (eventDetails) {
+    people = eventDetails.people;
+  }
 
   return (
     <>
@@ -87,7 +268,7 @@ const MainPeopleComponent = (props) => {
         <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between mb-2">
           <div className="d-flex flex-column mb-3">
             <div className="event-platform-side-drawer-heading">
-              People in event
+              People in event ({people.length})
             </div>
             <div className="setting-tab-sub-text">
               Interect with other people in event
@@ -136,7 +317,7 @@ const MainPeopleComponent = (props) => {
               case "grid":
                 return (
                   <div className="people-list-grid">
-                    {renderPeopleList(currentlyInEvent)}
+                    {renderPeopleGrid(people)}
                   </div>
                 );
               case "list":

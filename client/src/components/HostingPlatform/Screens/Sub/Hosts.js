@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Faker from "faker";
+import { Avatar } from "@material-ui/core";
 import PersonProfile from "../../PersonProfile";
 import { useSelector } from "react-redux";
 import NoContent from "./../../NoContent";
@@ -41,35 +41,61 @@ const HostDesignationOrg = styled.div`
   font-size: 0.78rem;
 `;
 
-const HostCardComponent = ({ name, image, organisation, designation }) => {
+const HostCardComponent = ({
+  name,
+  image,
+  organisation,
+  designation,
+  person,
+}) => {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
   };
 
+  const { userDetails } = useSelector((state) => state.user);
+  let isMe = false;
+
+  if (person._id.toString() === userDetails._id.toString()) {
+    isMe = true;
+  }
+
   return (
     <>
       <HostCardBody className="">
-        <HostImg src={image}></HostImg>
+        <Avatar
+          alt={name}
+          src={image}
+          variant={"rounded"}
+          style={{ height: "210px", width: "100%" }}
+        />
 
         <div className="p-3">
-          <HostName className="mb-3">{name}</HostName>
-          <HostDesignationOrg className="mb-2">
-            {designation}
-          </HostDesignationOrg>
-          <HostDesignationOrg>{organisation}</HostDesignationOrg>
+          <HostName className="mb-3">
+            {name} {isMe && <span>(You)</span>}{" "}
+          </HostName>
+          <div className="d-flex flex-row align-items-center justify-content-between">
+            <div>
+              <HostDesignationOrg className="mb-2">
+                {designation}
+              </HostDesignationOrg>
+              <HostDesignationOrg>{organisation}</HostDesignationOrg>
+            </div>
+
+            <button
+              className="btn btn-light btn-outline-text"
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              View profile
+            </button>
+          </div>
         </div>
       </HostCardBody>
 
-      <PersonProfile
-        open={open}
-        handleClose={handleClose}
-        userName={Faker.name.findName()}
-        userImage={Faker.image.avatar()}
-        userOrganisation={"Google Inc."}
-        userDesignation={"VP"}
-      />
+      <PersonProfile open={open} handleClose={handleClose} person={person} />
     </>
   );
 };
@@ -78,8 +104,15 @@ const renderHosts = (hosts) => {
   return hosts.map((host) => {
     return (
       <HostCardComponent
+        person={host}
         name={host.firstName + " " + host.lastName}
-        image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${host.image}`}
+        image={
+          host.image
+            ? host.image.startsWith("https://")
+              ? host.image
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${host.image}`
+            : ""
+        }
         organisation={host.organisation}
         designation={host.designation}
       />

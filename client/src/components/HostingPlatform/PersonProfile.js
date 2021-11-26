@@ -22,7 +22,10 @@ import {
   setOpenVenueRightDrawer,
 } from "./../../actions";
 
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
+
+import UpdateEventProfile from "./../HostingPlatform/HelperComponents/UpdateEventProfile";
 
 const PersonProfileBody = styled.div`
   width: 360px;
@@ -122,88 +125,30 @@ const renderInterests = (interests) => {
   });
 };
 
-const PersonProfile = ({
-  hideBtns,
-  open,
-  handleClose,
-  userId,
-  userName,
-  userImage,
-  userOrganisation,
-  userDesignation,
-}) => {
-  let myConnections = [];
-  let thisPersonIsInMyConnections = false;
-  let connectionStatusToThisPerson;
+const PersonProfile = ({ hideBtns, open, handleClose, person }) => {
+  const [openUpdateProfile, setOpenUpdateProfile] = useState(false);
+
+  const handleCloseUpdateProfile = () => {
+    setOpenUpdateProfile(false);
+  };
+
+  let isMe = false;
 
   const dispatch = useDispatch();
   const theme = useTheme();
   const params = useParams();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { id } = useSelector((state) => state.eventAccessToken);
-  const { connections } = useSelector((state) => state.connections);
-
-  const { registrations } = useSelector((state) => state.registration);
-
   useEffect(() => {
     dispatch(fetchMyConnections());
   }, []);
 
-  const userRegistrationDetails = registrations.find(
-    (element) => element.bookedByUser === userId
-  );
+  const { userDetails } = useSelector((state) => state.user);
 
-  const receiverId = userId;
-  const senderId = id;
-  const eventId = params.eventId;
+  const userId = userDetails._id;
 
-  const processing = () => {
-    if (connections) {
-      for (let element of connections) {
-        // Return if any of requestedToUser or requestedByUser is not present
-
-        if (!element.requestedToUser || !element.requestedByUser) return;
-
-        // Check if I sent this connection request to me or I sent this to someone
-
-        if (element.requestedByUser._id === id) {
-          // I requested to make to have this connection
-          // * Collect info from requestedToUser
-
-          if (!myConnections.includes(element.requestedToUser._id)) {
-            myConnections.push({
-              connectionId: element.requestedToUser._id,
-              status: element.status,
-            });
-          }
-        }
-        if (element.requestedToUser._id === id) {
-          // Someone else requested to connect with me
-          // * Collect info from requestedByUser
-
-          if (!myConnections.includes(element.requestedByUser._id)) {
-            myConnections.push({
-              connectionId: element.requestedByUser._id,
-              status: element.status,
-            });
-          }
-        }
-      }
-    }
-  };
-
-  processing();
-
-  // At this point we have all of current browsing user's connection in myConnections array with their id and status
-
-  for (let element of myConnections) {
-    if (!thisPersonIsInMyConnections) {
-      if (element.connectionId === userId) {
-        thisPersonIsInMyConnections = true;
-        connectionStatusToThisPerson = element.status;
-      }
-    }
+  if (person._id.toString() === userId.toString()) {
+    isMe = true;
   }
 
   return (
@@ -231,30 +176,30 @@ const PersonProfile = ({
           <div className="d-flex flex-row align-items-center justify-content-center mb-4">
             <Avatar
               src={
-                userImage
-                  ? userImage.startsWith("https://")
-                    ? userImage
-                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${userImage}`
+                person.image
+                  ? person.image.startsWith("https://")
+                    ? person.image
+                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`
                   : ""
               }
-              alt={userName}
+              alt={person.firstName}
               variant="rounded"
               style={{ width: "72px", height: "72px" }}
             />
           </div>
-          <ProfileName className="mb-2">{userName}</ProfileName>
-          {userOrganisation && userDesignation ? (
-            <ProfileDesignationOrg className="mb-5">{`${userOrganisation} ${userDesignation}`}</ProfileDesignationOrg>
+          <ProfileName className="mb-2">{`${person.firstName} ${person.lastName}`}</ProfileName>
+          {person.organisation && person.designation ? (
+            <ProfileDesignationOrg className="mb-5">{`${person.designation} ${person.organisation}`}</ProfileDesignationOrg>
           ) : (
             <div className="mb-4"></div>
           )}
 
-          {userRegistrationDetails ? (
+          {person ? (
             <div className="d-flex flex-row align-items-center justify-content-center mb-4">
-              {userRegistrationDetails.socialMediaHandles ? (
-                userRegistrationDetails.socialMediaHandles.facebook ? (
+              {person.socialMediaHandles ? (
+                person.socialMediaHandles.facebook ? (
                   <a
-                    href={`//${userRegistrationDetails.socialMediaHandles.facebook}`}
+                    href={`//${person.socialMediaHandles.facebook}`}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -273,10 +218,10 @@ const PersonProfile = ({
                 <></>
               )}
 
-              {userRegistrationDetails.socialMediaHandles ? (
-                userRegistrationDetails.socialMediaHandles.linkedin ? (
+              {person.socialMediaHandles ? (
+                person.socialMediaHandles.linkedin ? (
                   <a
-                    href={`//${userRegistrationDetails.socialMediaHandles.linkedin}`}
+                    href={`//${person.socialMediaHandles.linkedin}`}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -295,10 +240,10 @@ const PersonProfile = ({
                 <></>
               )}
 
-              {userRegistrationDetails.socialMediaHandles ? (
-                userRegistrationDetails.socialMediaHandles.twitter ? (
+              {person.socialMediaHandles ? (
+                person.socialMediaHandles.twitter ? (
                   <a
-                    href={`//${userRegistrationDetails.socialMediaHandles.twitter}`}
+                    href={`//${person.socialMediaHandles.twitter}`}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -318,10 +263,10 @@ const PersonProfile = ({
                 <></>
               )}
 
-              {userRegistrationDetails.socialMediaHandles ? (
-                userRegistrationDetails.socialMediaHandles.website ? (
+              {person.socialMediaHandles ? (
+                person.socialMediaHandles.website ? (
                   <a
-                    href={`//${userRegistrationDetails.socialMediaHandles.website}`}
+                    href={`//${person.socialMediaHandles.website}`}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -342,15 +287,13 @@ const PersonProfile = ({
           ) : (
             <></>
           )}
-          {userRegistrationDetails ? (
+          {person ? (
             <div className="mb-3">
-              {userRegistrationDetails.headline ? (
+              {person.headline ? (
                 <>
                   {" "}
                   <ProfileSmallText className="mb-1">Headline</ProfileSmallText>
-                  <ProfileMediumText>
-                    {userRegistrationDetails.headline}
-                  </ProfileMediumText>{" "}
+                  <ProfileMediumText>{person.headline}</ProfileMediumText>{" "}
                 </>
               ) : (
                 <></>
@@ -359,13 +302,13 @@ const PersonProfile = ({
           ) : (
             <></>
           )}
-          {userRegistrationDetails ? (
-            typeof userRegistrationDetails.interests !== "undefined" &&
-            userRegistrationDetails.interests.length > 0 ? (
+          {person ? (
+            typeof person.interests !== "undefined" &&
+            person.interests.length > 0 ? (
               <div className="">
                 <ProfileSmallText className="mb-2">Interests</ProfileSmallText>
 
-                <div>{renderInterests(userRegistrationDetails.interests)}</div>
+                <div>{renderInterests(person.interests)}</div>
               </div>
             ) : (
               <></>
@@ -375,26 +318,47 @@ const PersonProfile = ({
           )}
           {!hideBtns && (
             <div className="d-flex flex-row align-items-center justify-content-between mt-4">
-              <ButtonOutlinedDark
-                onClick={() => {
-                  dispatch(setVenueRightDrawerSelectedTab("feed"));
-                  dispatch(setChatSelectedTab("private"));
-                  dispatch(setPersonalChatConfig(userId));
-                  dispatch(setOpenVenueRightDrawer(true));
-                }}
-                style={{ width: "100%" }}
-              >
-                <ChatRoundedIcon
-                  style={{ fontSize: "18px" }}
-                  className="me-2"
-                />{" "}
-                Message
-              </ButtonOutlinedDark>
+              {isMe ? (
+                <ButtonOutlinedDark
+                  onClick={() => {
+                    setOpenUpdateProfile(true);
+                    handleClose();
+                  }}
+                  style={{ width: "100%" }}
+                >
+                  <EditRoundedIcon
+                    style={{ fontSize: "18px" }}
+                    className="me-2"
+                  />{" "}
+                  Edit profile
+                </ButtonOutlinedDark>
+              ) : (
+                <ButtonOutlinedDark
+                  onClick={() => {
+                    dispatch(setVenueRightDrawerSelectedTab("feed"));
+                    dispatch(setChatSelectedTab("private"));
+                    dispatch(setPersonalChatConfig(person._id));
+                    dispatch(setOpenVenueRightDrawer(true));
+                    handleClose();
+                  }}
+                  style={{ width: "100%" }}
+                >
+                  <ChatRoundedIcon
+                    style={{ fontSize: "18px" }}
+                    className="me-2"
+                  />{" "}
+                  Message
+                </ButtonOutlinedDark>
+              )}
             </div>
           )}
         </PersonProfileBody>
       </Dialog>
       <ScheduleMeeting />
+      <UpdateEventProfile
+        openDrawer={openUpdateProfile}
+        handleCloseDrawer={handleCloseUpdateProfile}
+      />
     </>
   );
 };

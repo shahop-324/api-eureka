@@ -65,6 +65,11 @@ const networkingSlice = createSlice({
           : chat
       );
     },
+    UpdateMsg(state, action) {
+      state.networkingChats = state.networkingChats.map((chat) =>
+        chat._id === action.payload.msg._id ? action.payload.msg : chat
+      );
+    },
     FetchNetworkingRoomDetails(state, action) {
       state.networkingRoomDetails = action.payload.networkingRoom;
     },

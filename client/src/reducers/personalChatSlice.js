@@ -20,6 +20,11 @@ const personalChatSlice = createSlice({
       // Fetch all chats in which this user is sender or reciever
       state.chats = action.payload.chats;
     },
+    UpdateMsg(state, action) {
+      state.chats = state.chats.map((chat) =>
+        chat._id === action.payload.msg._id ? action.payload.msg : chat
+      );
+    },
   },
 });
 export const personalChatActions = personalChatSlice.actions;

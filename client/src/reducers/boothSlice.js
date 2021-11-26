@@ -210,6 +210,11 @@ const boothSlice = createSlice({
     FetchBoothChats(state, action) {
       state.chats = action.payload.chats;
     },
+    UpdateMsg(state, action) {
+      state.chats = state.chats.map((chat) =>
+        chat._id === action.payload.msg._id ? action.payload.msg : chat
+      );
+    },
   },
 });
 export const boothActions = boothSlice.actions;

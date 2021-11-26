@@ -53,7 +53,7 @@ const MsgElement = ({
                 className="d-flex flex-row align-items-center justify-content-between"
               >
                 <div>
-                  {designation}, {organisation}
+                  {designation} {organisation}
                 </div>
 
                 <div>{timeAgo.format(new Date(timestamp), "round")}</div>

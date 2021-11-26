@@ -40,7 +40,9 @@ exports.updateSession = catchAsync(async (req, res, next) => {
       "endTime",
       "speaker",
       "tags",
-      "host"
+      "host",
+      "replay",
+      "allowEntryBeforeSessionBegin"
     );
 
     let removedSpeakers = [];
@@ -60,54 +62,56 @@ exports.updateSession = catchAsync(async (req, res, next) => {
 
     const eventDoc = await Event.findById(eventId);
 
-    // Speakers
-    for (let element of req.body.speaker) {
-      // Check who is the newly assigned speaker
-      if (!speakersSinceLastUpdate.includes(element)) {
-        // This confirms that its a new speaker
+    if (req.body.speaker) {
+      // Speakers
+      for (let element of req.body.speaker) {
+        // Check who is the newly assigned speaker
+        if (!speakersSinceLastUpdate.includes(element)) {
+          // This confirms that its a new speaker
 
-        // To all newly assigned speakers add this session to their doc
+          // To all newly assigned speakers add this session to their doc
 
-        const speaker = await Speaker.findById(element);
-        //
-        if (!speaker.sessions.includes(req.params.id)) {
-          speaker.sessions.push(req.params.id);
-          await speaker.save({ new: true, validateModifiedOnly: true });
-        }
-
-        await sessionDoc.save({ new: true, validateModifiedOnly: true });
-      }
-    }
-
-    // Check which previous speakers are missing
-
-    removedSpeakers = speakersSinceLastUpdate.filter(
-      (el) => !req.body.speaker.includes(el)
-    );
-
-    // To all previous speakers which are missing remove this session from their doc
-
-    for (let element of removedSpeakers) {
-      const speaker = await Speaker.findById(element);
-
-      // console.log(speaker, "This is the speaker who is removed from session.");
-      console.log(req.params.id);
-
-      if (speaker) {
-        speaker.sessions = speaker.sessions.filter(
-          (el) => el.toString() !== req.params.id.toString()
-        );
-        await speaker.save(
-          { new: true, validateModifiedOnly: true },
-          (err, doc) => {
-            console.log(
-              doc,
-              "This is the speaker after removing this session."
-            );
+          const speaker = await Speaker.findById(element);
+          //
+          if (!speaker.sessions.includes(req.params.id)) {
+            speaker.sessions.push(req.params.id);
+            await speaker.save({ new: true, validateModifiedOnly: true });
           }
-        );
 
-        await sessionDoc.save({ new: true, validateModifiedOnly: true });
+          await sessionDoc.save({ new: true, validateModifiedOnly: true });
+        }
+      }
+
+      // Check which previous speakers are missing
+
+      removedSpeakers = speakersSinceLastUpdate.filter(
+        (el) => !req.body.speaker.includes(el)
+      );
+
+      // To all previous speakers which are missing remove this session from their doc
+
+      for (let element of removedSpeakers) {
+        const speaker = await Speaker.findById(element);
+
+        // console.log(speaker, "This is the speaker who is removed from session.");
+        console.log(req.params.id);
+
+        if (speaker) {
+          speaker.sessions = speaker.sessions.filter(
+            (el) => el.toString() !== req.params.id.toString()
+          );
+          await speaker.save(
+            { new: true, validateModifiedOnly: true },
+            (err, doc) => {
+              console.log(
+                doc,
+                "This is the speaker after removing this session."
+              );
+            }
+          );
+
+          await sessionDoc.save({ new: true, validateModifiedOnly: true });
+        }
       }
     }
 
@@ -243,6 +247,26 @@ exports.getAllSessionsForUser = catchAsync(async (req, res, next) => {
       data: {
         sessions,
       },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+exports.updateSessionPreview = catchAsync(async (req, res, next) => {
+  try {
+    const sessionId = req.params.sessionId;
+    const sessionDoc = await Session.findById(sessionId);
+    sessionDoc.preview = req.body.key;
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: updatedSession,
     });
   } catch (error) {
     console.log(error);

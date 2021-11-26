@@ -64,6 +64,7 @@ import reviewSlice from "./reviewSlice";
 import recordingSlice from "./recordingSlice";
 import boothTablesSlice from "./boothTablesSlice";
 import boothChairsSlice from "./boothChairsSlice";
+import reportsSlice from "./reportsSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -130,4 +131,5 @@ export default combineReducers({
   review: reviewSlice.reducer,
   recording: recordingSlice.reducer,
   boothChairs: boothChairsSlice.reducer,
+  reports: reportsSlice.reducer,
 });

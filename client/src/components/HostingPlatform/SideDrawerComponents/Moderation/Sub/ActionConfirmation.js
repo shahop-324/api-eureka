@@ -1,31 +1,47 @@
-import React from "react";
-
-import Faker from "faker";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { showSnackbar } from "./../../../../../actions";
+import socket from "./../../../../HostingPlatform/service/socket";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import "./../Styles/report.scss";
 import { Avatar } from "@material-ui/core";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-const ActionConfirmation = ({ openDrawer, handleCloseDrawer, intent }) => {
+const ActionConfirmation = ({
+  name,
+  image,
+  organisation,
+  designation,
+  msgId,
+  openDrawer,
+  handleCloseDrawer,
+  intent,
+  senderId,
+}) => {
   let text;
   let visibility = "none";
 
-  if (intent === "eventSuspension") {
+  const dispatch = useDispatch();
+
+  const params = useParams();
+  const eventId = params.eventId;
+
+  const [warningText, setWarningText] = useState(null);
+
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userId = userDetails._id;
+
+  if (intent === "eventSuspension" || intent === "suspendOnly") {
     text =
-      "This person will be removed from this event and will be notified about the same through user dashboard and mail.";
+      "This person will be removed from this event and will be notified about the same through user dashboard & mail.";
   }
-  if (intent === "communitySuspension") {
-    text =
-      "This person will be removed from this event and won't be able to attend further events from this community and will be notified about the same through user dashboard and mail.";
-  }
-  if (intent === "temporarySuspension") {
-    visibility = "inline-block";
-    text =
-      "This person will be removed temporarily from this event and will be notified about the same through user dashboard and mail.";
-  }
+
   if (intent === "warnOnly") {
     text =
-      "This person will recieve a warning message and will be notified about the same through user dashboard and mail.";
+      "This person will recieve a warning message via mail and will also be notified via user dashboard.";
   }
 
   return (
@@ -36,7 +52,7 @@ const ActionConfirmation = ({ openDrawer, handleCloseDrawer, intent }) => {
           open={openDrawer}
           disableBackdropTransition={true}
         >
-          <div className="py-3 px-4" style={{ minWidth: "460px" }}>
+          <div className="py-3 px-4" style={{ width: "460px" }}>
             <div className="d-flex flex-row align-items-center mb-4">
               <div
                 style={{
@@ -65,19 +81,23 @@ const ActionConfirmation = ({ openDrawer, handleCloseDrawer, intent }) => {
                 Back
               </div>
             </div>
-
             <div className="confirm-action-heading mb-4">
               Confirm your action
             </div>
-
             <div className="confirm-action-preview px-4 py-3 mb-3">
               <div
                 className="mb-4"
                 style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
               >
                 <Avatar
-                  src={Faker.image.avatar()}
-                  alt={Faker.name.findName()}
+                  src={
+                    image
+                      ? image.startsWith("https")
+                        ? image
+                        : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${image}`
+                      : ""
+                  }
+                  alt={name}
                   variant="rounded"
                 />
                 <div>
@@ -88,8 +108,7 @@ const ActionConfirmation = ({ openDrawer, handleCloseDrawer, intent }) => {
                       fontFamily: "Ubuntu",
                     }}
                   >
-                    <div>{Faker.name.findName()}</div>
-
+                    <div>{name}</div>
                     <div
                       style={{
                         fontWeight: "500",
@@ -98,9 +117,9 @@ const ActionConfirmation = ({ openDrawer, handleCloseDrawer, intent }) => {
                       }}
                       className="d-flex flex-row align-items-center justify-content-between"
                     >
-                      <div>Product Manager, Evenz</div>
-
-                      {/* <div></div> */}
+                      <div>
+                        {designation} {organisation}
+                      </div>
                     </div>
                   </div>
 
@@ -112,47 +131,6 @@ const ActionConfirmation = ({ openDrawer, handleCloseDrawer, intent }) => {
                   </div>
                 </div>
               </div>
-
-              <div
-                className="mb-4 overlay-form-input-row form-row-2-in-1 d-flex flex-row align-items-center"
-                style={{ display: visibility }}
-              >
-                <div style={{ display: visibility }}>
-                  <label
-                    Forhtml="suspendTillDate"
-                    className="form-label form-label-customized"
-                    style={{ display: visibility }}
-                  >
-                    Suspend till date
-                  </label>
-                  <input
-                    style={{ display: visibility }}
-                    name="suspendedTillDate"
-                    type="date"
-                    className="form-control"
-                    id="suspendTillDate"
-                    minimumDate={Date.now()}
-                  />
-                </div>
-                <div style={{ display: visibility }}>
-                  <label
-                    style={{ display: visibility }}
-                    Forhtml="suspendedTillTime"
-                    className="form-label form-label-customized"
-                  >
-                    Suspend till time
-                  </label>
-                  <input
-                    style={{ display: visibility }}
-                    name="suspendedTillTime"
-                    type="time"
-                    className="form-control"
-                    id="suspendedTillTime"
-                    min={Date.now()}
-                  />
-                </div>
-              </div>
-
               <div className="mb-4 overlay-form-input-row">
                 <label
                   for="shortDescription"
@@ -161,12 +139,16 @@ const ActionConfirmation = ({ openDrawer, handleCloseDrawer, intent }) => {
                   Your Message
                 </label>
                 <textarea
+                  value={warningText}
+                  onChange={(e) => {
+                    setWarningText(e.target.value);
+                  }}
                   name="shortDescription"
                   type="text"
                   className="form-control"
                   id="shortDescription"
                   ariadescribedby="communityName"
-                  //   component={renderTextArea}
+                  placeholder="write what you want to convey to this user."
                 />
               </div>
             </div>
@@ -180,7 +162,82 @@ const ActionConfirmation = ({ openDrawer, handleCloseDrawer, intent }) => {
               >
                 Cancel
               </button>
-              <button className="btn btn-primary btn-outline-text">
+              <button
+                onClick={() => {
+                  if (intent === "eventSuspension") {
+                    //
+                    if (!warningText) {
+                      dispatch(
+                        showSnackbar(
+                          "info",
+                          "Please provide a valid message to suspend"
+                        )
+                      );
+                      return;
+                    }
+                    socket.emit(
+                      "suspendFromEvent",
+                      {
+                        msgId,
+                        eventId: eventId,
+                        warning: warningText,
+                        userId: userId,
+                      },
+                      (error) => {
+                        alert(error);
+                      }
+                    );
+                  }
+                  if (intent === "warnOnly") {
+                    //
+                    if (!warningText) {
+                      dispatch(
+                        showSnackbar(
+                          "info",
+                          "Please provide a valid message to warn"
+                        )
+                      );
+                      return;
+                    }
+                    socket.emit(
+                      "warn",
+                      {
+                        msgId,
+                        eventId: eventId,
+                        warning: warningText,
+                        userId: userId,
+                      },
+                      (error) => {
+                        alert(error);
+                      }
+                    );
+                  }
+                  if (intent === "suspendOnly") {
+                    if (!warningText) {
+                      dispatch(
+                        showSnackbar(
+                          "info",
+                          "Please provide a valid message to suspend"
+                        )
+                      );
+                      return;
+                    }
+                    socket.emit(
+                      "suspendOnly",
+                      {
+                        eventId: eventId,
+                        userId: userId,
+                        senderId: senderId,
+                        warning: warningText,
+                      },
+                      (error) => {
+                        alert(error);
+                      }
+                    );
+                  }
+                }}
+                className="btn btn-primary btn-outline-text"
+              >
                 Proceed
               </button>
             </div>

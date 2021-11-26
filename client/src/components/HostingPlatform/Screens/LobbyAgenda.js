@@ -108,8 +108,6 @@ const LobbyAgenda = () => {
         switch (selectedTab) {
           case "about":
             return <About />;
-          
-         
           case "speakers":
             return <Speakers />;
           case "hosts":

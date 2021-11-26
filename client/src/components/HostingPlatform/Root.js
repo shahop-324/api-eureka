@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import MsgTone from "./../../assets/msg_tone.mp3";
 import SideNav from "./HelperComponents/SideNav";
 import MidTopNav from "./HelperComponents/MidTopNav";
+import RatingComponent from "./RatingComponent";
 
 import "./Styles/root.scss";
 
@@ -14,7 +15,17 @@ import Rooms from "./Screens/Rooms";
 import Booths from "./Screens/Booths";
 import Stage from "./Screens/Stage";
 import {
+  signOut,
+  updateBoothTableMsg,
+  updateBoothMsg,
+  updateSessionMsg,
+  updateTableMsg,
+  updatePersonalMsg,
+  updateNetworkingMsg,
+  updateEventMsg,
+  fetchUpdatedEvent,
   createNewEventAlert,
+  deleteEventAlert,
   createNewEventMsg,
   createNewEventPoll,
   createNewPersonalMessage,
@@ -41,6 +52,7 @@ import {
   fetchSessionChats,
   createNewSessionMsg,
   updateSession,
+  showSnackbar,
 } from "../../actions/index";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -66,9 +78,30 @@ const Root = () => {
   const params = useParams();
   const dispatch = useDispatch();
 
+  const [openRating, setOpenRating] = useState(false);
+
+  const handleCloseRating = () => {
+    setOpenRating(false);
+  };
+
   // console.log(params);
 
   useEffect(() => {
+    // Check if this user is in this events block list (if yes then showSnackbar("You have been suspended from this event")) and logout
+
+    if (eventDetails.blocked.includes(userId)) {
+      dispatch(
+        showSnackbar("info", "You have been suspended from this event.")
+      );
+
+      //  Use event leave procedure
+
+      socket.emit("leaveEvent", { userId, eventId }, (error) => {
+        console.log(error);
+      });
+      dispatch(signOut());
+    }
+
     dispatch(fetchEvent(eventId));
   }, []);
 
@@ -103,6 +136,9 @@ const Root = () => {
 
   useEffect(() => {
     return () => {
+      socket.emit("leaveEvent", { userId, eventId }, (error) => {
+        alert(error);
+      });
       dispatch(navigationIndexForHostingPlatform(0));
     };
   }, [dispatch]);
@@ -125,8 +161,115 @@ const Root = () => {
   }, []);
 
   useEffect(() => {
+    socket.on("alertDeletedConfirmed", () => {
+      dispatch(showSnackbar("success", "Alert deleted successfully!"));
+    });
+
+    socket.on("acceptedSuccessfully", ({ updatedEvent }) => {
+      dispatch(fetchUpdatedEvent(updatedEvent));
+      dispatch(
+        showSnackbar(
+          "success",
+          "This user has been successfully accepted in this event."
+        )
+      );
+    });
+
+    socket.on("deletedSuccessfully", () => {
+      dispatch(
+        showSnackbar("success", "This message has been deleted successfully")
+      );
+    });
+
+    socket.on("suspendedSuccessfully", ({ updatedEvent }) => {
+      dispatch(fetchUpdatedEvent(updatedEvent));
+      dispatch(
+        showSnackbar("success", "This user has been suspended successfully!")
+      );
+    });
+
+    socket.on("youAreWarned", ({ warning }) => {
+      dispatch(showSnackbar("warning", warning));
+    });
+
+    socket.on("warnedSuccessfully", () => {
+      dispatch(showNotification("This user has been warned successfully!"));
+    });
+
+    socket.on("youHaveBeenSuspended", () => {
+      //
+      dispatch(
+        showSnackbar(
+          "warning",
+          "You have been suspended from this event by host."
+        )
+      );
+      socket.emit("leaveEvent", { userId, eventId }, (error) => {
+        console.log(error);
+      });
+      dispatch(signOut());
+    });
+
+    socket.on("reportedSuccessfully", () => {
+      dispatch(showSnackbar("success", "Message Reported successfully!"));
+    });
+
+    socket.on("msgReported", ({ msgType, reportedMsg }) => {
+      // Based on msg type just dispatch updateMsg and show notification to all people who have organiser role
+
+      if (role === "organiser") {
+        dispatch(showNotification("New message reported"));
+      }
+
+      // Msg Type can be networking, event, private, table, session, booth, boothTable,
+
+      switch (msgType) {
+        case "event":
+          dispatch(updateEventMsg(reportedMsg));
+          break;
+
+        case "networking":
+          dispatch(updateNetworkingMsg(reportedMsg));
+          break;
+
+        case "private":
+          dispatch(updatePersonalMsg(reportedMsg));
+          break;
+
+        case "table":
+          dispatch(updateTableMsg(reportedMsg));
+          break;
+
+        case "session":
+          dispatch(updateSessionMsg(reportedMsg));
+          break;
+
+        case "booth":
+          dispatch(updateBoothMsg(reportedMsg));
+          break;
+
+        case "boothTable":
+          dispatch(updateBoothTableMsg(reportedMsg));
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    socket.on("deleteAlert", ({ alertId }) => {
+      dispatch(deleteEventAlert(alertId));
+    });
+
     socket.on("previousSessionMessages", ({ chats }) => {
       dispatch(fetchSessionChats(chats));
+    });
+    socket.on("previousSessionMessages", ({ chats }) => {
+      dispatch(fetchSessionChats(chats));
+    });
+
+    socket.on("updatedEvent", ({ event }) => {
+      dispatch(fetchUpdatedEvent(event));
     });
 
     socket.on("newMatch", ({ room, matchedWith }) => {
@@ -196,16 +339,13 @@ const Root = () => {
       dispatch(showNotification("You have got a new meeting invite."));
     });
 
-    socket.on("updatedSession", ({ session }) => {
-      dispatch(updateSession(session));
-    });
-
     socket.on("newEventMsg", ({ newMsg }) => {
       // console.log(newMsg);
       dispatch(createNewEventMsg(newMsg));
     });
     socket.on("newEventAlert", ({ newAlert }) => {
       // console.log(newAlert);
+      dispatch(showSnackbar("info", newAlert.alertMsg));
       dispatch(createNewEventAlert(newAlert));
     });
     socket.on("newEventPoll", ({ newPoll }) => {
@@ -495,6 +635,7 @@ const Root = () => {
           </div>
         </div>
       </div>
+      <RatingComponent open={openRating} handleClose={handleCloseRating} />
     </>
   );
 };

@@ -23,6 +23,11 @@ const NetworkingRoom = require("./models/networkingRoomModel");
 const Recording = require("./models/recordingModel");
 const { nanoid } = require("nanoid");
 
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(
+  "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"
+);
+
 var btoa = require("btoa");
 
 const {
@@ -91,17 +96,590 @@ mongoose
 
 const port = process.env.PORT || 8000;
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
-const {
-  removeUser,
-  getUsersInSession,
-  getStageMembers,
-  addSession,
-  updateSession,
-  removeSession,
-  removeUserFromSession,
-  getSessionsInRoom,
-} = lobbyController;
+
 io.on("connect", (socket) => {
+  socket.on(
+    "suspendOnly",
+    async ({ eventId, userId, senderId, warning }, callback) => {
+      // Suspend user logout user mail user and send confirmation to person who suspended
+
+      // Make sure user is not in event block list already
+      const eventDoc = await Event.findById(eventId);
+
+      eventDoc.blocked = eventDoc.blocked.filter(
+        (user) => user.toString() !== senderId.toString()
+      );
+
+      eventDoc.blocked.push(senderId);
+
+      await eventDoc.save({ new: true, validateModifiedOnly: true });
+
+      const BlockedPersonEventDoc = await UsersInEvent.findOne({
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(senderId) },
+        ],
+      });
+
+      const blockedUserDoc = await User.findById(senderId);
+
+      // TODO Send warning via mail and notification
+
+      const msgToUser = {
+        to: blockedUserDoc.email, // Change to your recipient
+        from: "shreyanshshah242@gmail.com", // Change to your verified sender
+        subject: `You have been suspended from ${eventDoc.eventName}`,
+        text: `You have been suspended from ${eventDoc.eventName}. Here is what event organisers have to say about this ${warning}`,
+        // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+      };
+
+      // TODO Generate a notification for user
+
+      sgMail
+        .send(msgToUser)
+        .then(async () => {
+          console.log("Suspension notification sent to user");
+        })
+        .catch(async (error) => {
+          console.log("Failed to send suspension notification to user.");
+        });
+
+      const blockedUserSocket = BlockedPersonEventDoc.socketId; // ! Socket Id of suspended person
+
+      io.to(blockedUserSocket).emit("youHaveBeenSuspended");
+
+      // Find socketId of person who suspended
+
+      const AdminDoc = await UsersInEvent.findOne({
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(userId) },
+        ],
+      });
+
+      const adminSocket = AdminDoc.socketId; // ! Socket Id of admin
+
+      const updatedEventDoc = await Event.findById(eventId)
+        .populate({
+          path: "tickets",
+          options: {
+            sort: ["price"],
+          },
+        })
+        .populate("sponsors")
+        .populate("booths")
+        .populate({
+          path: "session",
+          populate: {
+            path: "speaker",
+          },
+        })
+        .populate("speaker")
+        .populate({
+          path: "createdBy",
+          select:
+            "name socialMediaHandles image email superAdmin eventManagers",
+        })
+        .populate({
+          path: "coupon",
+          options: {
+            match: { status: "Active" },
+          },
+        })
+        .populate("hosts")
+        .populate("people");
+
+      io.to(adminSocket).emit("suspendedSuccessfully", {
+        updatedEvent: updatedEventDoc,
+      });
+    }
+  );
+
+  socket.on("acceptInEvent", async ({ userId, myId, eventId }, callback) => {
+    // Unsuspend user and send mail to user and send confirmation to person who accepted in event
+
+    const eventDoc = await Event.findById(eventId);
+
+    eventDoc.blocked = eventDoc.blocked.filter(
+      (uid) => uid.toString() !== userId.toString()
+    );
+
+    await eventDoc.save({ new: true, validateModifiedOnly: true });
+
+    const UserDoc = await UsersInEvent.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(eventId) },
+        { userId: mongoose.Types.ObjectId(userId) },
+      ],
+    });
+
+    const acceptedUserDoc = await User.findById(userId);
+
+    // TODO Send warning via mail and notification
+
+    const msgToUser = {
+      to: acceptedUserDoc.email, // Change to your recipient
+      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      subject: `You have been accepted in ${eventDoc.eventName}.`,
+      text: `Here is a good news for you, You have been accepted in following event ${eventDoc.eventName}. You can now join this event by visiting your user dashboard. `,
+      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    };
+
+    // TODO Generate a notification for user
+
+    sgMail
+      .send(msgToUser)
+      .then(async () => {
+        console.log("Acceptance notification sent to user");
+      })
+      .catch(async (error) => {
+        console.log("Failed to send acceptance notification to user.");
+      });
+
+    // Find socketId of person who accepted
+
+    const AdminDoc = await UsersInEvent.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(eventId) },
+        { userId: mongoose.Types.ObjectId(myId) },
+      ],
+    });
+
+    const adminSocket = AdminDoc.socketId; // ! Socket Id of admin
+
+    const updatedEventDoc = await Event.findById(eventId)
+      .populate({
+        path: "tickets",
+        options: {
+          sort: ["price"],
+        },
+      })
+      .populate("sponsors")
+      .populate("booths")
+      .populate({
+        path: "session",
+        populate: {
+          path: "speaker",
+        },
+      })
+      .populate("speaker")
+      .populate({
+        path: "createdBy",
+        select: "name socialMediaHandles image email superAdmin eventManagers",
+      })
+      .populate({
+        path: "coupon",
+        options: {
+          match: { status: "Active" },
+        },
+      })
+      .populate("hosts")
+      .populate("people");
+
+    io.to(adminSocket).emit("acceptedSuccessfully", {
+      updatedEvent: updatedEventDoc,
+    });
+  });
+
+  socket.on(
+    "suspendFromEvent",
+    async ({ msgId, eventId, warning, userId }, callback) => {
+      // Add to user event blocked list
+      // Send warning message via email and notification
+      // Send confirmation to user who suspended this person
+
+      let msg;
+
+      const personalMsg = await PersonalChat.findByIdAndUpdate(msgId, {
+        suspended: true,
+      });
+      const tableMsg = await TableChats.findByIdAndUpdate(msgId, {
+        suspended: true,
+      });
+      const boothMsg = await BoothChats.findByIdAndUpdate(msgId, {
+        suspended: true,
+      });
+      const boothTableMsg = await BoothTableChats.findByIdAndUpdate(msgId, {
+        suspended: true,
+      });
+      const eventMsg = await EventChatMessage.findByIdAndUpdate(msgId, {
+        suspended: true,
+      });
+      const sessionMsg = await SessionChatMessage.findByIdAndUpdate(msgId, {
+        suspended: true,
+      });
+      const networkingMsg = await NetworkingRoomChats.findByIdAndUpdate(msgId, {
+        suspended: true,
+      });
+
+      if (personalMsg) {
+        msg = personalMsg;
+      }
+      if (tableMsg) {
+        msg = tableMsg;
+      }
+      if (boothMsg) {
+        msg = boothMsg;
+      }
+      if (boothTableMsg) {
+        msg = boothTableMsg;
+      }
+      if (eventMsg) {
+        msg = eventMsg;
+      }
+      if (sessionMsg) {
+        msg = sessionMsg;
+      }
+      if (networkingMsg) {
+        msg = networkingMsg;
+      }
+
+      let msgSentBy;
+
+      if (msg.userId) {
+        msgSentBy = msg.userId;
+      }
+      if (msg.senderId) {
+        msgSentBy = msg.senderId;
+      }
+
+      // Make sure user is not in event block list already
+      const eventDoc = await Event.findById(eventId);
+
+      eventDoc.blocked = eventDoc.blocked.filter(
+        (user) => user.toString() !== msgSentBy.toString()
+      );
+
+      eventDoc.blocked.push(msgSentBy);
+
+      await eventDoc.save({ new: true, validateModifiedOnly: true });
+
+      // Find socketId of msgSender
+
+      const MsgSenderDoc = await UsersInEvent.findOne({
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(msgSentBy) },
+        ],
+      });
+
+      const msgSenderUserDoc = await User.findById(msgSentBy);
+
+      msg.suspended = true;
+      await msg.save({ new: true, validateModifiedOnly: true });
+
+      // TODO Send warning via mail and notification
+
+      const msgToUser = {
+        to: msgSenderUserDoc.email, // Change to your recipient
+        from: "shreyanshshah242@gmail.com", // Change to your verified sender
+        subject: `You have been suspended from ${eventDoc.eventName}`,
+        text: `You have been suspended from ${eventDoc.eventName}. Here is what event organisers have to say about this ${warning}`,
+        // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+      };
+
+      // TODO Generate a notification for user
+
+      sgMail
+        .send(msgToUser)
+        .then(async () => {
+          console.log("Suspension notification sent to user");
+        })
+        .catch(async (error) => {
+          console.log("Failed to send suspension notification to user.");
+        });
+
+      const msgSenderSocket = MsgSenderDoc.socketId; // ! Socket Id of MsgSender
+
+      io.to(msgSenderSocket).emit("youHaveBeenSuspended");
+
+      // Find socketId of person who suspended
+
+      const UserDoc = await UsersInEvent.findOne({
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(userId) },
+        ],
+      });
+
+      const userSocket = UserDoc.socketId; // ! Socket Id of user
+
+      const updatedEventDoc = await Event.findById(eventId)
+        .populate({
+          path: "tickets",
+          options: {
+            sort: ["price"],
+          },
+        })
+        .populate("sponsors")
+        .populate("booths")
+        .populate({
+          path: "session",
+          populate: {
+            path: "speaker",
+          },
+        })
+        .populate("speaker")
+        .populate({
+          path: "createdBy",
+          select:
+            "name socialMediaHandles image email superAdmin eventManagers",
+        })
+        .populate({
+          path: "coupon",
+          options: {
+            match: { status: "Active" },
+          },
+        })
+        .populate("hosts")
+        .populate("people");
+
+      io.to(userSocket).emit("suspendedSuccessfully", {
+        updatedEvent: updatedEventDoc,
+      });
+    }
+  );
+
+  socket.on("warn", async ({ msgId, eventId, warning, userId }, callback) => {
+    // Send warning message via email and notification
+    // Send confirmation to user who warned this person
+
+    let msg;
+
+    const personalMsg = await PersonalChat.findByIdAndUpdate(msgId, {
+      warned: true,
+    });
+    const tableMsg = await TableChats.findByIdAndUpdate(msgId, {
+      warned: true,
+    });
+    const boothMsg = await BoothChats.findByIdAndUpdate(msgId, {
+      warned: true,
+    });
+    const boothTableMsg = await BoothTableChats.findByIdAndUpdate(msgId, {
+      warned: true,
+    });
+    const eventMsg = await EventChatMessage.findByIdAndUpdate(msgId, {
+      warned: true,
+    });
+    const sessionMsg = await SessionChatMessage.findByIdAndUpdate(msgId, {
+      warned: true,
+    });
+    const networkingMsg = await NetworkingRoomChats.findByIdAndUpdate(msgId, {
+      warned: true,
+    });
+
+    if (personalMsg) {
+      msg = personalMsg;
+    }
+    if (tableMsg) {
+      msg = tableMsg;
+    }
+    if (boothMsg) {
+      msg = boothMsg;
+    }
+    if (boothTableMsg) {
+      msg = boothTableMsg;
+    }
+    if (eventMsg) {
+      msg = eventMsg;
+    }
+    if (sessionMsg) {
+      msg = sessionMsg;
+    }
+    if (networkingMsg) {
+      msg = networkingMsg;
+    }
+
+    let msgSentBy;
+
+    if (msg.userId) {
+      msgSentBy = msg.userId;
+    }
+    if (msg.senderId) {
+      msgSentBy = msg.senderId;
+    }
+
+    // Find socketId of msgSender
+
+    const MsgSenderDoc = await UsersInEvent.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(eventId) },
+        { userId: mongoose.Types.ObjectId(msgSentBy) },
+      ],
+    });
+
+    const msgSenderUserDoc = await User.findById(msgSentBy);
+
+    const eventDoc = await Event.findById(eventId);
+
+    msg.warned = true;
+    await msg.save({ new: true, validateModifiedOnly: true });
+
+    // TODO Send warning via mail and notification
+
+    const msgToUser = {
+      to: msgSenderUserDoc.email, // Change to your recipient
+      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      subject: `You have a warning from ${eventDoc.eventName}`,
+      text: `You have got a warning from organisers of ${eventDoc.eventName}. ${warning}`,
+      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    };
+
+    // TODO Generate a notification for user
+
+    sgMail
+      .send(msgToUser)
+      .then(async () => {
+        console.log("Warning notification sent to user");
+      })
+      .catch(async (error) => {
+        console.log("Failed to send warning notification to user.");
+      });
+
+    const msgSenderSocket = MsgSenderDoc.socketId; // ! Socket Id of MsgSender
+
+    io.to(msgSenderSocket).emit("youAreWarned", { warning });
+
+    // Find socketId of person who suspended
+
+    const UserDoc = await UsersInEvent.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(eventId) },
+        { userId: mongoose.Types.ObjectId(userId) },
+      ],
+    });
+
+    const userSocket = UserDoc.socketId; // ! Socket Id of user
+
+    io.to(userSocket).emit("warnedSuccessfully");
+  });
+
+  socket.on(
+    "deleteReportedMsg",
+    async ({ userId, msgId, eventId }, callback) => {
+      // delete msg and send confirmation to user who deleted this message
+
+      const personalMsg = await PersonalChat.findByIdAndUpdate(msgId, {
+        deleted: true,
+      });
+      const tableMsg = await TableChats.findByIdAndUpdate(msgId, {
+        deleted: true,
+      });
+      const boothMsg = await BoothChats.findByIdAndUpdate(msgId, {
+        deleted: true,
+      });
+      const boothTableMsg = await BoothTableChats.findByIdAndUpdate(msgId, {
+        deleted: true,
+      });
+      const eventMsg = await EventChatMessage.findByIdAndUpdate(msgId, {
+        deleted: true,
+      });
+      const sessionMsg = await SessionChatMessage.findByIdAndUpdate(msgId, {
+        deleted: true,
+      });
+      const networkingMsg = await NetworkingRoomChats.findByIdAndUpdate(msgId, {
+        deleted: true,
+      });
+
+      const UserDoc = await UsersInEvent.findOne({
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(userId) },
+        ],
+      });
+
+      const userSocket = UserDoc.socketId; // ! Socket Id of user
+
+      io.to(userSocket).emit("deletedSuccessfully");
+    }
+  );
+
+  socket.on(
+    "reportMsg",
+    async ({ msgId, userId, eventId, reason, msgType }, callback) => {
+      let reportedMsg;
+
+      // Msg Type can be networking, event, private, table, session, booth, boothTable,
+
+      // Find msg and mark as reported
+
+      switch (msgType) {
+        case "event":
+          reportedMsg = await EventChatMessage.findByIdAndUpdate(
+            msgId,
+            { reported: true, reportReason: reason, reportedBy: userId },
+            { new: true, validateModifiedOnly: true }
+          ).populate("replyTo");
+          break;
+        case "private":
+          reportedMsg = await PersonalChat.findByIdAndUpdate(
+            msgId,
+            { reported: true, reportReason: reason, reportedBy: userId },
+            { new: true, validateModifiedOnly: true }
+          ).populate("replyTo");
+          break;
+        case "networking":
+          reportedMsg = await NetworkingRoomChats.findByIdAndUpdate(
+            msgId,
+            { reported: true, reportReason: reason, reportedBy: userId },
+            { new: true, validateModifiedOnly: true }
+          ).populate("replyTo");
+          break;
+        case "session":
+          reportedMsg = await SessionChatMessage.findByIdAndUpdate(
+            msgId,
+            { reported: true, reportReason: reason, reportedBy: userId },
+            { new: true, validateModifiedOnly: true }
+          ).populate("replyTo");
+          break;
+        case "boothTable":
+          reportedMsg = await BoothTableChats.findByIdAndUpdate(
+            msgId,
+            { reported: true, reportReason: reason, reportedBy: userId },
+            { new: true, validateModifiedOnly: true }
+          ).populate("replyTo");
+          break;
+        case "booth":
+          reportedMsg = await BoothChats.findByIdAndUpdate(
+            msgId,
+            { reported: true, reportReason: reason, reportedBy: userId },
+            { new: true, validateModifiedOnly: true }
+          ).populate("replyTo");
+          break;
+        case "table":
+          reportedMsg = await TableChats.findByIdAndUpdate(
+            msgId,
+            { reported: true, reportReason: reason, reportedBy: userId },
+            { new: true, validateModifiedOnly: true }
+          ).populate("replyTo");
+          break;
+
+        default:
+          break;
+      }
+
+      // Find socket Id of person who reported and send a confirmation to him / her
+
+      const UserDoc = await UsersInEvent.findOne({
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(userId) },
+        ],
+      });
+
+      const userSocket = UserDoc.socketId; // ! Socket Id of user
+
+      io.to(userSocket).emit("reportedSuccessfully");
+
+      // Emit event to everyone in this event
+
+      io.in(eventId).emit("msgReported", {
+        reportedMsg: reportedMsg,
+        msgType: msgType,
+      });
+    }
+  );
+
   socket.on("startCloudRecording", async ({ sessionId }, callback) => {
     const channelName = sessionId;
     const isPublisher = false;
@@ -3756,7 +4334,7 @@ io.on("connect", (socket) => {
 
   socket.on(
     "join",
-    (
+    async (
       {
         email,
         eventId,
@@ -3772,6 +4350,52 @@ io.on("connect", (socket) => {
       callback
     ) => {
       socket.join(eventId);
+
+      const eventDoc = await Event.findById(eventId);
+
+      // Make sure to remove this person from people array in event before pushing him/her in again
+
+      eventDoc.people = eventDoc.people.filter(
+        (el) => el._id.toString() !== userId.toString()
+      );
+
+      eventDoc.people.push(userId);
+
+      await eventDoc.save({ new: true, validateModifiedOnly: true });
+
+      // Send updated event to everyone in this event right now
+
+      const updatedEvent = await Event.findById(eventId)
+        .populate({
+          path: "tickets",
+          options: {
+            sort: ["price"],
+          },
+        })
+        .populate("sponsors")
+        .populate("booths")
+        .populate({
+          path: "session",
+          populate: {
+            path: "speaker",
+          },
+        })
+        .populate("speaker")
+        .populate({
+          path: "createdBy",
+          select:
+            "name socialMediaHandles image email superAdmin eventManagers",
+        })
+        .populate({
+          path: "coupon",
+          options: {
+            match: { status: "Active" },
+          },
+        })
+        .populate("hosts")
+        .populate("people");
+
+      io.in(eventId).emit("updatedEvent", { event: updatedEvent });
 
       const fetchCurrentMessages = async (eventId) => {
         const populatedEventChats = await EventChatMessage.find(
@@ -4189,57 +4813,47 @@ io.on("connect", (socket) => {
     }
   );
 
-  socket.on(
-    "transmitEventAlert",
-    async ({
-      alertMsg,
-      eventId,
-      hostId,
-      hostEmail,
-      hostFirstName,
-      hostLastName,
-      hostImage,
-      organisation,
-      designation,
-    }) => {
-      await EventAlert.create(
-        {
-          alertMsg,
-          eventId,
-          hostId,
-          hostEmail,
-          hostFirstName,
-          hostLastName,
-          hostImage,
-          organisation,
-          designation,
-        },
-        async (err, eventAlertDoc) => {
-          if (err) {
-            console.log(err);
-          } else {
-            await Event.findById(eventId, async (err, eventDoc) => {
-              if (err) {
-                console.log(err);
-              } else {
-                eventDoc.alerts.push(eventAlertDoc._id);
+  socket.on("createAlert", async ({ userId, alertText, eventId }, callback) => {
+    // Create and send alert to everyone in this event
 
-                eventDoc.save({ validateModifiedOnly: true }, (err, data) => {
-                  if (err) {
-                    console.log(err);
-                  } else {
-                    io.in(eventId).emit("newEventAlert", {
-                      newAlert: eventAlertDoc,
-                    });
-                  }
-                });
-              }
-            });
-          }
-        }
-      );
-    }
-  );
+    const newAlert = await EventAlert.create({
+      alertMsg: alertText,
+      eventId: eventId,
+      userId: userId,
+      createdAt: Date.now(),
+    });
+
+    const eventAlertDoc = await EventAlert.findById(newAlert._id).populate(
+      "userId"
+    );
+
+    io.in(eventId).emit("newEventAlert", { newAlert: eventAlertDoc });
+  });
+
+  socket.on("deleteAlert", async ({ alertId, userId, eventId }, callback) => {
+    // Mark alert as deleted and emit event to remove this alert from state to everyone in this event
+
+    await EventAlert.findByIdAndUpdate(
+      alertId,
+      { deleted: true },
+      { new: true, validateModifiedOnly: true }
+    );
+
+    // Find socket Id of user who deleted this alert and send him/her a confirmation
+
+    const UserDoc = await UsersInEvent.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(eventId) },
+        { userId: mongoose.Types.ObjectId(userId) },
+      ],
+    });
+
+    const userSocket = UserDoc.socketId; // ! Socket Id of sender
+
+    io.to(userSocket).emit("alertDeletedConfirmed");
+
+    io.in(eventId).emit("deleteAlert", { alertId: alertId });
+  });
 
   socket.on(
     "transmitPersonalMessage",
@@ -4525,6 +5139,47 @@ io.on("connect", (socket) => {
   socket.on("leaveEvent", async ({ userId, eventId }) => {
     socket.leave(eventId);
 
+    const eventDoc = await Event.findById(eventId);
+
+    eventDoc.people = eventDoc.people.filter(
+      (person) => person._id.toString() !== userId.toString()
+    );
+
+    await eventDoc.save({ new: true, validateModifiedOnly: true });
+
+    // Send updated doc to everyone in this event
+
+    const updatedEvent = await Event.findById(eventId)
+      .populate({
+        path: "tickets",
+        options: {
+          sort: ["price"],
+        },
+      })
+      .populate("sponsors")
+      .populate("booths")
+      .populate({
+        path: "session",
+        populate: {
+          path: "speaker",
+        },
+      })
+      .populate("speaker")
+      .populate({
+        path: "createdBy",
+        select: "name socialMediaHandles image email superAdmin eventManagers",
+      })
+      .populate({
+        path: "coupon",
+        options: {
+          match: { status: "Active" },
+        },
+      })
+      .populate("hosts")
+      .populate("people");
+
+    io.in(eventId).emit("updatedEvent", { event: updatedEvent });
+
     await UsersInEvent.findOneAndUpdate(
       {
         $and: [
@@ -4544,30 +5199,6 @@ io.on("connect", (socket) => {
         });
       }
     );
-  });
-
-  socket.on("disconnectUser", ({ userId, eventId }) => {
-    const user = removeUser(userId, eventId);
-
-    const fetchCurrentUsers = async (eventId) => {
-      await Event.findById(eventId, (err, doc) => {
-        if (err) {
-          console.log(err);
-        } else {
-          io.to(eventId).emit("roomData", { users: doc.currentlyInEvent });
-        }
-      })
-        .select("currentlyInEvent")
-        .populate({
-          path: "currentlyInEvent",
-          options: {
-            match: { status: "Active" },
-          },
-        });
-    };
-
-    fetchCurrentUsers(eventId);
-    // socket.leave(eventId);
   });
 
   socket.on("loggingInUser", async ({ email, password }) => {

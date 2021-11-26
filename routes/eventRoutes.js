@@ -141,4 +141,8 @@ router.delete(
 
 router.patch("/:eventId/updateEventBanner", authController.protectCommunity, eventController.uploadEventBanner);
 
+router.post("/:eventId/showInEventLobby", authController.protect, eventController.showInEventLobby);
+
+router.post("/:eventId/hideFromEventLobby", authController.protect, eventController.hideFromEventLobby)
+
 module.exports = router;

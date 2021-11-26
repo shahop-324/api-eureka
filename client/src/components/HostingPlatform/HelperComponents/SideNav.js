@@ -341,7 +341,16 @@ const SideNav = ({
               horizontal: "left",
             }}
           >
-            <MenuItem className="mb-1" disableRipple>
+            <MenuItem
+              onClick={() => {
+                socket.emit("leaveEvent", { userId, eventId }, (error) => {
+                  console.log(error);
+                });
+                handleClose();
+              }}
+              className="mb-1"
+              disableRipple
+            >
               <a
                 target="_blank"
                 rel="noreferrer"

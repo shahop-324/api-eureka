@@ -32,6 +32,10 @@ const SpeakerCardBody = styled.div`
   border-radius: 10px;
   height: auto;
   min-height: 300px;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const SpeakerImg = styled.img`
@@ -56,39 +60,60 @@ const SpeakerDesignationOrg = styled.div`
   font-size: 0.78rem;
 `;
 
-const SpeakerCardComponent = ({name, image, organisation, designation}) => {
+const SpeakerCardComponent = ({
+  name,
+  image,
+  organisation,
+  designation,
+  person,
+}) => {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
   };
 
+  const { userDetails } = useSelector((state) => state.user);
+  let isMe = false;
+
+  if (person._id.toString() === userDetails._id.toString()) {
+    isMe = true;
+  }
+
   return (
     <>
       <SpeakerCardBody className="">
-        <SpeakerImg
-          src={
-            image
-          }
-        ></SpeakerImg>
-
+        <Avatar
+          alt={name}
+          src={image}
+          variant={"rounded"}
+          style={{ height: "210px", width: "100%" }}
+        />
         <div className="p-3">
-          <SpeakerName className="mb-3">{name}</SpeakerName>
-          <SpeakerDesignationOrg className="mb-2">
-            {designation}
-          </SpeakerDesignationOrg>
-          <SpeakerDesignationOrg>{organisation}</SpeakerDesignationOrg>
+          <SpeakerName className="mb-3">
+            {name} {" "} {isMe && <span>(You)</span>}{" "}
+          </SpeakerName>
+          <div className="d-flex flex-row align-items-center justify-content-between">
+            <div>
+              <SpeakerDesignationOrg className="mb-2">
+                {designation}
+              </SpeakerDesignationOrg>
+              <SpeakerDesignationOrg>{organisation}</SpeakerDesignationOrg>
+            </div>
+
+            <button
+              className="btn btn-light btn-outline-text"
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              View profile
+            </button>
+          </div>
         </div>
       </SpeakerCardBody>
 
-      <PersonProfile
-        open={open}
-        handleClose={handleClose}
-        userName={Faker.name.findName()}
-        userImage={Faker.image.avatar()}
-        userOrganisation={"Google Inc."}
-        userDesignation={"VP"}
-      />
+      <PersonProfile open={open} handleClose={handleClose} person={person} />
     </>
   );
 };
@@ -97,8 +122,15 @@ const renderSpeakers = (speakers) => {
   return speakers.map((speaker) => {
     return (
       <SpeakerCardComponent
+        person={speaker}
         name={speaker.firstName + " " + speaker.lastName}
-        image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`}
+        image={
+          speaker.image
+            ? speaker.image.startsWith("https://")
+              ? speaker.image
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`
+            : ""
+        }
         organisation={speaker.organisation}
         designation={speaker.designation}
       />
@@ -121,10 +153,7 @@ const Speakers = () => {
   return (
     <>
       {typeof speakers !== "undefined" && speakers.length > 0 ? (
-        <EventSpeakersGrid>
-          {" "}
-         {renderSpeakers(speakers)}{" "}
-        </EventSpeakersGrid>
+        <EventSpeakersGrid> {renderSpeakers(speakers)} </EventSpeakersGrid>
       ) : (
         <div
           style={{ width: "100%" }}

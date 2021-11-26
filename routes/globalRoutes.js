@@ -399,4 +399,15 @@ router.get(
   globalController.getEventBooth
 );
 
+router.get(
+  "/fetchEventReportedMessages/:eventId",
+  authController.protect,
+  globalController.fetchEventReportedMessages
+);
+
+router.get(
+  "/getHighlightedSessions/:eventId",
+  globalController.getHighlightedSessions
+);
+
 module.exports = router;

@@ -64,6 +64,7 @@ import { communityPageActions } from "./../reducers/communityPageSlice";
 import { reviewActions } from "./../reducers/reviewSlice";
 import { recordingActions } from "./../reducers/recordingSlice";
 import { boothChairsActions } from "../reducers/boothChairsSlice";
+import { reportsActions } from "./../reducers/reportsSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -1115,6 +1116,23 @@ export const fetchEvent = (id) => async (dispatch, getState) => {
     console.log(err.response.data);
   }
 };
+
+export const getHighlightedSessions = (eventId) =>async(dispatch, getState) => {
+  try{
+    const res = await eureka.get(`eureka/v1/getHighlightedSessions/${eventId}`);
+    console.log(res.data);
+    dispatch(
+      sessionActions.FetchHighlightedSessions({
+        sessions: res.data.data,
+      })
+    );
+  }
+  catch(error) {
+    console.log(error);
+    dispatch(showSnackbar("error", "Failed to fetch current session highlights, Please try again"));
+  }
+}
+
 export const errorTrackerForFetchEvent = () => async (dispatch, getState) => {
   dispatch(eventActions.disabledError());
 };
@@ -1397,7 +1415,7 @@ export const updateEventCustomisation =
 
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().communityAuth.token}`,
+            Authorization: `Bearer ${getState().auth.token}`,
           },
         }
       );
@@ -5685,6 +5703,104 @@ export const errorTrackerForfetchEventChats =
     dispatch(eventChatActions.disabledError());
   };
 
+export const updateEventMsg = (msg) => async (dispatch, getState) => {
+  dispatch(
+    eventChatActions.UpdateMsg({
+      msg: msg,
+    })
+  );
+};
+
+export const updateNetworkingMsg = (msg) => async (dispatch, getState) => {
+  dispatch(
+    networkingActions.UpdateMsg({
+      msg: msg,
+    })
+  );
+};
+
+export const updatePersonalMsg = (msg) => async (dispatch, getState) => {
+  dispatch(
+    personalChatActions.UpdateMsg({
+      msg: msg,
+    })
+  );
+};
+
+export const updateTableMsg = (msg) => async (dispatch, getState) => {
+  dispatch(
+    roomsActions.UpdateMsg({
+      msg: msg,
+    })
+  );
+};
+
+export const updateSessionMsg = (msg) => async (dispatch, getState) => {
+  dispatch(
+    sessionChatActions.UpdateMsg({
+      msg: msg,
+    })
+  );
+};
+
+export const updateBoothMsg = (msg) => async (dispatch, getState) => {
+  dispatch(
+    boothActions.UpdateMsg({
+      msg: msg,
+    })
+  );
+};
+
+export const updateBoothTableMsg = (msg) => async (dispatch, getState) => {
+  dispatch(
+    boothChairsActions.UpdateMsg({
+      msg: msg,
+    })
+  );
+};
+
+export const updateReportedMsg = (msg) => async (dispatch, getState) => {
+  dispatch(
+    reportsActions.UpdateReport({
+      report: msg,
+    })
+  );
+};
+
+export const fetchEventReportedMessages =
+  (eventId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}fetchEventReportedMessages/${eventId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+
+      dispatch(
+        reportsActions.FetchReports({
+          reports: res.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to fetch reports, Please try again.")
+      );
+    }
+  };
+
 export const fetchPreviousEventChatMessages =
   (eventId) => async (dispatch, getState) => {
     dispatch(eventChatActions.startLoading());
@@ -6839,6 +6955,14 @@ export const createNewEventAlert = (newAlert) => async (dispatch, getState) => {
   dispatch(
     eventAlertActions.CreateEventAlert({
       eventAlert: newAlert,
+    })
+  );
+};
+
+export const deleteEventAlert = (alertId) => async (dispatch, getState) => {
+  dispatch(
+    eventAlertActions.DeleteEventAlert({
+      alertId: alertId,
     })
   );
 };
@@ -9612,6 +9736,19 @@ export const resetProgress = () => async (dispatch, getState) => {
   }
 };
 
+export const resetSessionPreviewUploadPercent =
+  () => async (dispatch, getState) => {
+    try {
+      dispatch(
+        sessionActions.SetPeviewUploadPercent({
+          percent: 0,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 export const resetEventVideoUploadProgress =
   () => async (dispatch, getState) => {
     try {
@@ -12046,6 +12183,179 @@ export const uploadCommunityCover =
     }
   };
 
+export const uploadSessionPreview =
+  (file, sessionId) => async (dispatch, getState) => {
+    try {
+      // Here we will get updated event
+
+      const key = `${sessionId}/${UUID()}.${file.type}`;
+
+      s3.getSignedUrl(
+        "putObject",
+        { Bucket: "bluemeet-inc", Key: key, ContentType: "image/jpeg" },
+        async (err, presignedURL) => {
+          await uploadS3(presignedURL, file, (percent) => {
+            dispatch(
+              sessionActions.SetPeviewUploadPercent({
+                percent: percent * 1 > 1.2 ? (percent * 1).toFixed(1) : 1.2,
+              })
+            );
+          });
+
+          try {
+            // Edit community
+
+            const res = await fetch(
+              `${BaseURL}sessions/${sessionId}/updateSessionPreview`,
+              {
+                method: "PATCH",
+                body: JSON.stringify({
+                  key: key,
+                }),
+
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${getState().auth.token}`,
+                },
+              }
+            );
+            if (!res.ok) {
+              if (!res.message) {
+                throw new Error("Something went wrong");
+              } else {
+                throw new Error(res.message);
+              }
+            }
+            const result = await res.json();
+
+            dispatch(
+              sessionActions.FetchSession({
+                session: result.data,
+              })
+            );
+
+            dispatch(
+              sessionActions.SetPeviewUploadPercent({
+                percent: 0,
+              })
+            );
+
+            dispatch(
+              showSnackbar("success", "Session Preview updated successfully!")
+            );
+          } catch (error) {
+            console.log(error);
+            dispatch(
+              showSnackbar(
+                "error",
+                "Failed to update preview, Please try again."
+              )
+            );
+            dispatch(
+              sessionActions.SetPeviewUploadPercent({
+                percent: 0,
+              })
+            );
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Updating Preview failed, Please try again.")
+      );
+      dispatch(
+        sessionActions.SetPeviewUploadPercent({
+          percent: 0,
+        })
+      );
+    }
+  };
+
+export const showInEventLobby =
+  (formValues, eventId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}events/${eventId}/showInEventLobby`, {
+        method: "POST",
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      dispatch(
+        eventActions.FetchEvent({
+          event: result.data,
+        })
+      );
+
+      dispatch(showSnackbar("success", "This session is now visible in Lobby"));
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar(
+          "error",
+          "Failed to show in event lobby, Please try again."
+        )
+      );
+    }
+  };
+
+export const hideFromEventLobby =
+  (formValues, eventId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}events/${eventId}/hideFromEventLobby`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            ...formValues,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      dispatch(
+        eventActions.FetchEvent({
+          event: result.data,
+        })
+      );
+
+      dispatch(
+        showSnackbar("success", "This session is now hidden from Lobby")
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to hide from lobby, Please try again.")
+      );
+    }
+  };
+
 export const uploadEventBanner =
   (file, eventId, handleClose) => async (dispatch, getState) => {
     try {
@@ -12116,6 +12426,14 @@ export const uploadEventBanner =
                 "Failed to update banner, Please try again."
               )
             );
+
+            dispatch(
+              eventActions.FetchEventBannerUploadPercent({
+                percent: 0,
+              })
+            );
+
+            handleClose();
           }
         }
       );
@@ -14416,6 +14734,14 @@ export const demoteFromStage = () => async (dispatch, getState) => {
   dispatch(
     eventAccessActions.setSessionRole({
       sessionRole: "attendee",
+    })
+  );
+};
+
+export const fetchUpdatedEvent = (event) => async (dispatch, getState) => {
+  dispatch(
+    eventActions.FetchEvent({
+      event: event,
     })
   );
 };

@@ -18,8 +18,6 @@ import { Link } from "react-router-dom";
 import SwitchCommunity from "../../Dashboard/HelperComponent/SwitchCommunity";
 
 const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
-  
-
   const [openSwitchCommunity, setOpenSwitchCommunity] = useState(false);
 
   const [openCustomise, setOpenCustomise] = useState(false);
@@ -46,7 +44,6 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
     setOpenSwitchCommunity(false);
   };
 
-
   const handleOpenNotificationSettings = () => {
     setOpenNotificationSettings(true);
   };
@@ -54,8 +51,6 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
   const handleCloseNotificationSettings = () => {
     setOpenNotificationSettings(false);
   };
-
-
 
   const handleOpenUpdateProfile = () => {
     setOpenUpdateProfile(true);
@@ -179,7 +174,9 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
             <div
               className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between"
               onClick={() => {
-                socket.emit("leaveEvent", { userId, eventId }, (error) => {console.log(error)});
+                socket.emit("leaveEvent", { userId, eventId }, (error) => {
+                  console.log(error);
+                });
                 history.push("/user/home");
               }}
             >
@@ -216,7 +213,9 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
               <Link
                 to="/home"
                 onClick={() => {
-                  socket.emit("leaveEvent", { userId, eventId }, (error) => {console.log(error)});
+                  socket.emit("leaveEvent", { userId, eventId }, (error) => {
+                    console.log(error);
+                  });
                   dispatch(signOut());
                 }}
                 className="btn btn-outline-danger btn-outline-text"
@@ -242,8 +241,7 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
         openDrawer={openUpdateProfile}
         handleCloseDrawer={handleCloseUpdateProfile}
       />
-      <CameraAndMic
-      />
+      <CameraAndMic />
       <SwitchCommunity
         open={openSwitchCommunity}
         handleClose={handleCloseSwitchCommunity}

@@ -49,55 +49,22 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
 
   const { eventDetails } = useSelector((state) => state.event);
 
-  const [theme, setTheme] = useState(
-    eventDetails && eventDetails.theme ? eventDetails.theme : "dark"
-  );
-  const [liveChat, setLiveChat] = useState(
-    eventDetails && eventDetails.liveChat ? eventDetails.liveChat : true
-  );
-  const [privateChat, setPrivateChat] = useState(
-    eventDetails && eventDetails.privateChat ? eventDetails.privateChat : true
-  );
+  const [theme, setTheme] = useState(eventDetails.theme);
+  const [liveChat, setLiveChat] = useState(eventDetails.liveChat);
+  const [privateChat, setPrivateChat] = useState(eventDetails.privateChat);
   const [peopleInEvent, setPeopleInEvent] = useState(
-    eventDetails && eventDetails.peopleInEvent
-      ? eventDetails.peopleInEvent
-      : true
-  );
-  const [privateMeetings, setPrivateMeetings] = useState(
-    eventDetails && eventDetails.privateMeetings
-      ? eventDetails.privateMeetings
-      : true
-  );
-  const [qna, setQna] = useState(
-    eventDetails && eventDetails.qna ? eventDetails.qna : true
-  );
-  const [attendeeCount, setAttendeeCount] = useState(
-    eventDetails && eventDetails.attendeeCount
-      ? eventDetails.attendeeCount
-      : true
-  );
-  const [emojiReaction, setEmojiReaction] = useState(
-    eventDetails && eventDetails.emojiReaction
-      ? eventDetails.emojiReaction
-      : true
-  );
-  const [review, setReview] = useState(
-    eventDetails && eventDetails.review ? eventDetails.review : true
-  );
-  const [boothEnabled, setBoothEnabled] = useState(
-    eventDetails && eventDetails.boothEnabled ? eventDetails.boothEnabled : true
+    eventDetails.peopleInEvent
   );
 
+  const [review, setReview] = useState(eventDetails.review);
+  const [boothEnabled, setBoothEnabled] = useState(eventDetails.boothEnabled);
+
   const [loungeEnabled, setLoungeEnabled] = useState(
-    eventDetails && eventDetails.loungeEnabled
-      ? eventDetails.loungeEnabled
-      : true
+    eventDetails.loungeEnabled
   );
 
   const [networkingEnabled, setNetworkingEnabled] = useState(
-    eventDetails && eventDetails.networkingEnabled
-      ? eventDetails.networkingEnabled
-      : true
+    eventDetails.networkingEnabled
   );
 
   // TODO Create form values out of these properties
@@ -107,10 +74,6 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
     liveChat,
     privateChat,
     peopleInEvent,
-    privateMeetings,
-    qna,
-    attendeeCount,
-    emojiReaction,
     review,
     boothEnabled,
     loungeEnabled,
@@ -293,36 +256,8 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                 <div className="my-3">
                   <Divider />
                 </div>
-                <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
-                  <div className="hosting-platform-widget-name">
-                    Private Meetings
-                  </div>
-
-                  <div>
-                    <FormGroup row>
-                      <FormControlLabel
-                        control={
-                          <RoyalBlueSwitch
-                            checked={privateMeetings}
-                            onChange={(e) => {
-                              setPrivateMeetings(e.target.checked);
-
-                              let newFormValues = { ...formValues };
-                              newFormValues.privateMeetings = e.target.checked;
-                              dispatch(
-                                updateEventCustomisation(newFormValues, eventId)
-                              );
-                            }}
-                            name="privateMeetings"
-                          />
-                        }
-                      />
-                    </FormGroup>
-                  </div>
-                </div>
-                <div className="my-3">
-                  <Divider />
-                </div>
+               
+             
                 <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
                   <div className="hosting-platform-widget-name">
                     Private chat
@@ -353,94 +288,8 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                 <div className="my-3">
                   <Divider />
                 </div>
-                <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
-                  <div className="hosting-platform-widget-name">Q & A</div>
-
-                  <div>
-                    <FormGroup row>
-                      <FormControlLabel
-                        control={
-                          <RoyalBlueSwitch
-                            checked={qna}
-                            onChange={(e) => {
-                              setQna(e.target.checked);
-
-                              let newFormValues = { ...formValues };
-                              newFormValues.qna = e.target.checked;
-                              dispatch(
-                                updateEventCustomisation(newFormValues, eventId)
-                              );
-                            }}
-                            name="qna"
-                          />
-                        }
-                      />
-                    </FormGroup>
-                  </div>
-                </div>
-                <div className="my-3">
-                  <Divider />
-                </div>
-                <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
-                  <div className="hosting-platform-widget-name">
-                    Attendee count
-                  </div>
-
-                  <div>
-                    <FormGroup row>
-                      <FormControlLabel
-                        control={
-                          <RoyalBlueSwitch
-                            checked={attendeeCount}
-                            onChange={(e) => {
-                              setAttendeeCount(e.target.checked);
-
-                              let newFormValues = { ...formValues };
-                              newFormValues.attendeeCount = e.target.checked;
-                              dispatch(
-                                updateEventCustomisation(newFormValues, eventId)
-                              );
-                            }}
-                            name="attendeeCount"
-                          />
-                        }
-                      />
-                    </FormGroup>
-                  </div>
-                </div>
-                <div className="my-3">
-                  <Divider />
-                </div>
-                <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
-                  <div className="hosting-platform-widget-name">
-                    Emoji reactions on stage
-                  </div>
-
-                  <div>
-                    <FormGroup row>
-                      <FormControlLabel
-                        control={
-                          <RoyalBlueSwitch
-                            checked={emojiReaction}
-                            onChange={(e) => {
-                              setEmojiReaction(e.target.checked);
-
-                              let newFormValues = { ...formValues };
-                              newFormValues.emojiReaction = e.target.checked;
-                              dispatch(
-                                updateEventCustomisation(newFormValues, eventId)
-                              );
-                            }}
-                            name="emojiReaction"
-                          />
-                        }
-                      />
-                    </FormGroup>
-                  </div>
-                </div>
-                <div className="my-3">
-                  <Divider />
-                </div>
+                
+               
                 <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
                   <div className="hosting-platform-widget-name">
                     Bluemeet Feedback Rating

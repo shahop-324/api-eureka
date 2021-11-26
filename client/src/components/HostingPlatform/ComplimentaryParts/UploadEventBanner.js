@@ -91,7 +91,7 @@ const UploadEventBanner = ({ open, handleClose }) => {
   }
 
   const [file, setFile] = useState(null);
-  const [fileToPreview, setFileToPreview] = useState(null);
+  const [fileToPreview, setFileToPreview] = useState(imgUrl);
 
   const onFileChange = (event) => {
     console.log(event.target.files[0]);

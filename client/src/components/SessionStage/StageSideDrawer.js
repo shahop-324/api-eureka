@@ -152,7 +152,7 @@ const PeopleGridComponent = ({ person }) => {
 
   const handleCloseProfile = () => {
     setOpenProfile(false);
-  }
+  };
 
   return (
     <>
@@ -160,10 +160,6 @@ const PeopleGridComponent = ({ person }) => {
         {open && (
           <ChatPopup
             onClick={() => {
-              // dispatch(setVenueRightDrawerSelectedTab("feed"));
-              // dispatch(setChatSelectedTab("private"));
-              // dispatch(setPersonalChatConfig(person._id));
-              // dispatch(setOpenVenueRightDrawer(true));
               setOpenProfile(true);
             }}
             aria-owns={open ? "mouse-over-popover" : undefined}
@@ -223,15 +219,12 @@ const PeopleGridComponent = ({ person }) => {
         </PopOverBox>
       </Popover>
       <PersonProfile
-      hideBtns={true}
-          open={openProfile}
-          userId={person._id}
-          handleClose={handleCloseProfile}
-          userImage={person.image}
-          userName={`${person.firstName} ${person.lastName}`}
-          userOrganisation={person.organisation}
-          userDesignation={person.designation}
-        />
+        hideBtns={true}
+        open={openProfile}
+        userId={person._id}
+        handleClose={handleCloseProfile}
+        person={person}
+      />
     </>
   );
 };
@@ -280,14 +273,11 @@ const PeopleListComponent = ({ person }) => {
           </ViewCompleteProfileBtn>
         </PeopleListWidget>
         <PersonProfile
-         hideBtns={true}
+          hideBtns={true}
           open={open}
           userId={person._id}
           handleClose={handleClose}
-          userImage={person.image}
-          userName={`${person.firstName} ${person.lastName}`}
-          userOrganisation={person.organisation}
-          userDesignation={person.designation}
+          person={person}
         />
       </>
     </>

@@ -3,7 +3,30 @@ import { Avatar } from "@material-ui/core";
 import "./../../../Styles/root.scss";
 import "./../../../Styles/chatComponent.scss";
 
-const ReportedMsg = ({ name, image, msgText }) => {
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
+
+import { useParams } from "react-router";
+
+TimeAgo.addDefaultLocale(en);
+
+// Create formatter (English).
+const timeAgo = new TimeAgo("en-US");
+
+const ReportedMsg = ({
+  name,
+  image,
+  msgText,
+  organisation,
+  designation,
+  timestamp,
+}) => {
+  console.log(name,
+    image,
+    msgText,
+    organisation,
+    designation,
+    timestamp,)
   return (
     <>
       <div className="chat-msg-element py-2">
@@ -27,9 +50,11 @@ const ReportedMsg = ({ name, image, msgText }) => {
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
               >
-                <div>Product Manager, Evenz</div>
+                <div>
+                  {designation} {organisation}
+                </div>
 
-                <div>3m ago</div>
+                {/* <div>{timeAgo.format(timestamp, "round")}</div> */}
               </div>
             </div>
           </div>

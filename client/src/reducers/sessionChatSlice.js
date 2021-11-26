@@ -48,6 +48,11 @@ const sessionChatSlice = createSlice({
         element._id === action.payload.chat._id ? action.payload.chat : element
       );
     },
+    UpdateMsg(state, action) {
+      state.sessionChats = state.sessionChats.map((chat) =>
+        chat._id === action.payload.msg._id ? action.payload.msg : chat
+      );
+    },
   },
 });
 export const sessionChatActions = sessionChatSlice.actions;

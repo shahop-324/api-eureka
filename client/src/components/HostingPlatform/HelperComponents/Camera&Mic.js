@@ -11,7 +11,7 @@ import AgoraRTC from "agora-rtc-sdk-ng";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Tring from "./../../../assets/tring_tring.mp3";
-import { updateRegistrationSettings, setOpenAudioVideoSettings } from "../../../actions";
+import { updateRegistrationSettings, setOpenAudioVideoSettings, fetchEventRegistrations } from "../../../actions";
 
 const styles = {
   control: (base) => ({
@@ -62,12 +62,17 @@ const CameraAndMic = () => {
   const dispatch = useDispatch();
   const params = useParams();
 
+  const eventId = params.eventId;
+
   const { id } = useSelector((state) => state.eventAccessToken);
   const {audioVideoSettings} = useSelector((state) => state.selectedTab);
 
-  const userId = id;
 
-  const eventId = params.eventId;
+  useEffect(() => {
+    dispatch(fetchEventRegistrations(eventId));
+  }, []);
+
+  const userId = id;
 
   let myRegistration;
 

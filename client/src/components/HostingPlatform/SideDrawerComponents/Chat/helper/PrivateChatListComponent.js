@@ -212,7 +212,8 @@ const renderIndividualChatSummary = (
 };
 
 const PrivateChatListComponent = () => {
-  const userId = useSelector((state) => state.eventAccessToken.id);
+  const { userDetails } = useSelector((state) => state.user);
+  const userId = userDetails._id;
   const { peopleInThisEvent } = useSelector((state) => state.user);
   const personalChats = useSelector((state) => state.personalChat.chats);
   const dispatch = useDispatch();
@@ -240,7 +241,14 @@ const PrivateChatListComponent = () => {
               placeholder="Search people..."
               className="form-control"
             ></input>
-            <SearchRoundedIcon style={{position: "absolute", right: "10px", top: "10px", color: "#757575"}} />
+            <SearchRoundedIcon
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "10px",
+                color: "#757575",
+              }}
+            />
           </div>
           {/* //  TODO  */}
           <div className="individual-chat-summary-list">

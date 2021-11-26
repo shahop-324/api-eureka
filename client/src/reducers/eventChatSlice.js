@@ -30,7 +30,12 @@ const eventChatSlice = createSlice({
     CreateEventChat(state, action) {
       state.eventChats.push(action.payload.chat);
       state.isLoading = false;
-    }
+    },
+    UpdateMsg(state, action) {
+      state.eventChats = state.eventChats.map((chat) =>
+        chat._id === action.payload.msg._id ? action.payload.msg : chat
+      );
+    },
   },
 });
 export const eventChatActions = eventChatSlice.actions;

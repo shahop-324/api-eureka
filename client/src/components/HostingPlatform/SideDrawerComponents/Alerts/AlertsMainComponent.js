@@ -17,7 +17,7 @@ const MainChatComponent = (props) => {
           <div className="d-flex flex-column mb-3">
             <div className="event-platform-side-drawer-heading">Alerts</div>
             <div className="setting-tab-sub-text">
-              Alerts from event organiser and Bluemeet
+              Alerts from event organiser
             </div>
           </div>
           <div
@@ -34,36 +34,10 @@ const MainChatComponent = (props) => {
           </div>
         </div>
 
-        <div className="slider-nav-event-platform d-flex flex-row justify-content-between align-items-center py-1 px-2 mb-3">
-          <div
-            onClick={() => {
-              setSelectedTab("event");
-            }}
-            className={`slider-nav-btn ${
-              selectedTab === "event" ? "slider-btn-active" : " "
-            } d-flex flex-row align-items-center justify-content-center`}
-          >
-            Event
-          </div>
-          <div
-            onClick={() => {
-              setSelectedTab("general");
-            }}
-            className={`slider-nav-btn ${
-              selectedTab === "general" ? "slider-btn-active" : " "
-            } d-flex flex-row align-items-center justify-content-center`}
-          >
-            General
-          </div>
-        </div>
-
         {(() => {
           switch (selectedTab) {
             case "event":
               return <EventAlerts />;
-
-            case "general":
-              return <GeneralAlerts />;
 
             default:
               return <div>This is side drawer alerts section.</div>;

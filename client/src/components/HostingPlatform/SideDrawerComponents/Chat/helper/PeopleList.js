@@ -74,9 +74,11 @@ const PeopleList = ({ open, handleClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { peopleInThisEvent } = useSelector((state) => state.user);
+  const { peopleInThisEvent, userDetails } = useSelector((state) => state.user);
 
-  const { id, role } = useSelector((state) => state.eventAccessToken);
+  const userId = userDetails._id;
+
+  const { role } = useSelector((state) => state.eventAccessToken);
 
   const dispatch = useDispatch();
   const params = useParams();
@@ -152,7 +154,7 @@ const PeopleList = ({ open, handleClose }) => {
           </div>
           {/* Here goes list of people */}
 
-          {renderPeople(peopleInThisEvent, id)}
+          {renderPeople(peopleInThisEvent, userId)}
         </div>
       </Dialog>
     </>
