@@ -31,6 +31,13 @@ const responsive = {
   },
 };
 
+const NoContentText = styled.div`
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #212121;
+  text-align: center;
+`;
+
 const BoothPromoCodes = styled.div`
   border-radius: 10px;
   background-color: #ffffff;
@@ -63,7 +70,7 @@ const renderoffers = (offers) => {
   });
 };
 
-const BoothOffers = () => {
+const BoothOffers = ({handleEdit}) => {
   const params = useParams();
   const eventId = params.eventId;
   const dispatch = useDispatch();
@@ -77,14 +84,31 @@ const BoothOffers = () => {
   return (
     <>
       <BoothPromoCodes className="">
-        { offers && <Carousel
-          containerClass="carousel-container-offers"
-          itemClass="carousel-item-offers"
-          responsive={responsive}
-        >
-           { renderoffers(offers)}
-        </Carousel> }
-        
+        {typeof offers !== "undefined" && offers.length > 0 ? (
+          offers && (
+            <Carousel
+              containerClass="carousel-container-offers"
+              itemClass="carousel-item-offers"
+              responsive={responsive}
+            >
+              {renderoffers(offers)}
+            </Carousel>
+          )
+        ) : (
+          <div
+            className="d-flex flex-column align-items-center justify-content-center"
+            style={{ height: "100%", width: "100%" }}
+          >
+            <NoContentText className="mb-3">
+              No Promo codes or offers found
+            </NoContentText>
+            <button onClick={() => {
+              handleEdit();
+            }} className="btn btn-outline-text btn-dark">
+              Add promo codes
+            </button>
+          </div>
+        )}
       </BoothPromoCodes>
     </>
   );

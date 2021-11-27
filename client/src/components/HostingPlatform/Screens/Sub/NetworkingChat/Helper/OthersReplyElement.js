@@ -219,6 +219,7 @@ const OthersReplyElement = ({
         </div>
       </div>
       <ReportMsg
+        timestamp={replierTimestamp}
         name={replierName}
         image={replierImage}
         msgText={replierMsg}
@@ -243,5 +244,3 @@ const OthersReplyElement = ({
 };
 
 export default OthersReplyElement;
-
-

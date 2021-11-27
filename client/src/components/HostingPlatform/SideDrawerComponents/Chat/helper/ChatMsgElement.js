@@ -26,6 +26,7 @@ const ChatMsgElement = ({
   showOptions,
   timestamp,
   chatMsgId,
+  type,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -135,6 +136,7 @@ const ChatMsgElement = ({
 
       {/*  */}
       <ReportMsg
+      type={type}
         name={name}
         timestamp={timestamp}
         msgId={chatMsgId}

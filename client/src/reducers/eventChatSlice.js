@@ -32,6 +32,7 @@ const eventChatSlice = createSlice({
       state.isLoading = false;
     },
     UpdateMsg(state, action) {
+      console.log(action.payload.msg);
       state.eventChats = state.eventChats.map((chat) =>
         chat._id === action.payload.msg._id ? action.payload.msg : chat
       );

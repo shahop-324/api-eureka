@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import socket from "./../../service/socket";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
@@ -6,6 +9,13 @@ import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import "./../../Styles/report.scss";
 import { Avatar, IconButton } from "@material-ui/core";
 import Select from "react-select";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
+
+TimeAgo.addDefaultLocale(en);
+
+// Create formatter (English).
+const timeAgo = new TimeAgo("en-US");
 
 const styles = {
   control: (base) => ({
@@ -36,7 +46,14 @@ const reportOptions = [
   { value: "Other", label: "Other" },
 ];
 
-const MsgElement = ({ name, image, msgText }) => {
+const MsgElement = ({
+  name,
+  image,
+  msgText,
+  timestamp,
+  designation,
+  organisation,
+}) => {
   return (
     <>
       <div
@@ -66,9 +83,11 @@ const MsgElement = ({ name, image, msgText }) => {
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
               >
-                <div>Product Manager, Evenz</div>
+                <div>
+                  {designation} {organisation}
+                </div>
 
-                <div>3m ago</div>
+                <div>{timeAgo.format(new Date(timestamp), "round")}</div>
               </div>
             </div>
           </div>
@@ -89,9 +108,26 @@ const MsgElement = ({ name, image, msgText }) => {
   );
 };
 
-const ReportMsg = ({ name, image, msgText, open, handleClose }) => {
+const ReportMsg = ({
+  name,
+  image,
+  msgText,
+  open,
+  handleClose,
+  timestamp,
+  msgId,
+}) => {
+  const params = useParams();
+  const eventId = params.eventId;
+
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [reason, setReason] = useState(null);
+
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userId = userDetails._id;
 
   return (
     <>
@@ -123,7 +159,12 @@ const ReportMsg = ({ name, image, msgText, open, handleClose }) => {
 
           {/* <ChatMsgElement /> */}
           <div className="msg-to-report-container p-3 mb-4">
-            <MsgElement name={name} image={image} msgText={msgText} />
+            <MsgElement
+              name={name}
+              image={image}
+              msgText={msgText}
+              timestamp={timestamp}
+            />
           </div>
 
           <div
@@ -139,7 +180,10 @@ const ReportMsg = ({ name, image, msgText, open, handleClose }) => {
             </label>
             <Select
               name="eventName"
-              // placeholder="What's wrong?"
+              onChange={(event) => {
+                setReason(event);
+              }}
+              value={reason}
               styles={styles}
               menuPlacement="top"
               options={reportOptions}
@@ -151,6 +195,22 @@ const ReportMsg = ({ name, image, msgText, open, handleClose }) => {
             style={{ border: "none" }}
           >
             <button
+              onClick={() => {
+                socket.emit(
+                  "reportMsg",
+                  {
+                    msgId,
+                    userId,
+                    eventId,
+                    reason: reason.value,
+                    msgType: "table",
+                  },
+                  (error) => {
+                    alert(error);
+                  }
+                );
+                handleClose();
+              }}
               className="btn btn-primary btn-outline-text"
               style={{ width: "100%" }}
             >

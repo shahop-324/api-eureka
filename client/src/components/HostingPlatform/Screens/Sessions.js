@@ -5,7 +5,10 @@ import "./../Styles/sessions.scss";
 import SessionDetailCardsList from "../HelperComponents/SessionDetailCardsList";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { fetchSessionsForUser } from "../../../actions";
+import {
+  fetchSessionsForUser,
+  fetchSessionSpeakersTagsTracks,
+} from "../../../actions";
 
 import socket from "./../service/socket";
 import Loader from "../../Loader";
@@ -76,12 +79,6 @@ const StyledInputBase = MUIStyled(InputBase)(({ theme }) => ({
   },
 }));
 
-const Tags = styled.span`
-  font-weight: 500;
-  font-size: 0.9rem;
-  color: #152d35;
-`;
-
 const Sessions = () => {
   const dispatch = useDispatch();
 
@@ -96,7 +93,9 @@ const Sessions = () => {
   const role = useSelector((state) => state.eventAccessToken.role);
   const id = useSelector((state) => state.eventAccessToken.id);
 
-  const sessions = useSelector((state) => state.session.sessions);
+  const { sessions, tags, tracks, speakers } = useSelector(
+    (state) => state.session
+  );
 
   const params = useParams();
 
@@ -105,6 +104,7 @@ const Sessions = () => {
 
   useEffect(() => {
     dispatch(fetchSessionsForUser(eventId));
+    dispatch(fetchSessionSpeakersTagsTracks(eventId));
   }, [dispatch, eventId]);
 
   if (isLoading) {
@@ -147,13 +147,17 @@ const Sessions = () => {
         <div className="">
           <div className="schedule-filter-grid d-flex flex-row align-items-center justify-content-end">
             <div style={{ width: "200px" }}>
-              <Select styles={styles} options={[]} placeholder="Speakers" />{" "}
+              <Select
+                styles={styles}
+                options={speakers}
+                placeholder="Speakers"
+              />{" "}
             </div>
             <div style={{ width: "200px" }}>
-              <Select styles={styles} options={[]} placeholder="tracks" />
+              <Select styles={styles} options={tracks} placeholder="tracks" />
             </div>
             <div style={{ width: "200px" }}>
-              <Select styles={styles} options={[]} placeholder="tags" />
+              <Select styles={styles} options={tags} placeholder="tags" />
             </div>
           </div>
         </div>

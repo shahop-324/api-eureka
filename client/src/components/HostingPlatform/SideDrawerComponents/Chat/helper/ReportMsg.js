@@ -117,6 +117,7 @@ const ReportMsg = ({
   open,
   handleClose,
   timestamp,
+  type,
 }) => {
   const params = useParams();
   const eventId = params.eventId;
@@ -204,7 +205,7 @@ const ReportMsg = ({
                     userId,
                     eventId,
                     reason: reason.value,
-                    msgType: "event",
+                    msgType: type,
                   },
                   (error) => {
                     alert(error);

@@ -148,10 +148,11 @@ const IncomingChatMsgElement = ({
 
       {/*  */}
       <ReportMsg
+        msgId={chatMsgId}
+        timestamp={timestamp}
         name={name}
         image={image}
         msgText={msgText}
-        msgId={chatMsgId}
         open={open}
         handleClose={handleClose}
       />

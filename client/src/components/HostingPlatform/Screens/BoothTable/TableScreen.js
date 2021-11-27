@@ -198,7 +198,7 @@ const TableScreen = ({
 
   let options = {
     // Pass your app ID here.
-    appId: "702d57c3092c4fd389eb7ea5a505d471",
+    appId: "915628d494484dac856cba48faa55ccb",
     // Set the channel name.
     channel: table,
     // Set the user role in the channel.

@@ -73,7 +73,14 @@ const renderVideos = (videos) => {
   });
 };
 
-const BoothVideos = () => {
+const NoContentText = styled.div`
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #212121;
+  text-align: center;
+`;
+
+const BoothVideos = ({handleEdit}) => {
   const params = useParams();
   const eventId = params.eventId;
   const dispatch = useDispatch();
@@ -87,14 +94,28 @@ const BoothVideos = () => {
   return (
     <>
       <VideosContainer className="d-flex flex-column justify-content-center">
-        {videos && (
-          <Carousel
-            containerClass="carousel-container-video"
-            itemClass="carousel-item-video"
-            responsive={responsive}
+        {typeof videos !== "undefined" && videos.length > 0 ? (
+          videos && (
+            <Carousel
+              containerClass="carousel-container-video"
+              itemClass="carousel-item-video"
+              responsive={responsive}
+            >
+              {renderVideos(videos)}
+            </Carousel>
+          )
+        ) : (
+          <div
+            className="d-flex flex-column align-items-center justify-content-center"
+            style={{ height: "100%", width: "100%" }}
           >
-            {renderVideos(videos)}
-          </Carousel>
+            <NoContentText className="mb-3">No Videos found</NoContentText>
+            <button onClick={() => {
+              handleEdit();
+            }} className="btn btn-outline-text btn-dark">
+              Upload videos
+            </button>
+          </div>
         )}
       </VideosContainer>
     </>

@@ -13,15 +13,12 @@ import NoContent from "../NoContent";
 import NoSession from "./../../../assets/images/NoSession.svg";
 import NoSposnors from "./../../../assets/images/NoSponsor.svg";
 import {
-  fetchEvent,
-  fetchSessionsForUser,
+  fetchCommunity,
   getHighlightedSessions,
-  navigationIndexForHostingPlatform,
   setSessionRoleAndJoinSession,
   getRTCTokenAndSession,
 } from "../../../actions";
 import { useParams } from "react-router";
-import history from "./../../../history";
 
 const HostedByCard = styled.div`
   width: 100%;
@@ -385,53 +382,53 @@ const SessionComponent = ({ session }) => {
               </div>
             </div>
 
-<div>
-            <button
-              onClick={() => {
-                // alert(channel)
-                dispatch(
-                  getRTCTokenAndSession(
-                    session._id,
-                    channel,
-                    sessionRole,
-                    eventId,
-                    communityId
-                  )
-                );
+            <div>
+              <button
+                onClick={() => {
+                  // alert(channel)
+                  dispatch(
+                    getRTCTokenAndSession(
+                      session._id,
+                      channel,
+                      sessionRole,
+                      eventId,
+                      communityId
+                    )
+                  );
 
-                // Join session channel
+                  // Join session channel
 
-                socket.emit(
-                  "joinSession",
-                  {
-                    sessionId: session._id,
-                    userId: userId,
-                    sessionRole: sessionRole,
-                    userName: `${userDetails.firstName} ${userDetails.lastName}`,
-                    userEmail: userDetails.email,
-                    userImage: userDetails.image,
-                    userCity: userDetails.city,
-                    userCountry: userDetails.country,
-                    userOrganisation: userDetails.organisation,
-                    userDesignation: userDetails.designation,
-                    roleToBeDisplayed: role,
-                  },
-                  (error) => {
-                    if (error) {
-                      alert(error);
+                  socket.emit(
+                    "joinSession",
+                    {
+                      sessionId: session._id,
+                      userId: userId,
+                      sessionRole: sessionRole,
+                      userName: `${userDetails.firstName} ${userDetails.lastName}`,
+                      userEmail: userDetails.email,
+                      userImage: userDetails.image,
+                      userCity: userDetails.city,
+                      userCountry: userDetails.country,
+                      userOrganisation: userDetails.organisation,
+                      userDesignation: userDetails.designation,
+                      roleToBeDisplayed: role,
+                    },
+                    (error) => {
+                      if (error) {
+                        alert(error);
+                      }
                     }
-                  }
-                );
+                  );
 
-                dispatch(setSessionRoleAndJoinSession(sessionRole));
-              }}
-              className="btn btn-outline-text btn-primary"
-              style={{
-                width: "100%",
-              }}
-            >
-              Join
-            </button>
+                  dispatch(setSessionRoleAndJoinSession(sessionRole));
+                }}
+                className="btn btn-outline-text btn-primary"
+                style={{
+                  width: "100%",
+                }}
+              >
+                Join
+              </button>
             </div>
           </div>
         </SessionPlaybackPreview>
@@ -556,6 +553,7 @@ const About = () => {
 
   useEffect(() => {
     dispatch(getHighlightedSessions(eventId));
+    dispatch(fetchCommunity(communityId));
   }, [dispatch, eventId]);
 
   if (!communityDetails) {

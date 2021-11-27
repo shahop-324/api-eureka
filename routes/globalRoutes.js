@@ -220,6 +220,8 @@ router.get("/getPeopleOnBoothTable/:tableId", globalController.getPeopleOnBoothT
 
 router.get("/getPeopleOnLoungeTable/:tableId", globalController.getPeopleOnLoungeTable);
 
+router.get("/getSessionSpeakersTagsTracks/:eventId", globalController.getSessionSpeakersTagsTracks);
+
 router.get(
   "/getMyAllPersonalChatMsg/:userId",
   globalController.getMyAllPersonalChatMsg

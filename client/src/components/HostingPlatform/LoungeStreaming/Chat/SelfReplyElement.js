@@ -158,39 +158,42 @@ const SelfReplyElement = ({
 
               {/*  Make a light container with dark text, show image, name, org, designation but not timestamp */}
 
-
               <div
-            className=" mb-2"
-            style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
-          >
-            <Avatar src={originalImage} alt={originalName} variant="rounded" />
-            <div
-              className="chat-box-name ms-3"
-              style={{
-                textTransform: "capitalize",
-                fontFamily: "Ubuntu",
-                color: "#fff",
-              }}
-            >
-              <div style={{ color: "#E0E0E0" }}>{originalName}</div>
-
-              <div
-                style={{
-                  fontWeight: "500",
-                  color: "#FFFFFF",
-                  fontSize: "0.7rem",
-                }}
-                className="d-flex flex-row align-items-center justify-content-between"
+                className=" mb-2"
+                style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
               >
-                <div style={{ color: "#E0E0E0" }}>
-                  {originalDesignation}, {originalOrganisation}
-                </div>
-                <div style={{ color: "#212121" }}>
-                  {/* {timeAgo.format(new Date(timestamp) , "round")} */}
+                <Avatar
+                  src={originalImage}
+                  alt={originalName}
+                  variant="rounded"
+                />
+                <div
+                  className="chat-box-name ms-3"
+                  style={{
+                    textTransform: "capitalize",
+                    fontFamily: "Ubuntu",
+                    color: "#fff",
+                  }}
+                >
+                  <div style={{ color: "#E0E0E0" }}>{originalName}</div>
+
+                  <div
+                    style={{
+                      fontWeight: "500",
+                      color: "#FFFFFF",
+                      fontSize: "0.7rem",
+                    }}
+                    className="d-flex flex-row align-items-center justify-content-between"
+                  >
+                    <div style={{ color: "#E0E0E0" }}>
+                      {originalDesignation}, {originalOrganisation}
+                    </div>
+                    <div style={{ color: "#212121" }}>
+                      {/* {timeAgo.format(new Date(timestamp) , "round")} */}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
               <OriginalMsgPaper
                 style={{ color: "#212121" }}
                 className="px-3 py-2 mb-3"
@@ -204,7 +207,7 @@ const SelfReplyElement = ({
         </div>
       </div>
       <DeleteMsg
-      tableId={tableId}
+        tableId={tableId}
         name={replierName}
         image={replierImage}
         msgText={replierMsg}
@@ -220,6 +223,3 @@ const SelfReplyElement = ({
 };
 
 export default SelfReplyElement;
-
-
-

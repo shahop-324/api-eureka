@@ -34,6 +34,7 @@ const Coupon = require("./../models/couponModel");
 const Ticket = require("./../models/ticketModel");
 const Booth = require("./../models/boothModel");
 const Review = require("./../models/reviewModel");
+const Track = require("./../models/trackModel");
 
 const EventChatMessage = require("./../models/eventChatMessageModel");
 const SessionChats = require("./../models/sessionChatMessageModel");
@@ -295,8 +296,8 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const isPublisher = req.body.role === "host" ? true : false;
 
-  const appID = "702d57c3092c4fd389eb7ea5a505d471";
-  const appCertificate = "d8311f38cf434445805478cb8c93a334";
+  const appID = "915628d494484dac856cba48faa55ccb";
+  const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
   const channelName = channel;
   const uid = userId;
   const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
@@ -339,8 +340,8 @@ exports.getLiveStageToken = catchAsync(async (req, res, next) => {
     const channel = `${req.body.sessionId}-live`;
     const userId = req.user._id;
 
-    const appID = "702d57c3092c4fd389eb7ea5a505d471";
-    const appCertificate = "d8311f38cf434445805478cb8c93a334";
+    const appID = "915628d494484dac856cba48faa55ccb";
+    const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
     const channelName = channel;
     const uid = userId;
     const role = RtcRole.PUBLISHER;
@@ -387,8 +388,8 @@ exports.getBackstageToken = catchAsync(async (req, res, next) => {
     const channel = `${req.body.sessionId}-back`;
     const userId = req.user._id;
 
-    const appID = "702d57c3092c4fd389eb7ea5a505d471";
-    const appCertificate = "d8311f38cf434445805478cb8c93a334";
+    const appID = "915628d494484dac856cba48faa55ccb";
+    const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
     const channelName = channel;
     const uid = userId;
     const role = RtcRole.PUBLISHER;
@@ -436,8 +437,8 @@ exports.generateLiveStreamingTokenForJoiningTable = catchAsync(
     const userId = req.body.userId;
     const isPublisher = true;
 
-    const appID = "702d57c3092c4fd389eb7ea5a505d471";
-    const appCertificate = "d8311f38cf434445805478cb8c93a334";
+    const appID = "915628d494484dac856cba48faa55ccb";
+    const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
     const channelName = tableId;
     const uid = userId;
     const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
@@ -472,8 +473,8 @@ exports.getTokenForBoothTable = catchAsync(async (req, res, next) => {
   const userId = req.body.userId;
   const isPublisher = true;
 
-  const appID = "702d57c3092c4fd389eb7ea5a505d471";
-  const appCertificate = "d8311f38cf434445805478cb8c93a334";
+  const appID = "915628d494484dac856cba48faa55ccb";
+  const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
   const channelName = tableId;
   const uid = userId;
   const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
@@ -510,8 +511,8 @@ exports.getLiveStreamingTokenForNetworking = catchAsync(
 
       console.log(roomId, userId, "Room Id", "User Id");
 
-      const appID = "702d57c3092c4fd389eb7ea5a505d471";
-      const appCertificate = "d8311f38cf434445805478cb8c93a334";
+      const appID = "915628d494484dac856cba48faa55ccb";
+      const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
 
       const channelName = roomId;
       const uid = userId;
@@ -553,8 +554,8 @@ exports.generateTokenForLiveStreamingForNonUser = catchAsync(
     const userId = req.body.userId;
     const isPublisher = req.body.role === "host" ? true : false;
 
-    const appID = "702d57c3092c4fd389eb7ea5a505d471";
-    const appCertificate = "d8311f38cf434445805478cb8c93a334";
+    const appID = "915628d494484dac856cba48faa55ccb";
+    const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
     const channelName = channel;
     const uid = userId;
     const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
@@ -590,8 +591,8 @@ exports.generateTokenForLiveStreamingForScreenShare = catchAsync(
     const channel = req.body.channel;
     const myUID = req.body.uid;
 
-    const appID = "702d57c3092c4fd389eb7ea5a505d471";
-    const appCertificate = "d8311f38cf434445805478cb8c93a334";
+    const appID = "915628d494484dac856cba48faa55ccb";
+    const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
     const channelName = channel;
     const uid = myUID;
     const role = RtcRole.PUBLISHER;
@@ -627,8 +628,8 @@ exports.generateTokenForBoothScreenShare = catchAsync(
     const channel = req.body.channel;
     const myUID = req.body.uid;
 
-    const appID = "702d57c3092c4fd389eb7ea5a505d471";
-    const appCertificate = "d8311f38cf434445805478cb8c93a334";
+    const appID = "915628d494484dac856cba48faa55ccb";
+    const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
     const channelName = channel;
     const uid = myUID;
     const role = RtcRole.PUBLISHER;
@@ -1077,8 +1078,8 @@ exports.getCommunityTransactions = catchAsync(async (req, res, next) => {
 exports.acquireRecordingResource = catchAsync(async (req, res, next) => {
   const channelName = req.params.channelName;
   const isPublisher = false;
-  const appID = "702d57c3092c4fd389eb7ea5a505d471";
-  const appCertificate = "d8311f38cf434445805478cb8c93a334";
+  const appID = "915628d494484dac856cba48faa55ccb";
+  const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
   const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
 
   const expirationTimeInSeconds = 3600;
@@ -2769,14 +2770,14 @@ exports.getPeopleOnBoothTable = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getPeopleOnLoungeTable = catchAsync(async(req, res, next) => {
+exports.getPeopleOnLoungeTable = catchAsync(async (req, res, next) => {
   const tableId = req.params.tableId;
 
-  const roomTableDoc = await RoomTable.findOne({tableId: tableId});
+  const roomTableDoc = await RoomTable.findOne({ tableId: tableId });
 
   let people = [];
 
-  if(roomTableDoc) {
+  if (roomTableDoc) {
     for (let element of roomTableDoc.onStagePeople) {
       const userDoc = await User.findById(element.user);
       if (userDoc) {
@@ -2785,9 +2786,64 @@ exports.getPeopleOnLoungeTable = catchAsync(async(req, res, next) => {
     }
   }
 
-
   res.status(200).json({
     status: "success",
     data: people,
   });
-})
+});
+
+exports.getSessionSpeakersTagsTracks = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  // Session Tags , session Tracks , Session speakers
+
+  const eventDoc = await Event.findById(eventId);
+
+  const sessions = await Session.find({
+    eventId: mongoose.Types.ObjectId(eventId),
+  });
+
+  const allTags = [];
+
+  for (let element of sessions) {
+    allTags.push(element.tags);
+  }
+
+  const [uniqTags] = Array.from(new Set(allTags));
+
+  let processedTags = [];
+
+  for (let item of uniqTags) {
+    console.log(item);
+    processedTags.push({ value: item, label: item });
+  }
+
+  const tracks = await Track.find({
+    eventId: mongoose.Types.ObjectId(eventId),
+  });
+
+  const processedTracks = tracks.map((track) => {
+    return {
+      value: track._id,
+      label: track.name,
+    };
+  });
+
+  const speakers = await Speaker.find({
+    eventId: mongoose.Types.ObjectId(eventId),
+  });
+
+  const processedSpeakers = speakers.map((speaker) => {
+    return {
+      value: speaker._id,
+      label: `${speaker.firstName} ${speaker.lastName}`,
+    };
+  });
+
+  res.status(200).json({
+    status: "success",
+    tags: processedTags,
+    tracks: processedTracks,
+    speakers: processedSpeakers,
+  });
+});

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
-import {useParams} from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import Faker from "faker";
 import { Avatar } from "@material-ui/core";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
@@ -10,7 +10,10 @@ import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import OneOnOneMsgInput from "./OneOnOneMsgInput";
 import ChatMsgElement from "./ChatMsgElement";
 import OutgoingChatMsgElement from "./OutgoingChatElement";
-import { setPersonalChatConfig, getPeopleInEvent } from "../../../../../actions";
+import {
+  setPersonalChatConfig,
+  getPeopleInEvent,
+} from "../../../../../actions";
 
 const renderMessages = (chats, receiverId, createReplyWidget) => {
   console.log(chats);
@@ -55,6 +58,7 @@ const renderMessages = (chats, receiverId, createReplyWidget) => {
         console.log(chat);
         return (
           <ChatMsgElement
+          type="private"
             createReplyWidget={createReplyWidget}
             name={chat.senderName}
             image={
@@ -74,15 +78,10 @@ const renderMessages = (chats, receiverId, createReplyWidget) => {
 };
 
 const IndividualChat = ({ handleOpen, handleOpenVideoOptions }) => {
-
   const params = useParams();
   const eventId = params.eventId;
-
   const { id, chats } = useSelector((state) => state.personalChat);
-
   const { peopleInThisEvent } = useSelector((state) => state.user);
-
-
 
   const requiredPerson = peopleInThisEvent.find(
     (element) => element.bookedByUser === id
@@ -92,7 +91,6 @@ const IndividualChat = ({ handleOpen, handleOpenVideoOptions }) => {
 
   const dispatch = useDispatch();
 
-  
   useEffect(() => {
     dispatch(getPeopleInEvent(eventId));
   }, []);
@@ -130,14 +128,16 @@ const IndividualChat = ({ handleOpen, handleOpenVideoOptions }) => {
     setTimestamp(null);
   };
 
-  if(!requiredPerson) {
-    return <></>
+  if (!requiredPerson) {
+    return <></>;
   }
 
   const profileName = requiredPerson.userName;
-  const profileImage = requiredPerson.userImage ? requiredPerson.userImage.startsWith("https://")
-    ? requiredPerson.userImage
-    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${requiredPerson.userImage}` : "";
+  const profileImage = requiredPerson.userImage
+    ? requiredPerson.userImage.startsWith("https://")
+      ? requiredPerson.userImage
+      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${requiredPerson.userImage}`
+    : "";
   const profileOrganisation = requiredPerson.userOrganisation;
   const profileDesigantion = requiredPerson.userDesignation;
   const profileStatus = requiredPerson.status;

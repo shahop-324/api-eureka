@@ -75,7 +75,7 @@ router.get(
 
 router.get(
   "/:id/getCommunity",
-  authController.protectCommunity,
+  authController.protect,
   communityController.getParticularCommunity
 );
 

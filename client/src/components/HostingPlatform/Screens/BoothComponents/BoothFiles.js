@@ -21,6 +21,13 @@ const Files = styled.div`
   align-items: center;
 `;
 
+const NoContentText = styled.div`
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #212121;
+  text-align: center;
+`;
+
 const FileTab = styled.div`
   border-radius: 20px;
   border: 1px solid #b9b9b9;
@@ -88,7 +95,7 @@ const renderLinks = (links) => {
   });
 };
 
-const BoothFiles = () => {
+const BoothFiles = ({handleEdit}) => {
   const params = useParams();
   const eventId = params.eventId;
   const dispatch = useDispatch();
@@ -103,7 +110,7 @@ const BoothFiles = () => {
   return (
     <>
       <Files className="py-3">
-        <div
+        {(typeof files !== "undefined" && files.length > 0 )&& (typeof links !== "undefined" && links.length > 0 )? <div
           className=""
           style={{
             height: "240px",
@@ -115,7 +122,20 @@ const BoothFiles = () => {
         >
           { files && renderFiles(files)}
           { links && renderLinks(links)}
-        </div>
+        </div> :  <div
+        className="d-flex flex-column align-items-center justify-content-center"
+        style={{ height: "100%", width: "100%" }}
+      >
+        <NoContentText className="mb-3">
+          No Downloadable assets or links found
+        </NoContentText>
+        <button onClick={() => {
+              handleEdit();
+            }} className="btn btn-outline-text btn-dark">
+          Add Files & Links
+        </button>
+      </div> }
+        
       </Files>
     </>
   );

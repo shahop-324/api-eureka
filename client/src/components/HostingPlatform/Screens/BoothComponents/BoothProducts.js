@@ -17,6 +17,13 @@ const ProductsContainer = styled.div`
   width: 100%;
 `;
 
+const NoContentText = styled.div`
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #212121;
+  text-align: center;
+`;
+
 const ProductCard = styled.div`
   border-radius: 20px;
   height: 230px;
@@ -82,7 +89,7 @@ const renderProducts = (products) => {
   });
 };
 
-const BoothProducts = () => {
+const BoothProducts = ({handleEdit}) => {
   const params = useParams();
   const eventId = params.eventId;
   const dispatch = useDispatch();
@@ -91,21 +98,36 @@ const BoothProducts = () => {
 
   useEffect(() => {
     dispatch(fetchBoothProducts(currentBoothId, eventId));
-    
   }, []);
 
   return (
     <>
-      
       <ProductsContainer className="d-flex flex-column justify-content-center">
-        {products && <Carousel
-          containerClass="carousel-container-products"
-          itemClass="carousel-item-products"
-          responsive={responsive}
-        >
-        {renderProducts(products)}
-        </Carousel>}
-      
+        {typeof products !== "undefined" && products.length > 0 ? (
+          products && (
+            <Carousel
+              containerClass="carousel-container-products"
+              itemClass="carousel-item-products"
+              responsive={responsive}
+            >
+              {renderProducts(products)}
+            </Carousel>
+          )
+        ) : (
+          <div
+            className="d-flex flex-column align-items-center justify-content-center"
+            style={{ height: "100%", width: "100%" }}
+          >
+            <NoContentText className="mb-3">
+              No Product or services found
+            </NoContentText>
+            <button onClick={() => {
+              handleEdit();
+            }} className="btn btn-outline-text btn-dark">
+              Add product
+            </button>
+          </div>
+        )}
       </ProductsContainer>
     </>
   );

@@ -3878,7 +3878,7 @@ export const fetchCommunity = (id) => async (dispatch, getState) => {
 
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getState().communityAuth.token}`,
+        Authorization: `Bearer ${getState().auth.token}`,
       },
     });
 
@@ -14959,5 +14959,45 @@ export const fetchPeopleOnLoungeTable =
       dispatch(
         showSnackbar("error", "Falied to fetch people, Please try again")
       );
+    }
+  };
+
+export const fetchSessionSpeakersTagsTracks =
+  (eventId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}getSessionSpeakersTagsTracks/${eventId}`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+
+      res = await res.json();
+
+      console.log(res);
+
+      dispatch(
+        sessionActions.FetchTracks({
+          tracks: res.tracks,
+        })
+      );
+      dispatch(
+        sessionActions.FetchTags({
+          tags: res.tags,
+        })
+      );
+      dispatch(
+        sessionActions.FetchSpeakers({
+          speakers: res.speakers,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar("error", "Failed to fetch filters"));
     }
   };

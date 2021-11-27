@@ -43,10 +43,18 @@ import {
   fetchBooth,
   fetchBusinessCards,
   fetchBoothChairs,
+  updateBoothChats,
 } from "./../../../actions";
 
 const ChatContainer = styled.div`
   width: 450px;
+`;
+
+const NoContentText = styled.div`
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #212121;
+  text-align: center;
 `;
 
 const ThemedBackgroundButtonOutlined = styled.div`
@@ -152,6 +160,12 @@ const BoothArea = () => {
         loadGoogleAnalytics();
       }
     }
+
+    socket.on("newBoothMsg", ({ chats }) => {
+      // alert("There is a new booth Message")
+      dispatch(updateBoothChats(chats)); // TODO Here we have to dispatch all chats using action creator
+    });
+
     socket.on("boothChairData", ({ roomChairs }) => {
       dispatch(fetchBoothChairs(roomChairs));
     });
@@ -228,6 +242,10 @@ const BoothArea = () => {
   if (sharedEmail.includes(userId)) {
     businessCardShared = true;
   }
+
+  const handleEdit = () => {
+    setOpenEdit(true);
+  };
 
   return (
     <>
@@ -423,39 +441,60 @@ const BoothArea = () => {
         </div>
 
         <BasicGrid className="mb-5">
-          <BoothVideos />
+          <BoothVideos handleEdit={handleEdit} />
           <GetInTouchCard className="p-4">
-            <div className="d-flex flex-row align-items-center pb-3 px-2">
-              <MailOutlineRoundedIcon />
-              <a
-                href={`mailto:${boothDetails.contactEmail}`}
-                style={{ textDecoration: "none" }}
+            {boothDetails.contactEmail && boothDetails.contactNumber ? (
+              <>
+                {" "}
+                <div className="d-flex flex-row align-items-center pb-3 px-2">
+                  <MailOutlineRoundedIcon />
+                  <a
+                    href={`mailto:${boothDetails.contactEmail}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <ContactInfo className="ms-3">
+                      {truncateText(boothDetails.contactEmail, 25)}
+                    </ContactInfo>
+                  </a>
+                </div>
+                <div className="d-flex flex-row align-items-center py-3 px-2">
+                  <PhoneRoundedIcon />
+                  <a
+                    href={`tel:${boothDetails.contactNumber}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <ContactInfo className="ms-3">
+                      {truncateText(boothDetails.contactNumber, 30)}
+                    </ContactInfo>
+                  </a>
+                </div>{" "}
+              </>
+            ) : (
+              <div
+                className="d-flex flex-column align-items-center justify-content-center"
+                style={{ height: "100%", width: "100%" }}
               >
-                <ContactInfo className="ms-3">
-                  {truncateText(boothDetails.contactEmail, 25)}
-                </ContactInfo>
-              </a>
-            </div>
-
-            <div className="d-flex flex-row align-items-center py-3 px-2">
-              <PhoneRoundedIcon />
-              <a
-                href={`tel:${boothDetails.contactNumber}`}
-                style={{ textDecoration: "none" }}
-              >
-                <ContactInfo className="ms-3">
-                  {truncateText(boothDetails.contactNumber, 30)}
-                </ContactInfo>
-              </a>
-            </div>
+                <NoContentText className="mb-3">
+                  No Contact details found
+                </NoContentText>
+                <button
+                  onClick={() => {
+                    handleEdit();
+                  }}
+                  className="btn btn-outline-text btn-dark"
+                >
+                  Add contact
+                </button>
+              </div>
+            )}
           </GetInTouchCard>
 
-          <BoothProducts />
-          <BoothForms />
+          <BoothProducts handleEdit={handleEdit} />
+          <BoothForms handleEdit={handleEdit} />
 
-          <BoothFiles />
+          <BoothFiles handleEdit={handleEdit} />
 
-          <BoothOffers />
+          <BoothOffers handleEdit={handleEdit} />
         </BasicGrid>
 
         <div

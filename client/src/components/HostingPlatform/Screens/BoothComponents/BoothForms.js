@@ -46,6 +46,13 @@ const FormCard = styled.div`
   background-color: #dcedf3;
 `;
 
+const NoContentText = styled.div`
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #212121;
+  text-align: center;
+`;
+
 const renderForms = (forms) => {
   return forms.map((form) => {
     return (
@@ -62,7 +69,7 @@ const renderForms = (forms) => {
   });
 };
 
-const BoothForms = () => {
+const BoothForms = ({handleEdit}) => {
   const params = useParams();
   const eventId = params.eventId;
   const dispatch = useDispatch();
@@ -76,7 +83,7 @@ const BoothForms = () => {
   return (
     <>
       <BoothFormsContainer className="">
-        {forms && (
+        {typeof forms !== "undefined" && forms.length > 0 ?  forms && (
           <Carousel
             containerClass="carousel-container-forms"
             itemClass="carousel-item-forms"
@@ -84,7 +91,20 @@ const BoothForms = () => {
           >
             {renderForms(forms)}
           </Carousel>
-        )}
+        ) :  <div
+        className="d-flex flex-column align-items-center justify-content-center"
+        style={{ height: "100%", width: "100%" }}
+      >
+        <NoContentText className="mb-3">
+          No Forms or surveys found
+        </NoContentText>
+        <button onClick={() => {
+          handleEdit();
+        }} className="btn btn-outline-text btn-dark">
+          Add Forms
+        </button>
+      </div> }
+        
       </BoothFormsContainer>
     </>
   );

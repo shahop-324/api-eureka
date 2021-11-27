@@ -7,6 +7,9 @@ const sessionSlice = createSlice({
     sessions: [],
     sessionDetails: null,
     sessionsStatus: [],
+    tags: [],
+    tracks: [],
+    speakers: [],
     isLoading: true,
     isLoadingDetail: true,
     error: false,
@@ -124,6 +127,15 @@ const sessionSlice = createSlice({
     FetchHighlightedSessions(state, action) {
       state.highlightedSessions = action.payload.sessions;
     },
+    FetchTags(state, action) {
+      state.tags = action.payload.tags;
+    },
+    FetchTracks(state, action) {
+      state.tracks = action.payload.tracks;
+    },
+    FetchSpeakers(state, action) {
+      state.speakers = action.payload.speakers;
+    }
   },
 });
 export const sessionActions = sessionSlice.actions;

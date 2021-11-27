@@ -75,17 +75,12 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
     myRegistration ? myRegistration.emailNotifications : true
   );
 
-  const [sessionReminders, setSessionReminders] = useState(
-    myRegistration ? myRegistration.sessionReminders : true
-  );
-
   const formValues = {
     messageNotifications,
     alerts,
     pollNotification,
     notificationSound,
     emailNotifications,
-    sessionReminders,
   };
 
   return (
@@ -300,37 +295,6 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
                 </div>
                 <div className="my-3">
                   <Divider />
-                </div>
-                <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between pt-2">
-                  <div className="hosting-platform-widget-name">
-                    Session reminders
-                  </div>
-                  <div>
-                    <FormGroup row>
-                      <FormControlLabel
-                        control={
-                          <RoyalBlueSwitch
-                            checked={sessionReminders}
-                            onChange={(e) => {
-                              setSessionReminders(e.target.checked);
-                              let newFormValues = { ...formValues };
-
-                              newFormValues.sessionReminders = e.target.checked;
-                              if (myRegistration) {
-                                dispatch(
-                                  updateRegistrationSettings(
-                                    newFormValues,
-                                    myRegistration._id
-                                  )
-                                );
-                              }
-                            }}
-                            name="sessionReminders"
-                          />
-                        }
-                      />
-                    </FormGroup>
-                  </div>
                 </div>
               </div>
             </div>

@@ -60,9 +60,9 @@ const MainChatComponent = () => {
   useEffect(() => {
     dispatch(fetchBoothChats(currentBoothId));
 
-    socket.on("newBoothMsg", ({ chats }) => {
-      dispatch(updateBoothChats(chats)); // TODO Here we have to dispatch all chats using action creator
-    });
+    // socket.on("newBoothMsg", ({ chats }) => {
+    //   dispatch(updateBoothChats(chats)); // TODO Here we have to dispatch all chats using action creator
+    // });
 
     socket.on("updateBoothChats", ({ chats }) => {
       dispatch(updateBoothChats(chats));

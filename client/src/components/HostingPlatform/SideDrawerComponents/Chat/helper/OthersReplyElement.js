@@ -221,10 +221,12 @@ const OthersReplyElement = ({
       <ReportMsg
         name={replierName}
         image={replierImage}
+        timestamp={replierTimestamp}
         msgText={replierMsg}
         msgId={replierMsgId}
         open={open}
         handleClose={handleClose}
+        type="event"
       />
 
       <DeleteMsg
@@ -243,5 +245,3 @@ const OthersReplyElement = ({
 };
 
 export default OthersReplyElement;
-
-

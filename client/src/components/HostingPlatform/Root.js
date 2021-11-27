@@ -76,6 +76,8 @@ const Root = () => {
   const params = useParams();
   const dispatch = useDispatch();
 
+  const eventDetails = useSelector((state) => state.event.eventDetails);
+
   const [openRating, setOpenRating] = useState(false);
 
   const handleCloseRating = () => {
@@ -85,23 +87,27 @@ const Root = () => {
   // console.log(params);
 
   useEffect(() => {
-    // Check if this user is in this events block list (if yes then showSnackbar("You have been suspended from this event")) and logout
-
-    if (eventDetails.blocked.includes(userId)) {
-      dispatch(
-        showSnackbar("info", "You have been suspended from this event.")
-      );
-
-      //  Use event leave procedure
-
-      socket.emit("leaveEvent", { userId, eventId }, (error) => {
-        console.log(error);
-      });
-      dispatch(signOut());
-    }
-
     dispatch(fetchEvent(eventId));
   }, []);
+
+  useEffect(() => {
+    // Check if this user is in this events block list (if yes then showSnackbar("You have been suspended from this event")) and logout
+
+    if (eventDetails) {
+      if (eventDetails.blocked.includes(userId)) {
+        dispatch(
+          showSnackbar("info", "You have been suspended from this event.")
+        );
+
+        //  Use event leave procedure
+
+        socket.emit("leaveEvent", { userId, eventId }, (error) => {
+          console.log(error);
+        });
+        dispatch(signOut());
+      }
+    }
+  }, [eventDetails]);
 
   const currentSenderId = useSelector((state) => state.personalChat.id);
 
@@ -115,8 +121,6 @@ const Root = () => {
   const { role, id, email } = useSelector((state) => state.eventAccessToken);
 
   const userDetails = useSelector((state) => state.user.userDetails);
-
-  const eventDetails = useSelector((state) => state.event.eventDetails);
 
   const { currentBoothId } = useSelector((state) => state.booth);
 
