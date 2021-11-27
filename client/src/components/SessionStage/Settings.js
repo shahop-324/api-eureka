@@ -16,7 +16,6 @@ import Box from "@mui/material/Box";
 import "./../../index.css";
 import StreamSettings from "./SubComponent/StreamSettings";
 import SessionCustomisation from "./SubComponent/SessionCustomisation";
-import EnableDisableLiveStreaming from "./SubComponent/EnableDisableLiveStreaming";
 import { useSelector } from "react-redux";
 
 function TabPanel(props) {
@@ -52,7 +51,7 @@ function a11yProps(index) {
   };
 }
 
-function VerticalTabs({ canPublishStream }) {
+function VerticalTabs({ canPublishStream, rtc }) {
   let currentUserIsAHost = false;
 
   const [value, setValue] = React.useState(0);
@@ -71,7 +70,7 @@ function VerticalTabs({ canPublishStream }) {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, display: "flex", height: 400 }}>
+    <Box sx={{ flexGrow: 1, display: "flex", height: 600 }}>
       <Tabs
         orientation="vertical"
         variant="scrollable"
@@ -94,26 +93,13 @@ function VerticalTabs({ canPublishStream }) {
         ) : (
           <></>
         )}
-
-        {/* {currentUserIsAHost ? (
-          <Tab
-            label="Live streaming"
-            {...a11yProps(2)}
-            className="custom-mui-tab"
-          />
-        ) : (
-          <></>
-        )} */}
       </Tabs>
       <TabPanel value={value} index={0}>
-        <StreamSettings />
+        <StreamSettings rtc={rtc} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <SessionCustomisation />
       </TabPanel>
-      {/* <TabPanel value={value} index={2}>
-        <EnableDisableLiveStreaming />
-      </TabPanel> */}
     </Box>
   );
 }
@@ -139,7 +125,7 @@ const WidgetHeadlineWithClose = styled.div`
   border-bottom: 1px solid #152d35;
 `;
 
-const SessionSettings = ({ open, handleClose, canPublishStream }) => {
+const SessionSettings = ({ open, handleClose, canPublishStream, rtc }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -164,7 +150,7 @@ const SessionSettings = ({ open, handleClose, canPublishStream }) => {
               </IconButton>
             </div>
           </WidgetHeadlineWithClose>
-          <VerticalTabs canPublishStream={canPublishStream} />
+          <VerticalTabs canPublishStream={canPublishStream} rtc={rtc} />
         </SessionSettingsBody>
       </Dialog>
     </>

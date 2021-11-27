@@ -10,13 +10,13 @@ import {
   editCurrentlyJoinedChair,
 } from "../../../actions";
 
-const LeftChair = ({ id, launchTableScreen }) => {
+const RightChair2 = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
 
   const chair = useSelector((state) =>
     state.rooms.chairs.find((chair) => {
       return chair && chair.chairId
-        ? chair.chairId === `${id}_chair_4` && chair.status === "Occupied"
+        ? chair.chairId === `${id}_chair_10` && chair.status === "Occupied"
           ? chair
           : null
         : null;
@@ -24,30 +24,30 @@ const LeftChair = ({ id, launchTableScreen }) => {
   );
 
   let chairIsOccupied;
-  let userName4;
-  let userImage4;
-  let userCity4;
-  let userCountry4;
-  let userOrganisation4;
-  let userDesignation4;
+  let userName10;
+  let userImage10;
+  let userCity10;
+  let userCountry10;
+  let userOrganisation10;
+  let userDesignation10;
   let displayPopUp = "auto";
 
   if (chair) {
-    // What if chair_1 is occupied
+    // What if chair_10 is occupied
     chairIsOccupied = true;
 
-    userName4 = chair.userName;
-    userImage4 = chair.userImage
+    userName10 = chair.userName;
+    userImage10 = chair.userImage
       ? chair.userImage.startsWith("https://")
         ? chair.userImage
         : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chair.userImage}`
       : "";
-    userCity4 = chair.userCity;
-    userCountry4 = chair.userCountry;
-    userOrganisation4 = chair.userOrganisation;
-    userDesignation4 = chair.userDesignation;
+    userCity10 = chair.userCity;
+    userCountry10 = chair.userCountry;
+    userOrganisation10 = chair.userOrganisation;
+    userDesignation10 = chair.userDesignation;
   } else {
-    // What if chair_1 is not occupied
+    // What if chair_10 is not occupied
     chairIsOccupied = false;
     displayPopUp = "none";
   }
@@ -87,12 +87,12 @@ const LeftChair = ({ id, launchTableScreen }) => {
     image.style.objectFit = "cover";
     image.style.borderTopRightRadius = "5px";
     image.style.borderBottomRightRadius = "5px";
-    image.id = `${id}_chair_4_img_blob`;
+    image.id = `${id}_chair_10_img_blob`;
 
     if (imgURL) {
-      document.getElementById(`${id}_chair_4_img`).appendChild(image);
+      document.getElementById(`${id}_chair_10_img`).appendChild(image);
     } else {
-      let element = document.getElementById(`${id}_chair_4_img`);
+      let element = document.getElementById(`${id}_chair_10_img`);
       while (element.firstChild) {
         element.removeChild(element.firstChild);
       }
@@ -101,15 +101,15 @@ const LeftChair = ({ id, launchTableScreen }) => {
 
   useEffect(() => {
     if (userImage) {
-      fetchImage(userImage4, id).catch((e) => {
+      fetchImage(userImage10, id).catch((e) => {
         //   "There has been a problem with your fetch operation."
       });
     } else {
-      if (document.getElementById(`${id}_chair_4_img_blob`)) {
-        document.getElementById(`${id}_chair_4_img_blob`).remove();
+      if (document.getElementById(`${id}_chair_10_img_blob`)) {
+        document.getElementById(`${id}_chair_10_img_blob`).remove();
       }
     }
-  }, [userImage4, userImage, id]);
+  }, [userImage10, userImage, id]);
 
   const userId = userDetails._id;
 
@@ -117,15 +117,15 @@ const LeftChair = ({ id, launchTableScreen }) => {
     <>
       <div
         className="right-chair-wrapper"
-        id={`${id}_chair_4`}
+        id={`${id}_chair_10`}
         onClick={() => {
-          dispatch(editCurrentlyJoinedChair(`${id}_chair_4`));
+          dispatch(editCurrentlyJoinedChair(`${id}_chair_10`));
           socket.emit(
             "updateChair",
             {
               eventId,
               tableId: id,
-              chairId: `${id}_chair_4`,
+              chairId: `${id}_chair_10`,
               userId,
               userName,
               userRole: role,
@@ -156,7 +156,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
             <Popup
               trigger={
                 <div
-                  id={`${id}_chair_4_img`}
+                  id={`${id}_chair_10_img`}
                   style={{
                     position: "relative",
                     top: "0",
@@ -175,8 +175,8 @@ const LeftChair = ({ id, launchTableScreen }) => {
                   style={{ display: displayPopUp }}
                 >
                   <Avatar
-                    alt={userName4}
-                    src={userImage4}
+                    alt={userName10}
+                    src={userImage10}
                     variant="rounded"
                     style={{ display: displayPopUp }}
                   />
@@ -185,19 +185,19 @@ const LeftChair = ({ id, launchTableScreen }) => {
                       className="btn-outline-text"
                       style={{ fontSize: "14px", display: displayPopUp }}
                     >
-                      {userName4}
+                      {userName10}
                     </div>
                     <div
                       className="people-headline"
                       style={{ display: displayPopUp }}
                     >
-                      {userDesignation4} at {userOrganisation4}
+                      {userDesignation10} at {userOrganisation10}
                     </div>
                     <div
                       className="people-location"
                       style={{ display: displayPopUp }}
                     >
-                      {userCity4}, {userCountry4}
+                      {userCity10}, {userCountry10}
                     </div>
                   </div>
                 </div>
@@ -210,4 +210,4 @@ const LeftChair = ({ id, launchTableScreen }) => {
   );
 };
 
-export default LeftChair;
+export default RightChair2;

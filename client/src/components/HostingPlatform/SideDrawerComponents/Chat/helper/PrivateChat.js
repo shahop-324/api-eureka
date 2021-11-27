@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { fetchEventRegistrations } from "../../../../../actions";
+import { fetchEventRegistrations, getPeopleInEvent } from "../../../../../actions";
 import PeopleProfile from "../../People/helper/PeopleProfile";
 import VideoCallOptions from "../Sub/VideoCallOptions";
 import IndividualChat from "./IndividualChat";
@@ -35,8 +35,13 @@ const PrivateChat = () => {
 
   const bool = id ? true : false; // Flag to detect if we have to show personal chat or not
 
+  // useEffect(() => {
+  //   dispatch(fetchEventRegistrations(eventId));
+  // }, []);
+
+
   useEffect(() => {
-    dispatch(fetchEventRegistrations(eventId));
+    dispatch(getPeopleInEvent(eventId));
   }, []);
 
   return (

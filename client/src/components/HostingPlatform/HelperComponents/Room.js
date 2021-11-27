@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import LeftChair from "../chairComponents/LeftChair";
 import RightChair from "../chairComponents/RightChair";
+import LeftChair2 from "../chairComponents/LeftChair2";
+import RightChair2 from "../chairComponents/RightChair2";
 import UPPER_1_CHAIR from "../chairComponents/Upper_1_Chair";
 import UPPER_2_CHAIR from "../chairComponents/Upper_2_Chair";
 import UPPER_3_CHAIR from "../chairComponents/Upper_3_Chair";
@@ -35,8 +37,17 @@ const RoomTitle = styled.div`
 const RoomWraper = styled.div`
   background-color: #345b63 !important;
 
+  min-height: 338px !important;
+  height: auto !important;
+
+  border-radius: 10px;
+  opacity: 1;
+  border: 3px solid #ffffff00;
+
   &:hover {
     border: 1px solid #dcc7be;
+
+    cursor: pointer;
   }
 `;
 
@@ -66,6 +77,7 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    
     socket.on("numberOfPeopleOnTable", ({ numberOfPeopleOnTable }) => {
       dispatch(fetchNumberOfPeopleOnTable(numberOfPeopleOnTable));
     });
@@ -98,17 +110,17 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
 
         <div className="upper-chair-row mt-3">
           {/* // Upper_1_Chair */}
-          {/* <div>
+          <div>
             <UPPER_1_CHAIR id={id} launchTableScreen={launchTableScreen} />
-          </div> */}
+          </div>
 
           {/* // UPPER_2_CHAIR */}
-          <div className="me-2">
+          <div className="mx-2">
             <UPPER_2_CHAIR id={id} launchTableScreen={launchTableScreen} />
           </div>
 
           {/* // UPPER_3_CHAIR */}
-          <div className="ms-2">
+          <div className="">
             <UPPER_3_CHAIR id={id} launchTableScreen={launchTableScreen} />
           </div>
         </div>
@@ -117,7 +129,13 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
           <div className="col-3 left-chair-row">
             {/* //Left Chair */}
 
-            <LeftChair id={id} launchTableScreen={launchTableScreen} />
+            <div className="mb-3">
+              <LeftChair id={id} launchTableScreen={launchTableScreen} />
+            </div>
+
+            <div>
+              <LeftChair2 id={id} launchTableScreen={launchTableScreen} />
+            </div>
           </div>
 
           <div className=" room-table px-3 py-4">
@@ -160,27 +178,27 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
 
           <div className="col-3 right-chair-row">
             {/* // Right Chair */}
-            <Tooltip title="This is the tooltip">
-              <RightChair
-                style={{ width: "140px" }}
-                id={id}
-                launchTableScreen={launchTableScreen}
-              />
-            </Tooltip>
+            <div className="mb-3">
+              <RightChair id={id} launchTableScreen={launchTableScreen} />
+            </div>
+            <div>
+              <RightChair2 id={id} launchTableScreen={launchTableScreen} />
+            </div>
           </div>
         </div>
 
         <div className="lower-chair-row mb-3">
           {/*LOWER_5_CHAIR */}
-          {/* <LOWER_5_CHAIR id={id} launchTableScreen={launchTableScreen} /> */}
-
+          <div>
+            <LOWER_5_CHAIR id={id} launchTableScreen={launchTableScreen} />
+          </div>
           {/* // LOWER_6_CHAIR */}
-          <div className="me-2">
+          <div className="mx-2">
             <LOWER_6_CHAIR id={id} launchTableScreen={launchTableScreen} />
           </div>
 
           {/* // LOWER_7_CHAIR */}
-          <div className="ms-2">
+          <div className="">
             <LOWER_7_CHAIR id={id} launchTableScreen={launchTableScreen} />
           </div>
         </div>

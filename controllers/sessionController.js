@@ -42,7 +42,17 @@ exports.updateSession = catchAsync(async (req, res, next) => {
       "tags",
       "host",
       "replay",
-      "allowEntryBeforeSessionBegin"
+      "allowEntryBeforeSessionBegin",
+      "liveChat",
+      "peopleInSession",
+      "raiseHand",
+      "qna",
+      "polls",
+      "videos",
+      "attendeeCount",
+      "emojiReactions",
+      "theme",
+      "vibe"
     );
 
     let removedSpeakers = [];

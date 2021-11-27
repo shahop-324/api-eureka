@@ -103,6 +103,7 @@ const IOSSwitch = withStyles((theme) => ({
 });
 
 const StageControlsComponent = ({
+  rtc,
   onEmojiSelect,
   onClap,
   onSmile,
@@ -578,7 +579,7 @@ const StageControlsComponent = ({
 
       <CreatePoll open={openCreatePoll} handleClose={handleCloseCreatePoll} />
       <ReactTooltip place="top" type="light" effect="float" />
-      <Settings open={openSettings} handleClose={handleCloseSettings} />
+      <Settings open={openSettings} handleClose={handleCloseSettings} rtc={rtc} />
 
       <StartRecordingConfirmation
         setState={setState}

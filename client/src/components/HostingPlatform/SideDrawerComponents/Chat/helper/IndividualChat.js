@@ -1,17 +1,16 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import {useParams} from 'react-router-dom';
 import Faker from "faker";
 import { Avatar } from "@material-ui/core";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import CalendarTodayRoundedIcon from "@mui/icons-material/CalendarTodayRounded";
 import { useDispatch, useSelector } from "react-redux";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
-import Ripple from "../../../../ActiveStatusRipple";
 import OneOnOneMsgInput from "./OneOnOneMsgInput";
 import ChatMsgElement from "./ChatMsgElement";
 import OutgoingChatMsgElement from "./OutgoingChatElement";
-import { setPersonalChatConfig } from "../../../../../actions";
-import Loader from "./../../../../Loader";
+import { setPersonalChatConfig, getPeopleInEvent } from "../../../../../actions";
 
 const renderMessages = (chats, receiverId, createReplyWidget) => {
   console.log(chats);
@@ -75,17 +74,28 @@ const renderMessages = (chats, receiverId, createReplyWidget) => {
 };
 
 const IndividualChat = ({ handleOpen, handleOpenVideoOptions }) => {
+
+  const params = useParams();
+  const eventId = params.eventId;
+
   const { id, chats } = useSelector((state) => state.personalChat);
 
   const { peopleInThisEvent } = useSelector((state) => state.user);
 
+
+
   const requiredPerson = peopleInThisEvent.find(
-    (element) => element.userId === id
+    (element) => element.bookedByUser === id
   );
 
   const IsPersonLoaded = requiredPerson ? true : false;
 
   const dispatch = useDispatch();
+
+  
+  useEffect(() => {
+    dispatch(getPeopleInEvent(eventId));
+  }, []);
 
   const [name, setName] = useState(null);
   const [image, setImage] = useState(null);
@@ -120,14 +130,14 @@ const IndividualChat = ({ handleOpen, handleOpenVideoOptions }) => {
     setTimestamp(null);
   };
 
-  if (!IsPersonLoaded) {
-    return <Loader />;
+  if(!requiredPerson) {
+    return <></>
   }
 
   const profileName = requiredPerson.userName;
-  const profileImage = requiredPerson.userImage.startsWith("https://")
+  const profileImage = requiredPerson.userImage ? requiredPerson.userImage.startsWith("https://")
     ? requiredPerson.userImage
-    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${requiredPerson.userImage}`;
+    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${requiredPerson.userImage}` : "";
   const profileOrganisation = requiredPerson.userOrganisation;
   const profileDesigantion = requiredPerson.userDesignation;
   const profileStatus = requiredPerson.status;
@@ -173,49 +183,11 @@ const IndividualChat = ({ handleOpen, handleOpenVideoOptions }) => {
               >
                 {profileName}
               </div>
-              {profileStatus === "Active" ? (
-                <div
-                  className="d-flex flex-row align-items-center event-field-label field-label-value"
-                  style={{
-                    color: "#75BF72",
-                    fontFamily: "Ubuntu",
-                    fontSize: "0.8rem",
-                  }}
-                >
-                  <Ripple /> Active{" "}
-                </div>
-              ) : (
-                <div
-                  style={{
-                    fontFamily: "Ubuntu",
-                    fontWeight: "500",
-                    color: "#D64329",
-                    fontSize: "0.8rem",
-                  }}
-                >
-                  Inactive
-                </div>
-              )}
-            </div>
-
-            <div
-              className="d-flex flex-row align-items-center"
-              style={{ justifySelf: "end" }}
-            >
-              <CalendarTodayRoundedIcon
-                onClick={() => {
-                  handleOpenVideoOptions();
-                }}
-                className="chat-msg-hover-icon me-3"
-              />
-
-              <InfoOutlinedIcon
-                className="chat-msg-hover-icon"
-                onClick={() => {
-                  handleOpen();
-                }}
-              />
-              {/* When clicked on i button then open user profile component */}
+              {/* // TODO Here we need to show designation & organisation */}
+              <span style={{ fontWeight: "400", fontSize: "0.75rem" }}>
+                {" "}
+                {profileDesigantion} {profileOrganisation}
+              </span>
             </div>
           </div>
         </div>

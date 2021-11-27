@@ -10381,7 +10381,7 @@ export const getPeopleInEvent = (eventId) => async (dispatch, getState) => {
 
     dispatch(
       userActions.FetchPeopleInEvent({
-        peopleInThisEvent: result.data.currentlyInEvent,
+        peopleInThisEvent: result.data,
       })
     );
   } catch (error) {
@@ -14851,58 +14851,113 @@ export const toggleRatingWindow = (openState) => async (dispatch, getState) => {
   );
 };
 
-export const showEventReview = (reviewId) => async(dispatch, getState) => {
-  try{
-    const res = await fetch(
-      `${BaseURL}showReview/${reviewId}`,
-      {
-        method: "POST",
+export const showEventReview = (reviewId) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}showReview/${reviewId}`, {
+      method: "POST",
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
 
     const result = await res.json();
 
-    dispatch(reviewActions.UpdateReview({
-      review: result.data,
-    }))
+    dispatch(
+      reviewActions.UpdateReview({
+        review: result.data,
+      })
+    );
 
     dispatch(showSnackbar("success", "This review is now publicly visible"));
-  }
-  catch(error) {
+  } catch (error) {
     console.log(error);
-    dispatch(showSnackbar("error", "Failed to make this review public, Please try again."));
-  }
-}
-
-export const hideEventReview = (reviewId) => async(dispatch, getState) => {
-  try{
-    const res = await fetch(
-      `${BaseURL}hideReview/${reviewId}`,
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
+    dispatch(
+      showSnackbar(
+        "error",
+        "Failed to make this review public, Please try again."
+      )
     );
+  }
+};
+
+export const hideEventReview = (reviewId) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}hideReview/${reviewId}`, {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
 
     const result = await res.json();
 
-    dispatch(reviewActions.UpdateReview({
-      review: result.data,
-    }))
+    dispatch(
+      reviewActions.UpdateReview({
+        review: result.data,
+      })
+    );
 
     dispatch(showSnackbar("success", "This review is now hidden"));
-  }
-  catch(error) {
+  } catch (error) {
     console.log(error);
     dispatch(showSnackbar("error", "Failed to hide review, Please try again."));
   }
-}
+};
+
+export const fetchPeopleOnBoothTable =
+  (tableId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}getPeopleOnBoothTable/${tableId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      dispatch(
+        boothTablesActions.FetchPeople({
+          people: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to fetch people, Please try again")
+      );
+    }
+  };
+
+export const fetchPeopleOnLoungeTable =
+  (tableId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}getPeopleOnLoungeTable/${tableId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      dispatch(
+        roomsActions.FetchPeople({
+          people: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Falied to fetch people, Please try again")
+      );
+    }
+  };

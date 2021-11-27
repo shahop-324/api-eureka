@@ -215,6 +215,11 @@ router.post(
 router.get("/getEventSpeakers/:eventId", globalController.getEventSpeakers);
 
 router.get("/getPeopleInEvent/:eventId", globalController.getPeopleInEvent);
+
+router.get("/getPeopleOnBoothTable/:tableId", globalController.getPeopleOnBoothTable);
+
+router.get("/getPeopleOnLoungeTable/:tableId", globalController.getPeopleOnLoungeTable);
+
 router.get(
   "/getMyAllPersonalChatMsg/:userId",
   globalController.getMyAllPersonalChatMsg

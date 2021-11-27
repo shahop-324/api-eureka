@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import {useParams} from 'react-router-dom';
 import { IconButton } from "@material-ui/core";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 
@@ -7,10 +8,13 @@ import AllChatsComponent from "./helper/AllChatsComponent";
 import "./../../../../index.css";
 import PrivateChat from "./helper/PrivateChat";
 import { useDispatch, useSelector } from "react-redux";
-import { setChatSelectedTab, setPersonalChatConfig } from "../../../../actions";
+import { setChatSelectedTab, setPersonalChatConfig, getPeopleInEvent } from "../../../../actions";
 
 const MainChatComponent = (props) => {
   // const [selectedTab, setSelectedTab] = useState("all");
+
+  const params = useParams();
+  const eventId = params.eventId;
 
   const { chatSelectedTab } = useSelector((state) => state.selectedTab);
 
@@ -19,6 +23,10 @@ const MainChatComponent = (props) => {
   const setSelectedTab = (tab) => {
     dispatch(setChatSelectedTab(tab));
   };
+
+  useEffect(() => {
+    dispatch(getPeopleInEvent(eventId));
+  }, []);
 
   return (
     <>

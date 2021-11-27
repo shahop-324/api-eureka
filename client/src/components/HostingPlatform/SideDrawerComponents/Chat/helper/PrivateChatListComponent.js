@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import {useParams} from 'react-router-dom';
 import "./../../../Styles/PeopleList.scss";
 import { makeStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
@@ -10,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getMyAllPersonalMessages,
   setPersonalChatConfig,
+  getPeopleInEvent,
 } from "../../../../../actions";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
@@ -165,7 +167,13 @@ const renderIndividualChatSummary = (
     let last_message_of_this_contact;
     let last_message_time_ago;
     const contactDetails = peopleInThisEvent.find(
-      (el) => el.userId === element
+      (el) => el.bookedByUser === element
+    );
+
+    console.log(
+      peopleInThisEvent,
+      contactDetails,
+      "These are people in this event and conatct details"
     );
 
     for (let item of personalChats) {
@@ -181,7 +189,7 @@ const renderIndividualChatSummary = (
 
     if (contactDetails) {
       IndividualChats.push({
-        userId: contactDetails.userId,
+        userId: contactDetails.bookedByUser,
         name: contactDetails.userName,
         image: contactDetails.userImage,
         org: contactDetails.userOrganisation,
@@ -212,6 +220,10 @@ const renderIndividualChatSummary = (
 };
 
 const PrivateChatListComponent = () => {
+
+  const params = useParams();
+  const eventId = params.eventId;
+
   const { userDetails } = useSelector((state) => state.user);
   const userId = userDetails._id;
   const { peopleInThisEvent } = useSelector((state) => state.user);
@@ -222,6 +234,10 @@ const PrivateChatListComponent = () => {
 
   useEffect(() => {
     dispatch(getMyAllPersonalMessages(userId));
+  }, []);
+
+  useEffect(() => {
+    dispatch(getPeopleInEvent(eventId));
   }, []);
 
   const [openPeopleList, setOpenPeopleList] = useState(false);

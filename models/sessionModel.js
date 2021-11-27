@@ -196,6 +196,45 @@ const sessionSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    liveChat: {
+      type: Boolean,
+      default: true,
+    },
+    peopleInSession: {
+      type: Boolean,
+      default: true,
+    },
+    raiseHand: {
+      type: Boolean,
+      default: true,
+    },
+    qna: {
+      type: Boolean,
+      default: true,
+    },
+    polls: {
+      type: Boolean,
+      default: true,
+    },
+    videos: {
+      type: Boolean,
+      default: true,
+    },
+    attendeeCount: {
+      type: Boolean,
+      default: true,
+    },
+    emojiReactions: {
+      type: Boolean,
+      default: true,
+    },
+    theme: {
+      type: String,
+      default: "#152d35",
+    },
+    vibe: {
+      type: String,
+    },
   },
   {
     versionKey: false,

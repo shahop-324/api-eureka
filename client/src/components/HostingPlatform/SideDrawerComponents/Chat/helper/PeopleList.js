@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import "./../../../Styles/PeopleList.scss";
 import { Avatar, IconButton } from "@material-ui/core";
-import Chip from '@mui/material/Chip';
+import Chip from "@mui/material/Chip";
 import { useParams } from "react-router";
 import {
   getPeopleInEvent,
@@ -53,7 +53,12 @@ const PeopleComponent = ({
             </div>
 
             {self ? (
-              <Chip label="You" color="primary" variant="outlined" style={{fontWeight: "500"}} />
+              <Chip
+                label="You"
+                color="primary"
+                variant="outlined"
+                style={{ fontWeight: "500" }}
+              />
             ) : (
               <div
                 onClick={() => {
@@ -96,17 +101,17 @@ const PeopleList = ({ open, handleClose }) => {
         <PeopleComponent
           name={person.userName}
           image={
-            person.userImage && person.userImage.startsWith("https://")
-              ? person.userImage
-              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.userImage}`
+            person.image && person.image.startsWith("https://")
+              ? person.image
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`
           }
           organisation={person.userOrganisation}
           designation={person.userDesignation}
           socketId={person.socketId}
-          userId={person.userId}
+          userId={person.bookedByUser}
           key={person._id}
           tag={person.tag}
-          self={person.userId === userId ? true : false}
+          self={person.bookedByUser === userId ? true : false}
         />
       );
     });
@@ -117,7 +122,6 @@ const PeopleList = ({ open, handleClose }) => {
       <Dialog
         fullScreen={fullScreen}
         open={open}
-        // onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
         <div className="people-list-for-chat-container p-3">
@@ -150,7 +154,14 @@ const PeopleList = ({ open, handleClose }) => {
               placeholder="Search people..."
               className="form-control"
             />
-           <SearchRoundedIcon style={{position: "absolute", right: "10px", top: "10px", color: "#757575"}} />
+            <SearchRoundedIcon
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "10px",
+                color: "#757575",
+              }}
+            />
           </div>
           {/* Here goes list of people */}
 

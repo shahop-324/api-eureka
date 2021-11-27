@@ -6,6 +6,7 @@ const roomsSlice = createSlice({
   initialState: {
     chairs: [],
     tableChats: [],
+    people: [],
     numberOfPeopleOnTable: 0,
     hasChangedChairs: false,
   },
@@ -29,6 +30,9 @@ const roomsSlice = createSlice({
         chat._id === action.payload.msg._id ? action.payload.msg : chat
       );
     },
+    FetchPeople(state, action) {
+      state.people = action.payload.people;
+    }
   },
 });
 export const roomsActions = roomsSlice.actions;

@@ -9,6 +9,7 @@ import {
   setNetworkingRoom,
   setOpenAudioVideoSettings,
   fetchEventRegistrations,
+  showSnackbar,
 } from "./../../../actions";
 import socket from "./../service/socket";
 import "./../../../index.css";
@@ -28,6 +29,8 @@ import Portal from "@mui/core/Portal";
 import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphone Icon
 import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
 import CancelPresentationOutlinedIcon from "@mui/icons-material/CancelPresentationOutlined";
+
+import NetworkingStreamSettings from "./../Screens/StreamSettings/NetworkingScreen";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -66,6 +69,13 @@ const VideoGrid = styled.div``;
 
 const NetworkingScreen = ({ open, handleClose }) => {
   console.log("This is networking screen");
+
+  const [openSettings, setOpenSettings] = useState(false);
+
+  const handleCloseSettings = () => {
+    setOpenSettings(false);
+  }
+
   const params = useParams();
   const { registrations } = useSelector((state) => state.registration);
 
@@ -220,6 +230,111 @@ const NetworkingScreen = ({ open, handleClose }) => {
   };
 
   useEffect(() => {
+
+
+    // *********** Perform this procedure when microphone device is changed *********** //
+
+    AgoraRTC.onMicrophoneChanged = async (changedDevice) => {
+      if (rtc.localAudioTrack) {
+        // When plugging in a device, switch to a device that is newly plugged in.
+        if (changedDevice.state === "ACTIVE") {
+          rtc.localAudioTrack &&
+            rtc.localAudioTrack
+              .setDevice(changedDevice.device.deviceId)
+              .then(() => {
+                dispatch(
+                  showSnackbar(
+                    "success",
+                    `Microphone device changed to ${changedDevice.device.label}`
+                  )
+                );
+              })
+              .catch((e) => {
+                console.log(e);
+                dispatch(
+                  showSnackbar(
+                    "info",
+                    "Failed to switch to new microphone device"
+                  )
+                );
+              });
+          // Switch to an existing device when the current device is unplugged.
+        } else if (
+          changedDevice.device.label === rtc.localAudioTrack.getTrackLabel()
+        ) {
+          const oldMicrophones = await AgoraRTC.getMicrophones();
+          oldMicrophones[0] &&
+            rtc.localAudioTrack &&
+            rtc.localAudioTrack
+              .setDevice(oldMicrophones[0].deviceId)
+              .then(() => {
+                dispatch(
+                  showSnackbar(
+                    "success",
+                    `Microphone device changed to ${rtc.localAudioTrack.getTrackLabel()}`
+                  )
+                );
+              })
+              .catch((e) => {
+                console.log(e);
+                dispatch(
+                  showSnackbar("info", "Failed to switch microphone device")
+                );
+              });
+        }
+      }
+    };
+
+    // ************** Perform this procedure when camera device is changed ************ //
+
+    AgoraRTC.onCameraChanged = async (changedDevice) => {
+      if (rtc.localVideoTrack) {
+        // When plugging in a device, switch to a device that is newly plugged in.
+        if (changedDevice.state === "ACTIVE") {
+          rtc.localVideoTrack &&
+            rtc.localVideoTrack
+              .setDevice(changedDevice.device.deviceId)
+              .then(() => {
+                dispatch(
+                  showSnackbar(
+                    "success",
+                    `Camera device changed to ${changedDevice.device.label}`
+                  )
+                );
+              })
+              .catch((e) => {
+                console.log(e);
+                dispatch(
+                  showSnackbar("info", "Failed to switch to new camera device")
+                );
+              });
+          // Switch to an existing device when the current device is unplugged.
+        } else if (
+          changedDevice.device.label === rtc.localVideoTrack.getTrackLabel()
+        ) {
+          const oldCameras = await AgoraRTC.getCameras();
+          oldCameras[0] &&
+            rtc.localVideoTrack &&
+            rtc.localVideoTrack
+              .setDevice(oldCameras[0].deviceId)
+              .then(() => {
+                dispatch(
+                  showSnackbar(
+                    "success",
+                    `Camera device changed to ${rtc.localVideoTrack.getTrackLabel()}`
+                  )
+                );
+              })
+              .catch((e) => {
+                console.log(e);
+                dispatch(
+                  showSnackbar("info", "Failed to switch camera device")
+                );
+              });
+        }
+      }
+    };
+
     dispatch(fetchEventRegistrations(eventId));
     handleChangeGrid();
   }, [allStreams]);
@@ -774,7 +889,7 @@ const NetworkingScreen = ({ open, handleClose }) => {
               </IconButton>
               <IconButton
                 onClick={() => {
-                  dispatch(setOpenAudioVideoSettings(true));
+                  setOpenSettings(true);
                 }}
               >
                 <SettingsOutlinedIcon
@@ -783,12 +898,7 @@ const NetworkingScreen = ({ open, handleClose }) => {
               </IconButton>
             </div>
             <div className="d-flex flex-row align-items-center justify-content-end">
-              {/* <button className="btn btn-outline-text btn-light px-4">
-                Connect
-              </button>
-              <button className="btn btn-outline-text btn-outline-light px-4 ms-3">
-                Share Business card
-              </button> */}
+              
             </div>
           </LowerSection>
         </NetworkingTableBody>
@@ -811,6 +921,7 @@ const NetworkingScreen = ({ open, handleClose }) => {
           </Alert>
         </Snackbar>
       </Portal>
+      <NetworkingStreamSettings open={openSettings} handleClose={handleCloseSettings} rtc={rtc} />
     </>
   );
 };

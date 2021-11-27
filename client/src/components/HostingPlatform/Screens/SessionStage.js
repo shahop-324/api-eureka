@@ -35,6 +35,7 @@ import {
   updateSession,
   promoteToStage,
   demoteFromStage,
+  showSnackbar,
 } from "./../../../actions";
 
 import StreamBody from "../Functions/Stage/StreamBody";
@@ -193,6 +194,111 @@ const SessionStage = () => {
   ); // On animatedEmoji change we calculate new random values for the next flying object
 
   useEffect(() => {
+    // *********** Perform this procedure when microphone device is changed *********** //
+
+    AgoraRTC.onMicrophoneChanged = async (changedDevice) => {
+      if (rtc.localAudioTrack) {
+        // When plugging in a device, switch to a device that is newly plugged in.
+        if (changedDevice.state === "ACTIVE") {
+          rtc.localAudioTrack &&
+            rtc.localAudioTrack
+              .setDevice(changedDevice.device.deviceId)
+              .then(() => {
+                dispatch(
+                  showSnackbar(
+                    "success",
+                    `Microphone device changed to ${changedDevice.device.label}`
+                  )
+                );
+              })
+              .catch((e) => {
+                console.log(e);
+                dispatch(
+                  showSnackbar(
+                    "info",
+                    "Failed to switch to new microphone device"
+                  )
+                );
+              });
+          // Switch to an existing device when the current device is unplugged.
+        } else if (
+          changedDevice.device.label === rtc.localAudioTrack.getTrackLabel()
+        ) {
+          const oldMicrophones = await AgoraRTC.getMicrophones();
+          oldMicrophones[0] &&
+            rtc.localAudioTrack &&
+            rtc.localAudioTrack
+              .setDevice(oldMicrophones[0].deviceId)
+              .then(() => {
+                dispatch(
+                  showSnackbar(
+                    "success",
+                    `Microphone device changed to ${rtc.localAudioTrack.getTrackLabel()}`
+                  )
+                );
+              })
+              .catch((e) => {
+                console.log(e);
+                dispatch(
+                  showSnackbar("info", "Failed to switch microphone device")
+                );
+              });
+        }
+      }
+    };
+
+    // ************** Perform this procedure when camera device is changed ************ //
+
+    AgoraRTC.onCameraChanged = async (changedDevice) => {
+      if (rtc.localVideoTrack) {
+        // When plugging in a device, switch to a device that is newly plugged in.
+        if (changedDevice.state === "ACTIVE") {
+          rtc.localVideoTrack &&
+            rtc.localVideoTrack
+              .setDevice(changedDevice.device.deviceId)
+              .then(() => {
+                dispatch(
+                  showSnackbar(
+                    "success",
+                    `Camera device changed to ${changedDevice.device.label}`
+                  )
+                );
+              })
+              .catch((e) => {
+                console.log(e);
+                dispatch(
+                  showSnackbar("info", "Failed to switch to new camera device")
+                );
+              });
+          // Switch to an existing device when the current device is unplugged.
+        } else if (
+          changedDevice.device.label === rtc.localVideoTrack.getTrackLabel()
+        ) {
+          const oldCameras = await AgoraRTC.getCameras();
+          oldCameras[0] &&
+            rtc.localVideoTrack &&
+            rtc.localVideoTrack
+              .setDevice(oldCameras[0].deviceId)
+              .then(() => {
+                dispatch(
+                  showSnackbar(
+                    "success",
+                    `Camera device changed to ${rtc.localVideoTrack.getTrackLabel()}`
+                  )
+                );
+              })
+              .catch((e) => {
+                console.log(e);
+                dispatch(
+                  showSnackbar("info", "Failed to switch camera device")
+                );
+              });
+        }
+      }
+    };
+
+    // ******************** Enable log box for floating emoji reactions ************** //
+
     LogBox.ignoreLogs(["Animated: `useNativeDriver`"]);
   }, []);
 
@@ -1231,6 +1337,7 @@ const SessionStage = () => {
 
           {/* Stage Controls components */}
           <StageControlsComponent
+          rtc={rtc}
             onEmojiSelect={onEmojiSelect}
             onClap={onClap}
             onSmile={onSmile}

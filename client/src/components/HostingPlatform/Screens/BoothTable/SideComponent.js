@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
 import PropTypes from "prop-types";
@@ -18,6 +18,7 @@ import {
   setOpenVenueRightDrawer,
   setChatSelectedTab,
   setPersonalChatConfig,
+  fetchPeopleOnBoothTable,
 } from "./../../../../actions";
 import PersonProfile from "../../PersonProfile";
 
@@ -41,9 +42,9 @@ const PeopleComponent = ({
   organisation,
   designation,
   id,
-  role,
   you,
   handleOpen,
+  person,
 }) => {
   const [openProfile, setOpenProfile] = React.useState(false);
 
@@ -75,16 +76,6 @@ const PeopleComponent = ({
                 }}
               >
                 <span>{`${name} ${you ? "(You)" : ""}`}</span>
-                {role ? (
-                  <UserRoleTag
-                    style={{ position: "relative" }}
-                    className="px-3 py-1"
-                  >
-                    {role}
-                  </UserRoleTag>
-                ) : (
-                  <></>
-                )}
               </div>
 
               <div
@@ -108,7 +99,7 @@ const PeopleComponent = ({
             style={{
               backgroundColor: "#d3d3d3",
               color: "#152d35",
-              width: "48%",
+              width: "100%",
               fontSize: "0.7rem",
             }}
             onClick={() => {
@@ -116,26 +107,6 @@ const PeopleComponent = ({
             }}
           >
             View profile
-          </div>
-
-          <div
-            className="view-full-profile-btn py-1"
-            style={{
-              backgroundColor: "#d3d3d3",
-              color: "#152d35",
-              width: "48%",
-              fontSize: "0.7rem",
-            }}
-            onClick={() => {
-              if (id === currentUserId) return;
-              dispatch(setVenueRightDrawerSelectedTab("feed"));
-
-              dispatch(setChatSelectedTab("private"));
-              dispatch(setPersonalChatConfig(id));
-              dispatch(setOpenVenueRightDrawer(true));
-            }}
-          >
-            Message
           </div>
         </div>
       </div>
@@ -147,6 +118,7 @@ const PeopleComponent = ({
         userName={name}
         userOrganisation={organisation}
         userDesignation={designation}
+        person={person}
       />
     </>
   );
@@ -158,36 +130,22 @@ const renderPeople = (people, userId) => {
 
     let role = "Host";
 
-    if (person.userRole === "speaker") {
-      role = "Speaker";
-    }
-    if (person.userRole === "host") {
-      role = "Host";
-    }
-    if (person.userRole === "moderator") {
-      role = "Moderator";
-    }
-    if (person.userRole === "exhibitor") {
-      role = "Exhibitor";
-    }
-    if (person.userRole === "attendee") {
-      role = null;
-    }
-
     return (
       <PeopleComponent
-        key={person.userId}
-        you={person.userId === userId ? true : false}
-        role={role}
-        id={person.userId}
-        name={person.userName}
+        key={person._id}
+        you={person._id === userId ? true : false}
+        id={person._id}
+        name={`${person.firstName} ${person.lastName}`}
         image={
-          person.userImage ? person.userImage.startsWith("https://")
-            ? person.userImage
-            : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.userImage}` : ""
+          person.image
+            ? person.image.startsWith("https://")
+              ? person.image
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`
+            : ""
         }
-        organisation={person.userOrganisation}
-        designation={person.userDesignation}
+        organisation={person.organisation}
+        designation={person.designation}
+        person={person}
       />
     );
   });
@@ -227,14 +185,21 @@ function a11yProps(index) {
 }
 
 const SideComponent = ({ tableId, peopleInThisRoom }) => {
+  const dispatch = useDispatch();
   const { id } = useSelector((state) => state.eventAccessToken);
   const userDetails = useSelector((state) => state.user);
   const userId = userDetails._id;
   const [value, setValue] = React.useState(0);
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    dispatch(fetchPeopleOnBoothTable(tableId));
+  }, []);
 
   return (
     <>

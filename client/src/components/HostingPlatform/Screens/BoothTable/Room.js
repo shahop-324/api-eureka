@@ -2,10 +2,9 @@
 import React, { useEffect, useState } from "react";
 import "./../../Styles/rooms.scss";
 import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@mui/material/Tooltip";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import socket from "./../../service/socket";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import Chair1 from "./Chair/Chair_1";
 import Chair2 from "./Chair/Chair_2";
@@ -15,6 +14,8 @@ import Chair5 from "./Chair/Chair_5";
 import Chair6 from "./Chair/Chair_6";
 import Chair7 from "./Chair/Chair_7";
 import Chair8 from "./Chair/Chair_8";
+import Chair9 from "./Chair/Chair_9";
+import Chair10 from "./Chair/Chair_10";
 
 import TableScreen from "./TableScreen";
 
@@ -24,7 +25,7 @@ import {
   getBoothTable,
   fetchNumberOfPeopleOnBoothTable,
   fetchBoothTableDetails,
-  fetchBoothChairs
+  fetchBoothChairs,
 } from "../../../../actions";
 
 const RoomTitle = styled.div`
@@ -36,8 +37,17 @@ const RoomTitle = styled.div`
 const RoomWraper = styled.div`
   background-color: #345b63 !important;
 
+  min-height: 338px !important;
+  height: auto !important;
+
+  border-radius: 10px;
+  opacity: 1;
+  border: 3px solid #ffffff00;
+
   &:hover {
     border: 1px solid #dcc7be;
+
+    cursor: pointer;
   }
 `;
 
@@ -76,9 +86,6 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
     socket.on("updatedBoothTable", ({ tableDetails }) => {
       dispatch(fetchBoothTableDetails(tableDetails));
     });
-
-    
-
   }, []);
 
   return (
@@ -99,17 +106,17 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
 
         <div className="upper-chair-row mt-3">
           {/* // Upper_1_Chair */}
-          {/* <div>
-            <UPPER_1_CHAIR id={id} launchTableScreen={launchTableScreen} />
-          </div> */}
+          <div>
+            <Chair1 id={id} launchTableScreen={launchTableScreen} />
+          </div>
 
           {/* // UPPER_2_CHAIR */}
-          <div className="me-2">
+          <div className="mx-2">
             <Chair2 id={id} launchTableScreen={launchTableScreen} />
           </div>
 
           {/* // UPPER_3_CHAIR */}
-          <div className="ms-2">
+          <div className="">
             <Chair3 id={id} launchTableScreen={launchTableScreen} />
           </div>
         </div>
@@ -118,7 +125,12 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
           <div className="col-3 left-chair-row">
             {/* //Left Chair */}
 
-            <Chair8 id={id} launchTableScreen={launchTableScreen} />
+            <div className="mb-3">
+              <Chair8 id={id} launchTableScreen={launchTableScreen} />
+            </div>
+            <div>
+              <Chair10 id={id} launchTableScreen={launchTableScreen} />
+            </div>
           </div>
 
           <div className="room-table px-3 py-4">
@@ -161,27 +173,33 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
 
           <div className="col-3 right-chair-row">
             {/* // Right Chair */}
-            <Tooltip title="This is the tooltip">
+
+            <div className="mb-3">
               <Chair4
-                style={{ width: "140px" }}
+                className=""
                 id={id}
                 launchTableScreen={launchTableScreen}
               />
-            </Tooltip>
+            </div>
+            <div>
+              <Chair9 id={id} launchTableScreen={launchTableScreen} />
+            </div>
           </div>
         </div>
 
         <div className="lower-chair-row mb-3">
           {/*LOWER_5_CHAIR */}
-          {/* <LOWER_5_CHAIR id={id} launchTableScreen={launchTableScreen} /> */}
+          <div className="">
+            <Chair5 id={id} launchTableScreen={launchTableScreen} />
+          </div>
 
           {/* // LOWER_6_CHAIR */}
-          <div className="me-2">
+          <div className="mx-2">
             <Chair6 id={id} launchTableScreen={launchTableScreen} />
           </div>
 
           {/* // LOWER_7_CHAIR */}
-          <div className="ms-2">
+          <div className="">
             <Chair7 id={id} launchTableScreen={launchTableScreen} />
           </div>
         </div>

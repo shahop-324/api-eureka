@@ -466,15 +466,10 @@ const BoothArea = () => {
             <hr />
           </div>
 
-          <div className="col-2 connect-with-us-booth-card d-flex flex-row align-items-center justify-content-between">
+          <div className="col-2 connect-with-us-booth-card d-flex flex-row align-items-center justify-content-center">
             <ExpandMoreRoundedIcon />
 
-            <span className="join-us-here-booth">Join us here</span>
-            <Avatar
-              alt="Remy Sharp"
-              src={Faker.image.avatar()}
-              className={classes.small}
-            />
+            <span className="join-us-here-booth ms-2">Join us here</span>
           </div>
           <div className="col-5">
             <hr />

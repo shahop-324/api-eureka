@@ -5,6 +5,7 @@ const boothTablesSlice = createSlice({
 
   initialState: {
     boothTables: [],
+    people: [],
     tableDetails: null,
     isLoading: true,
     error: false,
@@ -36,6 +37,9 @@ const boothTablesSlice = createSlice({
       );
       state.isLoading = false;
     },
+    FetchPeople(state, action) {
+      state.people = action.payload.people;
+    }
   },
 });
 export const boothTablesActions = boothTablesSlice.actions;

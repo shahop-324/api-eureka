@@ -1341,18 +1341,13 @@ exports.getEventSpeakers = catchAsync(async (req, res, next) => {
 exports.getPeopleInEvent = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
 
-  const peopleInEvent = await Event.findById(eventId)
-    .select("currentlyInEvent")
-    .populate({
-      path: "currentlyInEvent",
-      options: {
-        match: { status: "Active" },
-      },
-    });
+  const registrations = await Registration.find({
+    bookedForEventId: mongoose.Types.ObjectId(eventId),
+  });
 
   res.status(200).json({
     status: "success",
-    data: peopleInEvent,
+    data: registrations,
   });
 });
 
@@ -2751,3 +2746,48 @@ exports.hideReview = catchAsync(async (req, res, next) => {
     data: updatedReview,
   });
 });
+
+exports.getPeopleOnBoothTable = catchAsync(async (req, res, next) => {
+  const tableId = req.params.tableId;
+
+  const boothTableDoc = await BoothTable.findOne({ tableId: tableId });
+
+  let people = [];
+
+  if (boothTableDoc) {
+    for (let element of boothTableDoc.onStagePeople) {
+      const userDoc = await User.findById(element.user);
+      if (userDoc) {
+        people.push(userDoc);
+      }
+    }
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: people,
+  });
+});
+
+exports.getPeopleOnLoungeTable = catchAsync(async(req, res, next) => {
+  const tableId = req.params.tableId;
+
+  const roomTableDoc = await RoomTable.findOne({tableId: tableId});
+
+  let people = [];
+
+  if(roomTableDoc) {
+    for (let element of roomTableDoc.onStagePeople) {
+      const userDoc = await User.findById(element.user);
+      if (userDoc) {
+        people.push(userDoc);
+      }
+    }
+  }
+
+
+  res.status(200).json({
+    status: "success",
+    data: people,
+  });
+})
