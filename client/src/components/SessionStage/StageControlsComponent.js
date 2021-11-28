@@ -134,6 +134,8 @@ const StageControlsComponent = ({
     sessionDetails ? sessionDetails.recording : false
   );
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   let myHandIsRaised = false;
 
   const [openManageStage, setOpenManageStage] = useState(false);
@@ -223,7 +225,7 @@ const StageControlsComponent = ({
 
   return (
     <>
-      <StageControl className="px-3 py-1">
+      <StageControl color={eventDetails.color} className="px-3 py-1">
         <div className="d-flex flex-row align-items-center">
           <BtnDanger
             id="leave-session"
@@ -579,7 +581,11 @@ const StageControlsComponent = ({
 
       <CreatePoll open={openCreatePoll} handleClose={handleCloseCreatePoll} />
       <ReactTooltip place="top" type="light" effect="float" />
-      <Settings open={openSettings} handleClose={handleCloseSettings} rtc={rtc} />
+      <Settings
+        open={openSettings}
+        handleClose={handleCloseSettings}
+        rtc={rtc}
+      />
 
       <StartRecordingConfirmation
         setState={setState}

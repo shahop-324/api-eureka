@@ -66,9 +66,13 @@ import BoothArea from "./Screens/BoothArea";
 
 import styled from "styled-components";
 import SocialSpace from "./Screens/SocialSpace";
+import α from "color-alpha";
 
 const RootBackground = styled.div`
-  background-color: #345b63;
+  background-color: ${(props) =>
+    props && props.color
+      ? `${α(props.color, 0.75)} !important`
+      : "#233e44 !important"};
   min-height: 92vh;
 `;
 
@@ -537,7 +541,10 @@ const Root = () => {
               switch (currentIndex) {
                 case "0":
                   return (
-                    <RootBackground style={{ position: "relative" }}>
+                    <RootBackground
+                      color={eventDetails.color}
+                      style={{ position: "relative" }}
+                    >
                       <div
                         className="opaque-layer "
                         style={{ height: "100%" }}
@@ -553,7 +560,10 @@ const Root = () => {
 
                 case "1":
                   return (
-                    <RootBackground style={{ position: "relative" }}>
+                    <RootBackground
+                      color={eventDetails.color}
+                      style={{ position: "relative" }}
+                    >
                       <div
                         className="opaque-layer "
                         style={{ height: "100%" }}
@@ -569,7 +579,10 @@ const Root = () => {
 
                 case "2":
                   return (
-                    <RootBackground style={{ position: "relative" }}>
+                    <RootBackground
+                      color={eventDetails.color}
+                      style={{ position: "relative" }}
+                    >
                       <div
                         className="opaque-layer "
                         style={{ height: "100%" }}
@@ -585,7 +598,10 @@ const Root = () => {
 
                 case "3":
                   return (
-                    <RootBackground style={{ position: "relative" }}>
+                    <RootBackground
+                      color={eventDetails.color}
+                      style={{ position: "relative" }}
+                    >
                       <div className="opaque-layer "></div>
                       <div
                         style={{ maxWidth: "1360px", margin: "0 auto" }}
@@ -598,7 +614,10 @@ const Root = () => {
 
                 case "4":
                   return (
-                    <RootBackground style={{ position: "relative" }}>
+                    <RootBackground
+                      color={eventDetails.color}
+                      style={{ position: "relative" }}
+                    >
                       <div
                         className="opaque-layer "
                         style={{ height: "100%" }}
@@ -614,7 +633,10 @@ const Root = () => {
 
                 case "5":
                   return (
-                    <RootBackground style={{ position: "relative" }}>
+                    <RootBackground
+                      color={eventDetails.color}
+                      style={{ position: "relative" }}
+                    >
                       <div
                         className="opaque-layer"
                         style={{ height: "100%" }}

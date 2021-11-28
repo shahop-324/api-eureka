@@ -11,6 +11,7 @@ import {
 } from "./../../../actions";
 import { useParams } from "react-router-dom";
 import Matching from "../HelperComponents/Matching";
+import α from "color-alpha";
 
 const Networking = () => {
   const params = useParams();
@@ -21,6 +22,8 @@ const Networking = () => {
   const { image, id, firstName, lastName } = useSelector(
     (state) => state.user.userDetails
   );
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   useEffect(() => {
     socket.on("updatedNetworkingRoom", ({ updatedNetworkingRoom }) => {
@@ -83,7 +86,17 @@ const Networking = () => {
 
       <div className="d-flex flex-row justify-content-center networking-options-btn">
         <div
-          className="btn-filled-h px-5 py-3 start-networking-btn"
+          style={{
+            backgroundColor: α(eventDetails.color, 1.5),
+            boxShadow: "inset 0px 3px 6px #00000029",
+            borderRadius: "10px",
+            opacity: "1",
+            textAlign: "left",
+            font: "normal normal 500 1rem/1.75rem Ubuntu",
+            letterSpacing: "0px",
+            color: "#ffffff",
+          }}
+          className="px-5 py-3 start-networking-btn"
           onClick={() => {
             setTimeout(() => {
               socket.emit("startNetworking", {
@@ -101,7 +114,6 @@ const Networking = () => {
           Start Speed Networking
         </div>
       </div>
-
       <Matching />
     </>
   );

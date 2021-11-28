@@ -72,12 +72,12 @@ const ButtonFilledDark = styled.div`
   font-size: 0.8rem;
   color: #ffffff;
   font-family: "Ubuntu";
-  background-color: #152d35;
-  border: 1px solid #152d35;
+  background-color: ${(props) => props.color};
+  border: 1px solid ${(props) => props.color};
   border-radius: 5px;
 
   &:hover {
-    color: #152d35;
+    color: ${(props) => props.color};
     background-color: transparent;
     cursor: pointer;
   }
@@ -92,14 +92,14 @@ const ButtonOutlinedDark = styled.div`
   color: #ffffff;
   font-family: "Ubuntu";
 
-  color: #152d35;
+  color: ${(props) => props.color};
   background-color: transparent;
 
-  border: 1px solid #152d35;
+  border: 1px solid ${(props) => props.color};
   border-radius: 5px;
 
   &:hover {
-    background-color: #152d35;
+    background-color: ${(props) => props.color};
 
     color: #ffffff;
 
@@ -138,6 +138,8 @@ const NetworkingConfirmation = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   const { id, role } = useSelector((state) => state.eventAccessToken);
   const eventId = params.eventId;
@@ -180,7 +182,10 @@ const NetworkingConfirmation = () => {
         style={{ minHeight: "550px", marginLeft: "4vw" }}
       >
         <div className="speed-networking-matching-container p-4 pt-5">
-          <div className="finding-your-match mb-5">
+          <div
+            style={{ color: eventDetails.color }}
+            className="finding-your-match mb-5"
+          >
             We've found a match for you.
           </div>
           <div className="d-flex flex-row align-items-center justify-content-center">
@@ -230,14 +235,10 @@ const NetworkingConfirmation = () => {
               ) : (
                 <></>
               )}
-
               <div className="d-flex flex-row align-items-center justify-content-between">
                 <ButtonFilledDark
+                  color={eventDetails.color}
                   onClick={() => {
-                    // dispatch
-                    // emit using socket to join this room
-                    // setOpenNetworkingConfirmation => false
-                    // setOpenNetworkingRoom => true
                     socket.emit(
                       "joinNetworking",
                       {
@@ -254,24 +255,18 @@ const NetworkingConfirmation = () => {
                     );
 
                     dispatch(getRTCTokenForNetworking(handleOpen));
-
-                    // set open networking table only after token has been arrived
                   }}
                   style={{ width: "48%" }}
                 >
                   Join
                 </ButtonFilledDark>
                 <ButtonOutlinedDark
+                  color={eventDetails.color}
                   onClick={() => {
-                    // dispatch
-
                     dispatch(setOpenConfirmation(false));
                     dispatch(setNetworkingRoom(null));
                     dispatch(setMatchedWith(null));
                     handleClose();
-                    // setOpenConfirmation => false
-                    // set networkingRoom to null
-                    // set matchedWith null
                   }}
                   style={{ width: "48%" }}
                 >

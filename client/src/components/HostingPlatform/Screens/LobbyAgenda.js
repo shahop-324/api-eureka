@@ -10,12 +10,16 @@ import Speakers from "./Sub/Speakers";
 import Hosts from "./Sub/Hosts";
 import MyMeetings from "./Sub/MyMeetings";
 import MyConnections from "./Sub/MyConnections";
+import α from "color-alpha";
 
 const CustomHorizontalTabWarpper = styled.div`
   min-width: 500px;
   height: auto;
   border-radius: 10px;
-  background-color: #345b63;
+  background-color: ${(props) =>
+    props && props.color
+      ? `${α(props.color, 0.5)} !important`
+      : "#233e44 !important"};
 
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -34,7 +38,9 @@ const CustomTabButton = styled.div`
   text-align: center;
   padding: 6px 12px;
   background-color: ${(props) =>
-    props.active && props.active ? "#152d35" : "#345b63"};
+    props && props.active
+      ? `${α(props.color, 1.5)} !important`
+      : `transparent !important`};
   border-radius: 10px;
   border: 1px solid transparent;
 
@@ -67,6 +73,8 @@ const LobbyAgenda = () => {
     (state) => state.event.eventDetails
   );
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   return (
     <>
       <EventBanner
@@ -74,9 +82,12 @@ const LobbyAgenda = () => {
         shortDescription={shortDescription}
         createdBy={createdBy}
       />
-
-      <CustomHorizontalTabWarpper className="px-3 mb-4">
+      <CustomHorizontalTabWarpper
+        color={eventDetails.color}
+        className="px-3 mb-4"
+      >
         <CustomTabButton
+          color={eventDetails.color}
           active={selectedTab === "about" ? true : false}
           onClick={() => {
             setSelectedTab("about");
@@ -84,10 +95,9 @@ const LobbyAgenda = () => {
         >
           About
         </CustomTabButton>
-        
-       
 
         <CustomTabButton
+          color={eventDetails.color}
           active={selectedTab === "speakers" ? true : false}
           onClick={() => {
             setSelectedTab("speakers");
@@ -96,6 +106,7 @@ const LobbyAgenda = () => {
           Speakers
         </CustomTabButton>
         <CustomTabButton
+          color={eventDetails.color}
           active={selectedTab === "hosts" ? true : false}
           onClick={() => {
             setSelectedTab("hosts");

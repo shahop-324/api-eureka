@@ -26,8 +26,10 @@ import {
 import { useParams } from "react-router";
 import UpdateEventProfile from "./../HelperComponents/UpdateEventProfile";
 
+import α from 'color-alpha';
+
 const SideNavBody = styled.div`
-  background-color: #233e44 !important;
+  background-color:  ${(props) => props && props.color ? α(props.color, 2) : "#233e44 !important"};
 `;
 
 const MenuText = styled.span`
@@ -81,7 +83,7 @@ const SideNav = ({
 
   return (
     <>
-      <SideNavBody className="h-side-nav">
+      <SideNavBody color={eventDetails.color} className="h-side-nav">
         <div
           className="community-logo-container d-flex flex-row align-items-center justify-content-center py-2 px-3"
           style={{ height: "9vh" }}

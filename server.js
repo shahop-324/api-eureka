@@ -58,7 +58,6 @@ const io = require("socket.io")(server, {
       "https://zapier.com",
       "https://www.zapier.com",
     ],
-
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
   },
 });

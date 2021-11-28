@@ -30,15 +30,20 @@ import Links from "./BoothComponents/Main/Links";
 import PromoCodes from "./BoothComponents/Main/PromoCodes";
 import BusinessCards from "./BoothComponents/Main/BusinessCards";
 import Forms from "./BoothComponents/Main/Forms";
+import α from "color-alpha";
 
 const BasicGrid = styled.div`
   display: grid;
   grid-template-columns: 0.7fr 9fr;
   height: 92vh;
+  /* background-color: ${(props) => props.color}; */
 `;
 
 const MainContent = styled.div`
-  background-color: #dfeaee;
+  background-color: ${(props) =>
+    props && props.color
+      ? `${α(props.color, 0.2)} !important`
+      : "#dfeaee !important"};
   width: 100%;
   min-height: 92vh;
   overflow: auto;
@@ -85,6 +90,8 @@ const EditBoothDrawer = ({ open, handleClose }) => {
 
   const { currentIndexForEditBooth } = useSelector((state) => state.navigation);
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   return (
     <>
       <Dialog
@@ -93,7 +100,9 @@ const EditBoothDrawer = ({ open, handleClose }) => {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: "relative", backgroundColor: "#152d35" }}>
+        <AppBar
+          sx={{ position: "relative", backgroundColor: eventDetails.color }}
+        >
           <Toolbar>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Edit Booth
@@ -109,7 +118,7 @@ const EditBoothDrawer = ({ open, handleClose }) => {
           </Toolbar>
         </AppBar>
 
-        <BasicGrid>
+        <BasicGrid color={eventDetails.color}>
           {/* This will be a grid to separate side nav and main body content */}
           <div style={{ maxWidth: "120px" }}>
             <SideNav
@@ -124,7 +133,7 @@ const EditBoothDrawer = ({ open, handleClose }) => {
               handleBusinessCardsClick={handleBusinessCardsClick}
             />
           </div>
-          <MainContent>
+          <MainContent color={eventDetails.color}>
             {(() => {
               switch (currentIndexForEditBooth * 1) {
                 case 0:

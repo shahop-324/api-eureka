@@ -31,13 +31,11 @@ import BoothFiles from "./BoothComponents/BoothFiles";
 import BoothOffers from "./BoothComponents/BoothPromoCodes";
 import BoothForms from "./BoothComponents/BoothForms";
 import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
-
 import { SwipeableDrawer } from "@material-ui/core";
-
 import MainChatComponent from "./BoothAreaChat/MainChatComponent";
-
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
+import α from "color-alpha";
 
 import {
   fetchBooth,
@@ -58,27 +56,33 @@ const NoContentText = styled.div`
 `;
 
 const ThemedBackgroundButtonOutlined = styled.div`
-  background-color: #152d35 !important;
-  text-decoration: none !important;
-  color: #ffffff !important;
-  border: 1px solid transparent;
   outline: none !important;
+  background-color: ${(props) =>
+    props && props.color
+      ? `${α(props.color, 1.5)} !important`
+      : "#152d35 !important"};
+  border: ${(props) => `1px solid ${α(props.color, 1.5)} !important`};
+  color: #ffffff !important;
 
   &:hover {
+    color: ${(props) => `${α(props.color, 1.5)} !important`};
     background-color: transparent !important;
-    color: #152d35 !important;
-    border: 1px solid #152d35 !important;
-    cursor: pointer !important;
+    text-decoration: none !important;
+    cursor: pointer;
   }
 `;
+
 const ThemedBackgroundButtonFilled = styled.div`
   outline: none !important;
-  background-color: #152d35 !important;
-  border: 1px solid #152d35 !important;
+  background-color: ${(props) =>
+    props && props.color
+      ? `${α(props.color, 1.5)} !important`
+      : "#152d35 !important"};
+  border: ${(props) => `1px solid ${α(props.color, 1.5)} !important`};
   color: #ffffff;
 
   &:hover {
-    color: #152d35 !important;
+    color: ${(props) => `${α(props.color, 1.5)} !important`};
     background-color: transparent !important;
     text-decoration: none !important;
     cursor: pointer;
@@ -192,6 +196,8 @@ const BoothArea = () => {
     (state) => state.booth
   );
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   useEffect(() => {
     dispatch(fetchBooth(currentBoothId));
     dispatch(fetchBusinessCards(currentBoothId, eventId));
@@ -283,6 +289,7 @@ const BoothArea = () => {
 
           <div>
             <ThemedBackgroundButtonOutlined
+              color={eventDetails.color}
               onClick={() => {
                 setOpenEdit(true);
               }}
@@ -417,6 +424,7 @@ const BoothArea = () => {
                 <Chip label="Shared business card" color="success" />
               ) : (
                 <ThemedBackgroundButtonFilled
+                  color={eventDetails.color}
                   onClick={() => {
                     dispatch(
                       shareBusinessCard(userId, eventId, currentBoothId)
@@ -514,11 +522,9 @@ const BoothArea = () => {
             <hr />
           </div>
         </div>
-
         <Rooms />
       </div>
       <EditBoothDrawer open={openEdit} handleClose={handleCloseEdit} />
-
       <Fab
         onClick={() => {
           setOpenChats(true);
@@ -528,7 +534,7 @@ const BoothArea = () => {
           bottom: "16px",
           right: "16px",
           color: "#ffffff",
-          backgroundColor: "#152d35",
+          backgroundColor: α(eventDetails.color, 2.5),
         }}
         color="primary"
         aria-label="add"

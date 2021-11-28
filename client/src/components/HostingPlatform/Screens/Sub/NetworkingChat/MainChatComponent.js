@@ -15,7 +15,7 @@ import DeletedOthersMsg from "./Helper/DeletedOthersMsg";
 
 const ChatContainer = styled.div`
   background: rgba(255, 255, 255, 0.05) !important;
-  box-shadow: 0 8px 32px 0 #1d1d1d !important;
+  /* box-shadow: 0 8px 32px 0 #1d1d1d !important; */
   backdrop-filter: blur(4px) !important;
   -webkit-backdrop-filter: blur(4px) !important;
   border-radius: 10px !important;
@@ -255,7 +255,10 @@ const MainChatComponent = () => {
 
   return (
     <>
-      <ChatContainer className="chat-msg-container pt-2 px-2 d-flex flex-column justify-content-between">
+      <ChatContainer
+        style={{ height: "70vh" }}
+        className="chat-msg-container px-2 d-flex flex-column justify-content-between"
+      >
         <div
           className="scrollable-chat-element-container"
           id="all-chat-msg-container"

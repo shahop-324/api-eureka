@@ -28,6 +28,8 @@ import {
   fetchLoungeTableDetails,
 } from "../../../actions";
 
+import α from "color-alpha";
+
 const RoomTitle = styled.div`
   font-weight: 500;
   font-family: "Ubuntu";
@@ -35,7 +37,10 @@ const RoomTitle = styled.div`
   font-size: 0.83rem;
 `;
 const RoomWraper = styled.div`
-  background-color: #345b63 !important;
+  background-color: ${(props) =>
+    props && props.color
+      ? `${α(props.color, 0.7)} !important`
+      : "#233e44 !important"};
 
   min-height: 338px !important;
   height: auto !important;
@@ -62,6 +67,8 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
 
   const chairArrangement = useSelector((state) => state.rooms.chairs);
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   const handleCloseEditTable = () => {
     setOpenEditTable(false);
   };
@@ -77,7 +84,6 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    
     socket.on("numberOfPeopleOnTable", ({ numberOfPeopleOnTable }) => {
       dispatch(fetchNumberOfPeopleOnTable(numberOfPeopleOnTable));
     });
@@ -93,7 +99,7 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
 
   return (
     <>
-      <RoomWraper className="room-wrapper px-4 py-3">
+      <RoomWraper color={eventDetails.color} className="room-wrapper px-4 py-3">
         <div className="room-num-and-edit-wrapper d-flex flex-row justify-content-between align-items-center">
           <RoomNumber className="room-number">{num}</RoomNumber>
           <IconButton

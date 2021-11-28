@@ -100,7 +100,7 @@ const StageNavComponent = ({ runningStatus, canPublishStream }) => {
 
   return (
     <>
-      <StageNav className="px-3 py-1">
+      <StageNav color={eventDetails.color} className="px-3 py-1">
         <div className="d-flex flex-row align-items-center">
           <BrandLogo className="me-3">
             <img

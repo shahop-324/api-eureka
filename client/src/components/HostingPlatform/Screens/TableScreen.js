@@ -34,6 +34,8 @@ import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
 import CancelPresentationOutlinedIcon from "@mui/icons-material/CancelPresentationOutlined";
 import TableScreenStreamSettings from "./StreamSettings/TableScreen";
 
+import α from "color-alpha";
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -54,7 +56,11 @@ let rtc = {
 };
 
 const TableScreenBody = styled.div`
-  background-color: #0b1b20 !important;
+ 
+  background-color: ${(props) =>
+    props && props.color
+      ? `${α(props.color, 1)} !important`
+      : "#122225 !important"};
 `;
 
 const TableScreen = ({
@@ -62,6 +68,9 @@ const TableScreen = ({
   closeTableScreen,
   id, // * This is tableId
 }) => {
+
+  const {eventDetails} = useSelector((state) => state.event);
+
   const { registrations } = useSelector((state) => state.registration);
 
   const [openSettings, setOpenSettings] = useState(false);
@@ -824,7 +833,7 @@ AgoraRTC.onCameraChanged = async (changedDevice) => {
           margin: "0 auto 0 auto",
         }}
       >
-        <TableScreenBody className="px-4" id="table-full-screen-element">
+        <TableScreenBody color={eventDetails.color} className="px-4" id="table-full-screen-element">
           <div className="table-screen-header d-flex flex-row align-items-center justify-content-between pt-3">
             <div className="table-num-and-heading px-2">
               <span

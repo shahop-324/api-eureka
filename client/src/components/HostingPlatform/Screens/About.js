@@ -119,6 +119,7 @@ const WhatsHappeningBody = styled.div`
   border-radius: 5px;
   height: 400px;
   margin-bottom: 40px;
+  background-color: #ffffff;
 `;
 
 const SessionPlaybackPreview = styled.div`
@@ -127,7 +128,7 @@ const SessionPlaybackPreview = styled.div`
   height: 100%;
   padding: 10px;
   height: 420px;
-  background-color: #cecfcf;
+  background-color: #FFFFFF;
   display: grid;
   grid-gap: 32px;
   grid-template-columns: 3fr 1.5fr;

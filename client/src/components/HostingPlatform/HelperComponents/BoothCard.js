@@ -2,19 +2,21 @@ import React from "react";
 import socket from "./../service/socket";
 import styled from "styled-components";
 import "./../Styles/booth.scss";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SetCurrentBoothId } from "./../../../actions";
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
+import α from "color-alpha";
 
 const BoothCardContainer = styled.div`
-  background-color: #213a42 !important;
+  background-color: ${(props) =>
+    props && props.color
+      ? `${α(props.color, 0.65)} !important`
+      : `#213a42 !important`};
   border: 1px solid rgba(255, 255, 255, 0.18);
 
   &:hover {
     cursor: pointer;
-    background-color: #2d434b !important;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     border-radius: 10px;
@@ -52,9 +54,13 @@ const renderTags = (tags) => {
 const BoothCard = ({ promoImage, logo, name, tagline, tags, id }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
+
+  const { eventDetails } = useSelector((state) => state.event);
+
   return (
     <>
       <BoothCardContainer
+        color={eventDetails.color}
         onClick={() => {
           socket.emit("joinBooth", { boothId: id }, (error) => {
             if (error) {

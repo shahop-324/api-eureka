@@ -2,6 +2,8 @@ import styled from "styled-components";
 import LastPageRoundedIcon from "@material-ui/icons/LastPageRounded";
 import FirstPageRoundedIcon from "@material-ui/icons/FirstPageRounded";
 
+import α from "color-alpha";
+
 const Button = styled.div`
   font-family: "Ubuntu";
   font-weight: 500;
@@ -17,6 +19,9 @@ const Button = styled.div`
 const StageNav = styled.div`
   height: 7vh;
   background-color: #152d35;
+
+  background-color: ${(props) => props.color};
+
   width: 100%;
 
   display: grid;
@@ -29,7 +34,7 @@ const StageNav = styled.div`
 const StageBody = styled.div`
   min-height: 86vh;
   height: 92%;
-  background-color: #345b63;
+  background-color: ${(props) => α(props.color, 0.75)};
   width: 100%;
 
   position: relative;
@@ -88,7 +93,7 @@ const GridViewMini = styled.div`
 const StageControl = styled.div`
   min-height: 7vh;
   height: 8%;
-  background-color: #152d35;
+  background-color: ${(props) => props.color};
   width: 100%;
 
   display: grid;
@@ -146,9 +151,9 @@ const BtnFilled = styled.div`
 const BtnOutlined = styled.div`
   padding: 5px 8px;
   background-color: transparent;
-  border: 1px solid #1F3E49;
+  border: 1px solid #1f3e49;
 
-  color: #1F3E49;
+  color: #1f3e49;
   font-family: "Ubuntu";
   font-weight: 500;
   font-size: 0.8rem;
@@ -162,7 +167,7 @@ const BtnOutlined = styled.div`
   &:hover {
     color: #ffffff;
     cursor: pointer;
-    background-color: #1F3E49;
+    background-color: #1f3e49;
   }
 `;
 
@@ -201,7 +206,7 @@ const BtnDanger = styled.div`
 `;
 
 const IconButton = styled.div`
-z-index: 1000000000000000000000000000000000000000000000000000000000;
+  z-index: 1000000000000000000000000000000000000000000000000000000000;
   max-width: fit-content;
   padding: 7px;
   border-radius: 10px;

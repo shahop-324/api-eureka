@@ -105,6 +105,8 @@ const SessionStage = () => {
   const eventId = params.eventId;
   const communityId = params.communityId;
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   const handleJoinStage = async () => {
     if (rtc.client) {
       if (rtc.localScreenTrack) {
@@ -1289,6 +1291,7 @@ const SessionStage = () => {
 
         {/* Stage Nav Goes here */}
         <StageNavComponent
+          color={eventDetails.color}
           runningStatus={runningStatus}
           canPublishStream={canPublishStream}
         />
@@ -1314,9 +1317,10 @@ const SessionStage = () => {
               setFlyingObjects={setFlyingObjects}
             />
           </div>
-          <StageBody openSideDrawer={sideDrawerOpen}>
+          <StageBody color={eventDetails.color} openSideDrawer={sideDrawerOpen}>
             {/* Stream body goes here */}
             <StreamBody
+              color={eventDetails.color}
               screenTracks={screenTracks}
               handleOpenSideDrawer={handleOpenSideDrawer}
               sideDrawerOpen={sideDrawerOpen}
@@ -1329,6 +1333,7 @@ const SessionStage = () => {
             {/* Stage side drawer component goes here */}
             {sideDrawerOpen && (
               <StageSideDrawerComponent
+                color={eventDetails.color}
                 runningStatus={runningStatus}
                 canPublishStream={canPublishStream}
               />
@@ -1337,7 +1342,8 @@ const SessionStage = () => {
 
           {/* Stage Controls components */}
           <StageControlsComponent
-          rtc={rtc}
+            color={eventDetails.color}
+            rtc={rtc}
             onEmojiSelect={onEmojiSelect}
             onClap={onClap}
             onSmile={onSmile}

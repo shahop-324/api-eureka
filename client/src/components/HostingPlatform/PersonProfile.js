@@ -26,6 +26,7 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 
 import UpdateEventProfile from "./../HostingPlatform/HelperComponents/UpdateEventProfile";
+import α from "color-alpha";
 
 const PersonProfileBody = styled.div`
   width: 360px;
@@ -96,14 +97,14 @@ const ButtonOutlinedDark = styled.div`
   color: #ffffff;
   font-family: "Ubuntu";
 
-  color: #152d35;
+  color: ${(props) => α(props.color, 1.5)};
   background-color: transparent;
 
-  border: 1px solid #152d35;
+  border: 1px solid ${(props) => α(props.color, 1.5)};
   border-radius: 5px;
 
   &:hover {
-    background-color: #152d35;
+    background-color: ${(props) => α(props.color, 1.5)};
 
     color: #ffffff;
 
@@ -127,6 +128,8 @@ const renderInterests = (interests) => {
 
 const PersonProfile = ({ hideBtns, open, handleClose, person }) => {
   const [openUpdateProfile, setOpenUpdateProfile] = useState(false);
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   const handleCloseUpdateProfile = () => {
     setOpenUpdateProfile(false);
@@ -320,6 +323,7 @@ const PersonProfile = ({ hideBtns, open, handleClose, person }) => {
             <div className="d-flex flex-row align-items-center justify-content-between mt-4">
               {isMe ? (
                 <ButtonOutlinedDark
+                color={eventDetails.color}
                   onClick={() => {
                     setOpenUpdateProfile(true);
                     handleClose();

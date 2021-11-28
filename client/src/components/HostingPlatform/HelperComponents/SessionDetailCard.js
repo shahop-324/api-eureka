@@ -20,6 +20,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 import styled from "styled-components";
 import EditSession from "./EditSession";
+import α from "color-alpha";
 
 const useStyles = makeStyles((theme) => ({
   small: {
@@ -37,7 +38,10 @@ const SessionDetailCardBody = styled.div`
 `;
 
 const ThemedBackgroundButton = styled.div`
-  background-color: #152d35;
+  background-color: ${(props) =>
+    props && props.color
+      ? `${α(props.color, 1.5)} !important`
+      : "#233e44 !important"};
   text-decoration: none !important;
 `;
 
@@ -136,6 +140,8 @@ const SessionDetailCard = ({
 
   const { role } = useSelector((state) => state.eventAccessToken); // Possible values => "speaker" || "attendee" || "organiser" || "exhibitor"
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   // => Determine if this person should be treated as a publisher or subscriber
 
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
@@ -151,7 +157,6 @@ const SessionDetailCard = ({
 
   let sessionRole;
   let btnText = "Join";
-  let bgColor = "#3372F0D8";
 
   if (role === "organiser" || role === "speaker") {
     if (hostIds.includes(userId) || speakerEmails.includes(userEmail)) {
@@ -222,7 +227,11 @@ const SessionDetailCard = ({
                 color="info"
                 variant="outlined"
                 label="You are speaker"
-                style={{ fontWeight: "500" }}
+                style={{
+                  fontWeight: "500",
+                  color: eventDetails.color,
+                  border: `1px solid ${eventDetails.color} `,
+                }}
               />
             ) : (
               <></>
@@ -368,7 +377,10 @@ const SessionDetailCard = ({
               }}
               style={{ textDecoration: "none" }}
             >
-              <ThemedBackgroundButton className="btn-filled-h px-4 py-3 ms-3 join-session-btn">
+              <ThemedBackgroundButton
+                color={eventDetails.color}
+                className="btn-filled-h px-4 py-3 ms-3 join-session-btn"
+              >
                 {btnText}
               </ThemedBackgroundButton>
             </div>

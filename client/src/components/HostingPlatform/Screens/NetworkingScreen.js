@@ -32,6 +32,8 @@ import CancelPresentationOutlinedIcon from "@mui/icons-material/CancelPresentati
 
 import NetworkingStreamSettings from "./../Screens/StreamSettings/NetworkingScreen";
 
+import α from "color-alpha";
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -47,7 +49,10 @@ let rtc = {
 const NetworkingTableBody = styled.div`
   min-height: 85vh;
   max-width: 1600px;
-  background-color: #0c1a1f;
+  background-color: ${(props) =>
+    props && props.color
+      ? `${α(props.color, 1)} !important`
+      : "#122225 !important"};
 `;
 
 const UpperSection = styled.div`
@@ -70,11 +75,13 @@ const VideoGrid = styled.div``;
 const NetworkingScreen = ({ open, handleClose }) => {
   console.log("This is networking screen");
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   const [openSettings, setOpenSettings] = useState(false);
 
   const handleCloseSettings = () => {
     setOpenSettings(false);
-  }
+  };
 
   const params = useParams();
   const { registrations } = useSelector((state) => state.registration);
@@ -230,8 +237,6 @@ const NetworkingScreen = ({ open, handleClose }) => {
   };
 
   useEffect(() => {
-
-
     // *********** Perform this procedure when microphone device is changed *********** //
 
     AgoraRTC.onMicrophoneChanged = async (changedDevice) => {
@@ -802,9 +807,9 @@ const NetworkingScreen = ({ open, handleClose }) => {
           margin: "0 auto 0 auto",
         }}
       >
-        <NetworkingTableBody>
+        <NetworkingTableBody color={eventDetails.color}>
           <UpperSection className="mx-4 py-3">
-            <VideoGrid className="p-3">
+            <VideoGrid className="">
               {/* // Here we need to place stream body */}
               {/* // ! */}
               <StreamBody
@@ -812,8 +817,9 @@ const NetworkingScreen = ({ open, handleClose }) => {
                 galleryViewInput={galleryViewInput}
               ></StreamBody>
             </VideoGrid>
-            <div className="py-3">
-              <MainChatComponent />
+            <div className="d-flex flex-column justify-content-end mb-4">
+
+            <MainChatComponent />
             </div>
           </UpperSection>
 
@@ -897,9 +903,7 @@ const NetworkingScreen = ({ open, handleClose }) => {
                 />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center justify-content-end">
-              
-            </div>
+            <div className="d-flex flex-row align-items-center justify-content-end"></div>
           </LowerSection>
         </NetworkingTableBody>
       </Dialog>
@@ -921,7 +925,11 @@ const NetworkingScreen = ({ open, handleClose }) => {
           </Alert>
         </Snackbar>
       </Portal>
-      <NetworkingStreamSettings open={openSettings} handleClose={handleCloseSettings} rtc={rtc} />
+      <NetworkingStreamSettings
+        open={openSettings}
+        handleClose={handleCloseSettings}
+        rtc={rtc}
+      />
     </>
   );
 };

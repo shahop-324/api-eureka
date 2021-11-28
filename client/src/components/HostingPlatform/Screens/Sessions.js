@@ -148,16 +148,27 @@ const Sessions = () => {
           <div className="schedule-filter-grid d-flex flex-row align-items-center justify-content-end">
             <div style={{ width: "200px" }}>
               <Select
+                isMulti
                 styles={styles}
                 options={speakers}
                 placeholder="Speakers"
               />{" "}
             </div>
             <div style={{ width: "200px" }}>
-              <Select styles={styles} options={tracks} placeholder="tracks" />
+              <Select
+                isMulti
+                styles={styles}
+                options={tracks}
+                placeholder="tracks"
+              />
             </div>
             <div style={{ width: "200px" }}>
-              <Select styles={styles} options={tags} placeholder="tags" />
+              <Select
+                isMulti
+                styles={styles}
+                options={tags}
+                placeholder="tags"
+              />
             </div>
           </div>
         </div>
