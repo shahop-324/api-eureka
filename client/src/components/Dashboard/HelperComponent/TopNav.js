@@ -28,9 +28,19 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
 
 import NotificationsSideDrawer from "./../HelperComponent/NotificationsSideDrawer";
+import CampaignRoundedIcon from "@mui/icons-material/CampaignRounded";
 
 const HeaderFooter = styled.div`
   background-color: #ebf4f6;
+`;
+
+const CustomButton = styled.div`
+  color: #212121;
+  border-radius: 25px;
+  &:hover {
+    cursor: pointer;
+    background-color: #ececec;
+  }
 `;
 
 const FormHeading = styled.div`
@@ -133,13 +143,14 @@ const Topnav = ({
               className="me-2"
               style={{ border: "1px solid #538BF7", color: "#538BF7" }}
             />
-            <IconButton
+            {/* <IconButton
               onClick={() => {
                 setOpenNotifications(true);
               }}
             >
               <NotificationsNoneRoundedIcon />
-            </IconButton>
+            </IconButton> */}
+            
             <div
               onClick={handleClickOpenSettings}
               className={`${classes.root} mx-2`}
@@ -148,6 +159,19 @@ const Topnav = ({
                 <EditRoundedIcon style={{ fontSize: "22px" }} />
               </IconButton>
             </div>
+            <IconButton id="openBeamer">
+                  <CampaignRoundedIcon />
+                </IconButton>
+            {/* <div>
+              <CustomButton
+                style={{ border: "1px solid #ececec" }}
+                id="openBeamer"
+                className="btn-outline-text ms-2 d-flex flex-row align-items-center p-2"
+              >
+                {" "}
+                <span className="mx-2"> What's new</span>
+              </CustomButton>
+            </div> */}
             <div
               className="dashboard-avatar-menu mx-2 d-flex flex-row align-items-center"
               style={{ padding: "0" }}

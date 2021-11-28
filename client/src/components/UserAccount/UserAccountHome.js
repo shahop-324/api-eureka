@@ -27,12 +27,12 @@ import NotificationSideDrawer from "./Helper/NotificationSideDrawer";
 import Wishlist from "./Helper/Wishlist";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import Following from "./Following";
-
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
 import ArrowDropUpRoundedIcon from "@mui/icons-material/ArrowDropUpRounded";
 import ForumRoundedIcon from "@mui/icons-material/ForumRounded";
 import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
 import VideoLibraryRoundedIcon from "@mui/icons-material/VideoLibraryRounded";
+import CampaignRoundedIcon from "@mui/icons-material/CampaignRounded";
 
 import { styled as MUIStyled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
@@ -103,6 +103,26 @@ const StyledMenu = MUIStyled((props) => (
 }));
 
 const UserAccountHome = () => {
+  const loadChatAssistant = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src =
+        "https://static.zdassets.com/ekr/snippet.js?key=a57217fd-2440-4b02-9089-cd5beb7109d4";
+      script.id = "ze-snippet";
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  useEffect(() => {
+    loadChatAssistant();
+  }, []);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClickMore = (event) => {
@@ -235,13 +255,24 @@ const UserAccountHome = () => {
                 >
                   <FavoriteBorderRoundedIcon />
                 </IconButton>
-                <IconButton
+                {/* <IconButton
                   onClick={() => {
                     setOpenNotifications(true);
                   }}
                 >
                   <NotificationsNoneRoundedIcon />
+                </IconButton> */}
+                <IconButton id="openBeamer">
+                  <CampaignRoundedIcon />
                 </IconButton>
+                {/* <CustomButton
+                  style={{ border: "1px solid #ececec" }}
+                  id="openBeamer"
+                  className="btn-outline-text ms-2 d-flex flex-row align-items-center p-2"
+                >
+                  {" "}
+                  <span className="mx-2"> What's new</span>
+                </CustomButton> */}
                 <CustomButton
                   id="demo-customized-button"
                   aria-controls="demo-customized-menu"
@@ -331,7 +362,7 @@ const UserAccountHome = () => {
                 switch (currentIndex) {
                   case 0:
                     return <UserAccountHomeMainBody />;
-                    
+
                   case 1:
                     return <UserAccountEventsMainBody />;
 

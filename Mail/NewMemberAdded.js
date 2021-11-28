@@ -1,5 +1,5 @@
-module.exports = () => {
-    return `
+module.exports = (superAdminName, userFirstName, communityName) => {
+  return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -180,7 +180,7 @@ module.exports = () => {
 
                               <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-                                <p style="line-height: 140%; font-size: 14px;"><span style="font-size: 22px; line-height: 30.799999999999997px;"><span style="line-height: 30.799999999999997px; font-size: 22px;"><strong><span style="line-height: 30.799999999999997px; font-size: 22px;"><span style="line-height: 30.799999999999997px; font-size: 22px;">New member&nbsp;Abc has been added to XYZ </span></span>
+                                <p style="line-height: 140%; font-size: 14px;"><span style="font-size: 22px; line-height: 30.799999999999997px;"><span style="line-height: 30.799999999999997px; font-size: 22px;"><strong><span style="line-height: 30.799999999999997px; font-size: 22px;"><span style="line-height: 30.799999999999997px; font-size: 22px;">New member&nbsp;${userFirstName} has been added to ${communityName} </span></span>
                                   </strong>
                                   </span><span style="line-height: 30.799999999999997px; font-size: 22px;"><strong>community</strong></span></span>
                                 </p>
@@ -222,8 +222,8 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is to inform that ABC has accepted invitation to join your XYZ community on Bluemeet and has been added as a community manager to your Bluemeet community.</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${superAdminName}</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is to inform that ${userFirstName} has accepted invitation to join your ${communityName} community on Bluemeet and has been added as a community manager to your Bluemeet community.</span></p>
                               </div>
 
                             </td>
@@ -452,6 +452,5 @@ module.exports = () => {
 
 </html>
     
-    `
-}
-
+    `;
+};

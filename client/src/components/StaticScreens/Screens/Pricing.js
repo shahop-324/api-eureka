@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Footer from "../../Footer";
 import styled from "styled-components";
 import "./../Styles/pricing.scss";
@@ -143,6 +143,10 @@ const ComparePlans = styled.div`
 
 const Pricing = (props) => {
   const { signInSucceded } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    loadChatAssistant();
+  }, []);
 
   const referral = useSelector((state) => state.user.referredUserId);
   const dispatch = useDispatch();
@@ -387,6 +391,24 @@ const Pricing = (props) => {
   console.log(selectedCommunity);
 
   const { isSignedIn } = useSelector((state) => state.auth);
+
+  const loadChatAssistant = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src =
+        "https://static.zdassets.com/ekr/snippet.js?key=a57217fd-2440-4b02-9089-cd5beb7109d4";
+      script.id = "ze-snippet";
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+ 
 
   return (
     <>

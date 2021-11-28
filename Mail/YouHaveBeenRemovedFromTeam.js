@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (userName, communityName) => {
     return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -180,7 +180,7 @@ module.exports = () => {
 
                               <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 24px; line-height: 33.599999999999994px;"><strong><span style="line-height: 33.599999999999994px; font-size: 24px;">You have been removed from XYZ community</span></strong>
+                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 24px; line-height: 33.599999999999994px;"><strong><span style="line-height: 33.599999999999994px; font-size: 24px;">You have been removed from ${communityName} community</span></strong>
                                   </span>
                                 </p>
                               </div>
@@ -221,8 +221,8 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is to inform you that you have been removed from XYZ community on Bluemeet. You will not be able to manage events organised by this community anymore.</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${userName}</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is to inform you that you have been removed from ${communityName} on Bluemeet. You will not be able to manage events organised by this community anymore.</span></p>
                               </div>
 
                             </td>

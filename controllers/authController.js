@@ -333,10 +333,10 @@ exports.signup = catchAsync(async (req, res, next) => {
 
         const msg = {
           to: newUser.email, // Change to your recipient
-          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          from: "welcome@bluemeet.in", // Change to your verified sender
           subject: `Welcome to Bluemeet`,
           text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
-          html: WelcomeToBluemeet(),
+          html: WelcomeToBluemeet(newUser.firtsName),
         };
 
         sgMail
@@ -551,10 +551,10 @@ exports.signup = catchAsync(async (req, res, next) => {
 
         const msg = {
           to: newUser.email, // Change to your recipient
-          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          from: "welcome@bluemeet.in", // Change to your verified sender
           subject: `Welcome to Bluemeet`,
           text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
-          html: WelcomeToBluemeet(),
+          html: WelcomeToBluemeet(newUser.firstName),
         };
 
         sgMail
@@ -750,10 +750,10 @@ exports.signup = catchAsync(async (req, res, next) => {
 
         const msg = {
           to: newUser.email, // Change to your recipient
-          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          from: "welcome@bluemeet.in", // Change to your verified sender
           subject: `Welcome to Bluemeet`,
           text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
-          html: WelcomeToBluemeet(),
+          html: WelcomeToBluemeet(newUser.firstName),
         };
 
         sgMail
@@ -952,10 +952,10 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
     const msg = {
       to: user.email, // Change to your recipient
-      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      from: "security@bluemeet.in", // Change to your verified sender
       subject: "Your Password has been changed.",
       text: "Hi we have changed your password as requested by you. If you think its a mistake then please contact us via support room or write to us at support@bluemeet.in",
-      html: PasswordChanged(),
+      html: PasswordChanged(user.firstName),
     };
 
     sgMail

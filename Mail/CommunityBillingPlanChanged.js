@@ -1,5 +1,5 @@
-module.exports = () => {
-    return `
+module.exports = (superAdminName, communityName) => {
+  return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -180,7 +180,7 @@ module.exports = () => {
 
                               <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.199999999999996px;"><strong><span style="line-height: 39.199999999999996px; font-size: 28px;">XYZ community Plan Has been changed</span></strong>
+                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.199999999999996px;"><strong><span style="line-height: 39.199999999999996px; font-size: 28px;">${communityName} community Plan Has been changed</span></strong>
                                   </span>
                                 </p>
                               </div>
@@ -221,8 +221,8 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is a gentle reminder to inform you that XYZ community Plan has been changed to --- Plan. You can get more details on this from community dashboard.</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${superAdminName}</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is a gentle reminder to inform you that ${communityName} community Plan has been changed to --- Plan. You can get more details on this from community dashboard.</span></p>
                               </div>
 
                             </td>
@@ -451,5 +451,5 @@ module.exports = () => {
 
 </html>
     
-    `
-}
+    `;
+};

@@ -635,11 +635,11 @@ exports.deactivateMe = catchAsync(async (req, res, next) => {
       const msg = {
         to: updatedUser.email, // Change to your recipient
         from: "shreyanshshah242@gmail.com", // Change to your verified sender
-        subject: "Bluemeet account deactivated.",
+        subject: "no-reply@bluemeet.in",
         text: `Hi, ${
           updatedUser.firstName + " " + updatedUser.lastName
         } we have successfully deactivated your Bluemeet account as requested. You can still get back access to your account by logging in before ${Date.now()}. After that your account data will be deleted from Bluemeet permanently and cannot be restored in any way. Hope you enjoyed your journey with us. Looking forward to see you again. `,
-        html: BluemeetAccountDeactivated(),
+        html: BluemeetAccountDeactivated(updatedUser.firstName),
       };
 
       sgMail
@@ -784,10 +784,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     const msg = {
       to: user.email, // Change to your recipient
-      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      from: "security@bluemeet.in", // Change to your verified sender
       subject: "Your Password Reset Link",
       text: "use this link to reset your password. This link is valid for only 10 min.",
-      html: PasswordResetLink(),
+      html: PasswordResetLink(user.firstName, `http://localhost:3001/resetPassword/${resetToken}`),
     };
 
     sgMail
@@ -845,12 +845,12 @@ exports.createNewCommunityRequest = catchAsync(async (req, res, next) => {
 
     const msg = {
       to: req.body.email, // Change to your recipient
-      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      from: "security@bluemeet.im", // Change to your verified sender
       subject: `Verify your community mail.`,
       text: `Hi ${user.firstName} ${
         user.lastName
       }. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`https://www.bluemeet.in/verifying-community/${accountRequest._id}`}`,
-      html: VerifyCommunityEmail(),
+      html: VerifyCommunityEmail(`https://www.bluemeet.in/verifying-community/${accountRequest._id}`),
     };
 
     sgMail
@@ -964,15 +964,15 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
           from: "shreyanshshah242@gmail.com", // Change to your verified sender
           subject: `Welcome to ${req.body.name}`,
           text: `Hi ${userDoc.firstName} ${userDoc.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on Bluemeet. Happy Bluemeeting  🥳 🥳!`,
-          html: NewMemberAdded(),
+          html: WelcomeToTeam(userDoc.firstName, communityAccountRequestDoc.name),
         };
 
         const msgToCommunity = {
           to: communityAccountRequestDoc.email, // Mail to community
-          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          from: "welcome@bluemeet.in", // Change to your verified sender
           subject: `Welcome to ${req.body.name}`,
           text: `Hi ${userDoc.firstName} ${userDoc.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on Bluemeet. Happy Bluemeeting  🥳 🥳!`,
-          html: WelcomeToTeam(),
+          html: WelcomeToTeam(userDoc.firstName, communityAccountRequestDoc.name),
         };
 
         sgMail

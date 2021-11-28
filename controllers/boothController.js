@@ -105,7 +105,6 @@ exports.getAllBoothOfEvent = catchAsync(async (req, res, next) => {
       data: booths,
     });
   } catch (error) {
-    
     console.log(error);
   }
 });
@@ -217,12 +216,17 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
 
           const msg = {
             to: element,
-            from: "shreyanshshah242@gmail.com",
+            from: "dinesh.shah@bluemeet.in",
             subject: `Your are invited as a exhibitor in ${eventDoc.eventName}`,
             text: `use this link to join this event ${
               eventDoc.eventName
             } as a booth exhibitor. ${`http://localhost:3001/event/booth/${newRegistration._id}`}`,
-            html: ExhibitorInvitation(),
+            html: ExhibitorInvitation(
+              communityDoc.name,
+              eventDoc.eventName,
+              `http://localhost:3001/event/booth/${newRegistration._id}`,
+              existingUser.firstName
+            ),
           };
 
           sgMail
@@ -270,12 +274,16 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
 
           const msg = {
             to: element,
-            from: "shreyanshshah242@gmail.com",
+            from: "dinesh.shah@bluemeet.in",
             subject: `Your are invited as a exhibitor in ${eventDoc.eventName}`,
             text: `use this link to join this event ${
               eventDoc.eventName
             } as a booth exhibitor. ${`http://localhost:3001/event/booth/${newRegistration._id}`}`,
-            html: ExhibitorInvitation(),
+            html: ExhibitorInvitation(
+              communityDoc.name,
+              eventDoc.eventName,
+              `http://localhost:3001/event/booth/${newRegistration._id}`
+            ),
           };
 
           sgMail
@@ -383,18 +391,29 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
 
 exports.sendBoothInvitation = catchAsync(async (req, res, next) => {
   const boothId = req.params.boothId;
+  const boothDoc = await Booth.findById(boothId);
+  const eventDoc = await Event.findById(boothDoc.eventId);
 
-  const boothDoc = await Booth.findById(boothId, (err, doc) => {
+  const communityDoc = await Community.findById(eventDoc.communityId);
+
+  await Booth.findById(boothId, async (err, doc) => {
     if (!err) {
       // Send invitation mail to every one in doc.emails
 
       for (let element of doc.emails) {
+        const userDoc = await User.findOne({ email: element });
+
         const msg = {
           to: element, // Change to your recipient
-          from: "shreyanshshah242@gmail.com", // Change to your verified sender
-          subject: "Your Event Invitation Link",
+          from: "dinesh.shah@bluemeet.in", // Change to your verified sender
+          subject: "Your Booth Exhibitor Event Link",
           text: `Hi, use this link to join this event as a booth exhibitor. ${doc.invitationLink}.`,
-          html: ExhibitorInvitation(),
+          html: ExhibitorInvitation(
+            communityDoc.name,
+            eventDoc.eventName,
+            doc.invitationLink,
+            userDoc.firstName
+          ),
         };
 
         sgMail

@@ -1,5 +1,5 @@
-module.exports = () => {
-    return `
+module.exports = (communityName, eventName, magicLink, firstName) => {
+  return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -180,7 +180,7 @@ module.exports = () => {
 
                               <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.199999999999996px;"><strong><span style="line-height: 39.199999999999996px; font-size: 28px;">You are invited as a Exhibitor in ABC Event</span></strong>
+                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.199999999999996px;"><strong><span style="line-height: 39.199999999999996px; font-size: 28px;">You are invited as a Exhibitor in ${eventName} Event</span></strong>
                                   </span>
                                 </p>
                               </div>
@@ -221,8 +221,10 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: large;">ABC community has invited you as a Booth exhibitor for XY in&nbsp;their event QWE. You can join event by clicking on the following button.</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${
+                                  firstName && firstName
+                                }</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: large;">${communityName} community has invited you as a Booth exhibitor in&nbsp;their event ${eventName}. You can join event by clicking on the following button.</span></p>
                               </div>
 
                             </td>
@@ -238,7 +240,7 @@ module.exports = () => {
                               <div align="center">
                                 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="sms:9770668454" style="height:46px; v-text-anchor:middle; width:157px;" arcsize="8.5%" stroke="f" fillcolor="#ff6600"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
                                 <a href="sms:9770668454" target="_blank" style="box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #ff6600; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
-                                  <span style="display:block;padding:14px 44px 13px;line-height:120%;"><span style="font-size: 16px; line-height: 19.2px;"><strong><span style="line-height: 19.2px; font-size: 16px;">Join Event</span></strong>
+                                  <span style="display:block;padding:14px 44px 13px;line-height:120%;"><span style="font-size: 16px; line-height: 19.2px;"><strong><span style="line-height: 19.2px; font-size: 16px;"> <a href=${magicLink} style="text-decoration: none; color: "#ffffff">Join Event</a></span></strong>
                                   </span>
                                   </span>
                                 </a>
@@ -473,5 +475,5 @@ module.exports = () => {
     
     
     
-    `
-}
+    `;
+};

@@ -118,10 +118,10 @@ exports.sendInvite = catchAsync(async (req, res, next) => {
 
   const msg = {
     to: userEmail, // Change to your recipient
-    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    from: "no-reply@bluemeet.in", // Change to your verified sender
     subject: "Your Event Invitation Link",
     text: `Hi, ${userName} use this link to join this event. ${invitationLink}.`,
-    html: AttendeeMagicLink(),
+    html: AttendeeMagicLink(userName, invitationLink),
   };
 
   sgMail
@@ -150,10 +150,10 @@ exports.sendBulkInvite = catchAsync(async (req, res, next) => {
   for (let element of bulkMailInfo) {
     const msg = {
       to: element.email, // Change to your recipient
-      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      from: "no-reply@bluemeet.in", // Change to your verified sender
       subject: "Your Event Invitation Link",
       text: `Hi, ${element.name} use this link to join this event (${element.eventName}). ${element.link}.`,
-      html: AttendeeMagicLink(),
+      html: AttendeeMagicLink(element.name, element.link),
     };
 
     sgMail

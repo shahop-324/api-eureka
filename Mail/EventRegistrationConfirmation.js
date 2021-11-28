@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (firstName, eventName, link) => {
     return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -180,7 +180,7 @@ module.exports = () => {
 
                               <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.199999999999996px;"><strong><span style="line-height: 39.199999999999996px; font-size: 28px;">Successfully registered for XYZ Event</span></strong>
+                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.199999999999996px;"><strong><span style="line-height: 39.199999999999996px; font-size: 28px;">Successfully registered for ${eventName} Event</span></strong>
                                   </span>
                                 </p>
                               </div>
@@ -221,8 +221,8 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is &nbsp;to inform you that you have been successfully registered for XYZ event happening on Bluemeet. </span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${firstName}</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is &nbsp;to inform you that you have been successfully registered for ${eventName} event happening on Bluemeet. </span></p>
                                 <p style="line-height: 160%; font-size: 14px;">&nbsp;</p>
                                 <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">You can join event by clicking on the button below or visit your user dashboard to see booked events under My Upcoming event &nbsp;Tab.&nbsp;</span></p>
                                 <p style="line-height: 160%; font-size: 14px;">&nbsp;</p>
@@ -242,7 +242,7 @@ module.exports = () => {
                               <div align="center">
                                 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:36px; v-text-anchor:middle; width:100px;" arcsize="11%" stroke="f" fillcolor="#e67e23"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
                                 <a href="" target="_blank" style="box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #e67e23; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
-                                  <span style="display:block;padding:10px 20px;line-height:120%;"><strong><span style="font-size: 14px; line-height: 16.8px;">Join Event</span></strong>
+                                  <span style="display:block;padding:10px 20px;line-height:120%;"><strong><span style="font-size: 14px; line-height: 16.8px;"> <a href="${link}" style="color: #ffffff; text-decoration: 'none'"> Join Event </a></span></strong>
                                   </span>
                                 </a>
                                 <!--[if mso]></center></v:roundrect></td></tr></table><![endif]-->

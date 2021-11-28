@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (firstName) => {
     return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -252,7 +252,7 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${firstName}</span></p>
                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 18px; line-height: 28.8px;">We are so glad that you signed up on Bluemeet. Bluemeet helps communities and individuals to attend, manage and host virtual and Hybrid events at scale. </span></p>
                                 <p style="font-size: 14px; line-height: 160%;">&nbsp;</p>
                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 18px; line-height: 28.8px;">Our support team will be in touch with you to offer assistance at any point of time you need our help.&nbsp;</span></p>

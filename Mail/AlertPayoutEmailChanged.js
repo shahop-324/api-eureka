@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (firstName, communityName, newEmail) => {
     return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -182,7 +182,7 @@ module.exports = () => {
                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
                                 <p style="line-height: 140%; font-size: 14px;"><span style="font-size: 16px; line-height: 22.4px;"><span style="line-height: 22.4px; font-size: 16px;"><strong><span style="line-height: 22.4px; font-size: 16px;"><span style="line-height: 22.4px; font-size: 16px;">Alert 🚨&nbsp;! Your ABC </span></span>
                                   </strong>
-                                  </span><span style="line-height: 22.4px; font-size: 16px;"><strong>community PayPal Payout email has been changed on Bluemeet</strong></span></span>
+                                  </span><span style="line-height: 22.4px; font-size: 16px;"><strong>${communityName} PayPal Payout email has been changed on Bluemeet.</strong></span></span>
                                 </p>
                               </div>
 
@@ -220,12 +220,10 @@ module.exports = () => {
                         <tbody>
                           <tr>
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
-
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is a gentle reminder that your ABC community's PayPal Payout email has been changed recently. Please Make sure its done by you. If not, Please reply to this email and our support team shall assist you to address this.</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${firstName}</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is a gentle reminder that your ${communityName} community's PayPal Payout email has been changed recently to ${newEmail}. Please Make sure its done by you. If not, Please reply to this email and our support team shall assist you to address this.</span></p>
                               </div>
-
                             </td>
                           </tr>
                         </tbody>

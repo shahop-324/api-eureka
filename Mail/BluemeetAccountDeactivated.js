@@ -1,5 +1,5 @@
-module.exports = () => {
-    return `
+module.exports = (userName) => {
+  return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -221,7 +221,7 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${userName}</span></p>
                                 <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We are so sad to see you go. Your Bluemeet user account has been deactivated and all the information related to your account will be deleted after 14 days from today. You can get back your account by just signing in again. </span></p>
                                 <p style="line-height: 160%; font-size: 14px;">&nbsp;</p>
                                 <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">Hope to see you back soon on Bluemeet.</span></p>
@@ -240,7 +240,7 @@ module.exports = () => {
                               <div align="center">
                                 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:36px; v-text-anchor:middle; width:168px;" arcsize="11%" stroke="f" fillcolor="#169179"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
                                 <a href="" target="_blank" style="box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #169179; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
-                                  <span style="display:block;padding:10px 20px;line-height:120%;"><strong><span style="font-size: 14px; line-height: 16.8px;">Get Back My Account</span></strong>
+                                  <span style="display:block;padding:10px 20px;line-height:120%;"><strong><span style="font-size: 14px; line-height: 16.8px;"> <a href="https://www.bluemeet.in/signin" style="color: #ffffff; text-decoration: 'none'"> Get Back My Account</a></span></strong>
                                   </span>
                                 </a>
                                 <!--[if mso]></center></v:roundrect></td></tr></table><![endif]-->
@@ -472,5 +472,5 @@ module.exports = () => {
 
 </html>
     
-    `
-}
+    `;
+};

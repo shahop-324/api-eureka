@@ -980,10 +980,10 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
       for (let element of mailsArray) {
         const msg = {
           to: element, // Change to your recipient
-          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          from: "payments@bluemeet.in", // Change to your verified sender
           subject: "AppSumo codes redeemed!",
           text: `${totalNumOfCodes} Codes have been successfully applied to your Bluemeet Community. ${communityDoc.name}.`,
-          html: AppSumoCodeRedeemed(),
+          html: AppSumoCodeRedeemed(communityDoc.name, totalNumOfCodes),
         };
 
         sgMail
@@ -1745,7 +1745,7 @@ exports.sendStageReminder = catchAsync(async (req, res, next) => {
 
   const msg = {
     to: user.email, // Change to your recipient
-    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    from: "no-reply@bluemeet.in", // Change to your verified sender
     subject: Subject,
     text: msgToUser,
     html: SessionReminder(),
@@ -1787,10 +1787,10 @@ exports.resendCommunityVerificationMail = catchAsync(async (req, res, next) => {
 
   const msg = {
     to: communityAccountRequest.email, // Change to your recipient
-    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    from: "security@bluemeet.in", // Change to your verified sender
     subject: `Verify your community mail.`,
     text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`https://www.bluemeet.in/verifying-community/${communityAccountRequest._id}`}`,
-    html: VerifyCommunityEmail(),
+    html: VerifyCommunityEmail(`https://www.bluemeet.in/verifying-community/${communityAccountRequest._id}`),
   };
 
   sgMail
@@ -1844,10 +1844,10 @@ exports.createUserAccountRequest = catchAsync(async (req, res, next) => {
 
     const msg = {
       to: req.body.email, // Change to your recipient
-      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      from: "security@bluemeet.in", // Change to your verified sender
       subject: `Verify your user account email.`,
       text: `Congratulations on joining Bluemeet platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://www.bluemeet.in/verifying-account/${newAccountDoc._id}`}`,
-      html: VerifyUserEmail(),
+      html: VerifyUserEmail(`http://www.bluemeet.in/verifying-account/${newAccountDoc._id}`),
     };
 
     sgMail
@@ -1879,10 +1879,10 @@ exports.resendUserVerificationEmail = catchAsync(async (req, res, next) => {
 
   const msg = {
     to: userAccountRequest.email, // Change to your recipient
-    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    from: "security@bluemeet.in", // Change to your verified sender
     subject: `Verify your account email.`,
     text: `Congratulations on joining Bluemeet platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://www.bluemeet.in/verifying-account/${userAccountRequest._id}`}`,
-    html: VerifyUserEmail(),
+    html: VerifyUserEmail(`http://www.bluemeet.in/verifying-account/${userAccountRequest._id}`),
   };
 
   sgMail
@@ -1933,10 +1933,10 @@ exports.changeCommunityAccountRequestEmail = catchAsync(
 
       const msg = {
         to: updatedCommunityAccountRequest.email, // Change to your recipient
-        from: "shreyanshshah242@gmail.com", // Change to your verified sender
+        from: "security@bluemeet.in", // Change to your verified sender
         subject: `Verify your community email.`,
         text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`http://www.bluemeet.in/verifying-community/${updatedCommunityAccountRequest._id}`}`,
-        html: VerifyCommunityEmail(),
+        html: VerifyCommunityEmail(`http://www.bluemeet.in/verifying-community/${updatedCommunityAccountRequest._id}`),
       };
 
       sgMail
@@ -2196,12 +2196,12 @@ exports.editPayPalPayoutEmail = catchAsync(async (req, res, next) => {
 
   const msg = {
     to: email, // Change to your recipient
-    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    from: "payments@bluemeet.in", // Change to your verified sender
     subject: "Please verify your Paypal Payout email.",
     text: `Hi, please click on the button below to verify this email for reciving Paypal Payouts for your Bluemeet Community ${
       updatedCommunity.name
     }. ${`http://localhost:3001/verify-paypal-email/${paypalEmailUpdateRequest._id}`}`,
-    html: VerifyPayPalEmail(),
+    html: VerifyPayPalEmail(`http://localhost:3001/verify-paypal-email/${paypalEmailUpdateRequest._id}`, updatedCommunity.name),
   };
 
   sgMail
@@ -2221,10 +2221,10 @@ exports.editPayPalPayoutEmail = catchAsync(async (req, res, next) => {
 
   const msgToSuperAdmin = {
     to: superAdminEmail, // Change to your recipient
-    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    from: "security@bluemeet.in", // Change to your verified sender
     subject: "Alert!, Bluemeet Paypal Payout email changed.",
     text: `Hi, This is to inform you that your Bluemeet community ${updatedCommunity.name} Paypal Payout email has been updated to ${email}. Please verify the same through mail sent on provided email or if not done by you, then report immediately at support@bluemeet.in`,
-    html: AlertPayoutEmailChanged(),
+    html: AlertPayoutEmailChanged(userDoc.firstName, updatedCommunity.name, email),
   };
 
   sgMail
@@ -2294,6 +2294,7 @@ exports.createPayPalPayoutRequest = catchAsync(async (req, res, next) => {
     const superAdmin = communityDoc.superAdmin;
     const userDoc = await User.findById(superAdmin);
     const superAdminEmail = userDoc.email;
+    const superAdminFirstName = userDoc.firstName;
 
     // Make checks if requested amount is below or equal to available balance for community
     // Make sure email is verified
@@ -2325,10 +2326,10 @@ exports.createPayPalPayoutRequest = catchAsync(async (req, res, next) => {
 
           const msgToSuperAdmin = {
             to: superAdminEmail, // Change to your recipient
-            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            from: "payments@bluemeet.in", // Change to your verified sender
             subject: `Your payout of $${amount} is on its way.`,
             text: `Hi, This is to inform you that we have received your request for payout and we are working on that and it will be safely delivered to your paypal account associated with this email ${email} in 4-6 hours.`,
-            html: PayPalPayoutOnItsWay(),
+            html: PayPalPayoutOnItsWay(superAdminFirstName, amount),
           };
 
           sgMail
@@ -2344,10 +2345,10 @@ exports.createPayPalPayoutRequest = catchAsync(async (req, res, next) => {
 
           const msgToVerifiedEmail = {
             to: email, // Change to your recipient
-            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            from: "payments@bluemeet.in", // Change to your verified sender
             subject: `Your payout of $${amount} is on its way.`,
             text: `Hi, This is to inform you that we have received your request for payout and we are working on that and it will be safely delivered to your paypal account associated with this email ${email} in 4-6 hours.`,
-            html: PayPalPayoutOnItsWay(),
+            html: PayPalPayoutOnItsWay(superAdminFirstName, amount),
           };
 
           sgMail
@@ -2368,7 +2369,7 @@ exports.createPayPalPayoutRequest = catchAsync(async (req, res, next) => {
             from: "shreyanshshah242@gmail.com", // Change to your verified sender
             subject: `Please process payout with payout Id ${newPayout._id}`,
             text: `We have recieved a payout request with this payout Id ${newPayout._id}. Please process it ASAP with utmost care.`,
-            html: ProcessPayout(),
+            html: ProcessPayout(communityDoc.name, newPayout._id),
           };
 
           sgMail
@@ -2449,10 +2450,10 @@ exports.reportEvent = catchAsync(async (req, res, next) => {
 
     const msgToUser = {
       to: userDoc.email, // Change to your recipient
-      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      from: "security@bluemeet.in", // Change to your verified sender
       subject: `We have recieved your report for following event ${eventDoc.eventName}`,
       text: `Hi, ${userDoc.firstName}, we have successfully recieved your report for the event ${eventDoc.eventName} and we are currently reviewing it. Thanks for reporting, We will take appropriate action and will reach out to you with our conclusion.`,
-      html: ReportReceived(),
+      html: ReportReceived(userDoc.firstName, eventDoc.eventName),
     };
 
     sgMail
@@ -2467,11 +2468,11 @@ exports.reportEvent = catchAsync(async (req, res, next) => {
     // Send a mail to event surveillance team
 
     const msgToSurveillanceTeam = {
-      to: "surveillanc@bluemeet.in", // Change to your recipient
+      to: "security@bluemeet.in", // Change to your recipient
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: `Please review this event immediately and take appropriate action.`,
       text: `Please review event report with following Id: ${newEventReport._id}.`,
-      html: PleaseReviewEvent(),
+      html: PleaseReviewEvent(newEventReport._id),
     };
 
     sgMail
@@ -2618,10 +2619,10 @@ exports.acceptInEvent = catchAsync(async (req, res, next) => {
 
   const msgToUser = {
     to: acceptedUserDoc.email, // Change to your recipient
-    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    from: "no-reply@bluemeet.in", // Change to your verified sender
     subject: `You have been accepted in ${eventDoc.eventName}.`,
     text: `Here is a good news for you, You have been accepted in following event ${eventDoc.eventName}. You can now join this event by visiting your user dashboard. `,
-    html: AcceptedInEvent(),
+    html: AcceptedInEvent(eventDoc.eventName),
   };
 
   // TODO Generate a notification for user

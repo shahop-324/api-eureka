@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (communityName, codesRedeemed) => {
     return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -221,8 +221,8 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is to inform you that we have successfully applied Lifetime Benefits for the AppSumo codes you have stacked on following Bluemeet community. </span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi,</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is to inform you that we have successfully applied Lifetime Benefits of ${codesRedeemed} code for the AppSumo codes you have stacked on following ${communityName} Bluemeet community. </span></p>
                                 <p style="line-height: 160%; font-size: 14px;">&nbsp;</p>
                                 <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">You can see your benefits on dashboard under Add ons &amp; Plan.</span></p>
                               </div>

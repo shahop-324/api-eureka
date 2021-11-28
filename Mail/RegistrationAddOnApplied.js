@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (superAdminName, communityName, numberOfRegistrations) => {
     return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -221,8 +221,8 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We have successfully applied 100 More registrations to your Bluemeet Community. You can use this add on within 60 days from today. </span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${superAdminName}</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We have successfully applied ${numberOfRegistrations} More registrations to your Bluemeet Community. You can use this add on within 60 days from today. </span></p>
                                 <p style="line-height: 160%; font-size: 14px;">&nbsp;</p>
                                 <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">For more info, Please visit your community dashboard on Bluemeet or contact us.</span></p>
                               </div>

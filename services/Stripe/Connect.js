@@ -19,6 +19,7 @@ const appError = require("./../../utils/appError");
 const axios = require("axios");
 
 const sgMail = require("@sendgrid/mail");
+const EventRegistrationConfirmation = require("../../Mail/EventRegistrationConfirmation");
 
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
@@ -804,15 +805,10 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
 
       const msg = {
         to: email, // Change to your recipient
-        from: "shreyanshshah242@gmail.com", // Change to your verified sender
+        from: "payments@bluemeet.in", // Change to your verified sender
         subject: "Your Event Registration Confirmation.",
         text: `You have just successfully registered in an event. Checkout your Bluemeet user dashboard for more information. Thanks! Here is your magic link http://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`,
-        // html: EventRegistrationTemplate(
-        //   `${userDoingEventTransaction.firstName}  ${userDoingEventTransaction.lastName}`,
-        //   eventGettingEventTransaction.eventName,
-        //   ticketBeingPurchased.name,
-        //   amountTotal/100
-        // ),
+        html: EventRegistrationConfirmation(),
       };
 
       sgMail

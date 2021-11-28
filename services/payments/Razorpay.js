@@ -788,10 +788,14 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
         const msg = {
           to: userDoingEventTransaction.email, // Change to your recipient
-          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          from: "payment@bluemeet.in", // Change to your verified sender
           subject: "Your Event Registration Confirmation.",
           text: `You have just successfully registered in an event. Checkout your Bluemeet user dashboard for more information. Thanks! Here is your magic link http://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`,
-          html: EventRegistrationConfirmation(),
+          html: EventRegistrationConfirmation(
+            userDoingEventTransaction.firstName,
+            eventGettingEventTransaction.eventName,
+            `http://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`
+          ),
         };
 
         sgMail
@@ -869,7 +873,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             // Send mail to super admin informing about credits that were applied to their account
             const referralRedeemedMsg = {
               to: superAdminDoc.email, // Change to your recipient
-              from: "shreyanshshah242@gmail.com", // Change to your verified sender
+              from: "payments@bluemeet.in", // Change to your verified sender
               subject: `$10 Bluemeet credits applied to your account.`,
               text: `We have applied your $10 referral credits to your account. Encourage others to switch to Bluemeet and earn $10 and give your referral $10 too. Its a win win for all of us. Cheers.`,
               // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
@@ -900,7 +904,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
               const creditsAppliedMsg = {
                 to: referredBydoc.email, // Change to your recipient
-                from: "shreyanshshah242@gmail.com", // Change to your verified sender
+                from: "payments@bluemeet.in", // Change to your verified sender
                 subject: `$10 Bluemeet credits applied to your account.`,
                 text: `Someone has just upgraded their Bluemeet plan by your referral. So we have added $10 to your Bluemeet account.`,
                 // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
@@ -938,10 +942,13 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
         const planSwitchMsg = {
           to: communityDoc.superAdminEmail, // Change to your recipient
-          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          from: "payments@bluemeet.in", // Change to your verified sender
           subject: `Your Bluemeet plan has been changed!`,
           text: `We have successfully processed your request to change your Bluemeet plan. Please visit your community dashboard to get more details.`,
-          html: CommunityBillingPlanChanged(),
+          html: CommunityBillingPlanChanged(
+            communityDoc.superAdminName,
+            communityDoc.name
+          ),
         };
 
         sgMail
@@ -1001,12 +1008,16 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
           const registrationMsg = {
             to: communityDoc.superAdminEmail, // Change to your recipient
-            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            from: "payments@bluemeet.in", // Change to your verified sender
             subject: `Registration add added to your ${communityDoc.name} community.`,
             text: `We have successfully processed your request to add ${
               numOfRegistrations * 1
             } extra registrations to your community. You can use this add on till 60 days from today. Thanks, From Bluemeet Team.`,
-            html: RegistrationAddOnApplied(),
+            html: RegistrationAddOnApplied(
+              communityDoc.superAdminName,
+              communityDoc.name,
+              numOfRegistrations * 1
+            ),
           };
 
           sgMail
@@ -1048,12 +1059,16 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
           const organiserSeatMsg = {
             to: communityDoc.superAdminEmail, // Change to your recipient
-            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            from: "payments@bluemeet.in", // Change to your verified sender
             subject: `Extra Organiser seats added to your ${communityDoc.name} community.`,
             text: `We have successfully processed your request to add ${
               numOfOrganiserSeats * 1
             } extra organsiser seats to your community. You can use this add on till 30 days from today. Thanks, From Bluemeet Team.`,
-            html: OrganiserSeatAddon(),
+            html: OrganiserSeatAddon(
+              communityDoc.superAdminName,
+              communityDoc.name,
+              numOfOrganiserSeats * 1
+            ),
           };
 
           sgMail
@@ -1095,12 +1110,16 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
           const streamingHourMsg = {
             to: communityDoc.superAdminEmail, // Change to your recipient
-            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            from: "payments@bluemeet.in", // Change to your verified sender
             subject: `Extra Streaming hours added to your ${communityDoc.name} community.`,
             text: `We have successfully processed your request to add ${
               streamingHours * 1
             } extra streaming hours to your community. You can use this add on till 60 days from today. Thanks, From Bluemeet Team.`,
-            html: StreamingHourAddon(),
+            html: StreamingHourAddon(
+              communityDoc.superAdminName,
+              communityDoc.name,
+              streamingHours * 1
+            ),
           };
 
           sgMail
@@ -1142,12 +1161,16 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
           const emailCreditsMsg = {
             to: communityDoc.superAdminEmail, // Change to your recipient
-            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            from: "payments@bluemeet.in", // Change to your verified sender
             subject: `Extra Email credits added to your ${communityDoc.name} community.`,
             text: `We have successfully processed your request to add ${
               emailCredits * 1
             } extra email credits to your community. You can use this add on till 60 days from today. Thanks, From Bluemeet Team.`,
-            html: EmailCreditsAddon(),
+            html: EmailCreditsAddon(
+              communityDoc.superAdminName,
+              communityDoc.name,
+              emailCredits * 1
+            ),
           };
 
           sgMail
@@ -1189,12 +1212,16 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
           const cloudStorageMsg = {
             to: communityDoc.superAdminEmail, // Change to your recipient
-            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            from: "payments@bluemeet.in", // Change to your verified sender
             subject: `Extra Cloud storage added to your ${communityDoc.name} community.`,
             text: `We have successfully processed your request to add ${
               cloudStorage * 1
             } extra cloud storage to your community. You can use this add on till 30 days from today. Thanks, From Bluemeet Team.`,
-            html: CloudStorageAddOn(),
+            html: CloudStorageAddOn(
+              communityDoc.superAdminName,
+              communityDoc.name,
+              cloudStorage * 1
+            ),
           };
 
           sgMail
@@ -1520,10 +1547,14 @@ exports.registerFreeTicket = catchAsync(async (req, res, next) => {
 
     const msg = {
       to: userDoingEventTransaction.email, // Change to your recipient
-      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      from: "payments@bluemeet.in", // Change to your verified sender
       subject: "Your Event Registration Confirmation.",
       text: `You have just successfully registered in an event. Checkout your Bluemeet user dashboard for more information. Thanks! Here is your magic link http://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`,
-      html: EventRegistrationConfirmation(),
+      html: EventRegistrationConfirmation(
+        userDoingEventTransaction.firstName,
+        eventGettingEventTransaction.eventName,
+        `http://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`
+      ),
     };
 
     sgMail

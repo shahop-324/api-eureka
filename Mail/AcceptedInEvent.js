@@ -1,5 +1,5 @@
-module.exports = () => {
-    return `
+module.exports = (eventName) => {
+  return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -180,7 +180,7 @@ module.exports = () => {
 
                               <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.199999999999996px;"><strong><span style="line-height: 39.199999999999996px; font-size: 28px;">RYou have been accepted in ABC Event</span></strong>
+                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.199999999999996px;"><strong><span style="line-height: 39.199999999999996px; font-size: 28px;">You have been accepted in ${eventName} Event</span></strong>
                                   </span>
                                 </p>
                               </div>
@@ -221,8 +221,8 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We are glad to inform you that you have been accepted in ABC event by the organising community admin. You can now join this event by clicking on the button below. See you inside.</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, </span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We are glad to inform you that you have been accepted in ${eventName} event by the organising community admin. You can now join this event by via your user dashboard by clicking on join button under upcoming events. See you inside.</span></p>
                               </div>
 
                             </td>
@@ -237,10 +237,7 @@ module.exports = () => {
 
                               <div align="center">
                                 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:36px; v-text-anchor:middle; width:94px;" arcsize="11%" stroke="f" fillcolor="#e67e23"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
-                                <a href="" target="_blank" style="box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #e67e23; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
-                                  <span style="display:block;padding:10px 20px;line-height:120%;"><strong><span style="font-size: 14px; line-height: 16.8px;">Join Now</span></strong>
-                                  </span>
-                                </a>
+                               
                                 <!--[if mso]></center></v:roundrect></td></tr></table><![endif]-->
                               </div>
 
@@ -470,6 +467,5 @@ module.exports = () => {
 
 </html>
     
-    `
-}
-
+    `;
+};

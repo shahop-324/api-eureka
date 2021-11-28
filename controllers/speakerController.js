@@ -156,13 +156,15 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
 
           speakerDoc.registrationId = newSpeakerRegistration._id;
 
+          
+
           // 2.) Send new Invitation via mail to speaker
           const msg = {
             to: req.body.email, // Change to your recipient
-            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            from: "no-reply@bluemeet.in", // Change to your verified sender
             subject: `Your are invited as speaker in ${eventDoc.eventName}`,
             text: `use this link to join this event as a speaker. ${`http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
-            html: SpeakerMagicLink(),
+            html: SpeakerMagicLink(eventDoc.eventName, `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`),
           };
 
           sgMail
@@ -219,10 +221,10 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
           // 2.) Send new Invitation via mail to speaker
           const msg = {
             to: req.body.email, // Change to your recipient
-            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            from: "no-reply@bluemeet.in", // Change to your verified sender
             subject: `Your are invited as speaker in ${eventDoc.eventName}`,
             text: `use this link to join this event as a speaker. ${`http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
-            html: SpeakerMagicLink(),
+            html: SpeakerMagicLink(eventDoc.eventName, `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`),
           };
 
           sgMail
@@ -344,14 +346,18 @@ exports.sendInvitation = catchAsync(async (req, res, next) => {
   const invitationLink = req.body.invitationLink;
   const sessions = req.body.sessions;
 
+  const speakerDoc = await Speaker.findById(speakerId);
+
+  const eventDoc = await Event.findById(speakerDoc.eventId);
+
   // Send invitation and mark that invitation is sent to this speaker
 
   const msg = {
     to: speakerEmail, // Change to your recipient
-    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    from: "no-reply@bluemeet.in", // Change to your verified sender
     subject: "Your Event Invitation Link",
     text: `Hi, ${speakerName} use this link to join this event as a speaker. ${invitationLink}. You have been invited in these sessions ${sessions}`,
-    html: SpeakerMagicLink(),
+    html: SpeakerMagicLink(eventDoc.eventName, invitationLink),
   };
 
   sgMail
@@ -397,10 +403,10 @@ exports.sendBulkInvite = catchAsync(async (req, res, next) => {
   for (let element of bulkMailInfo) {
     const msg = {
       to: element.email, // Change to your recipient
-      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      from: "no-reply@bluemeet.in", // Change to your verified sender
       subject: "Your Event Invitation Link",
       text: `Hi, ${element.name} use this link to join this event (${eventDoc.eventName}). ${element.invitationLink}. And you can access your dashboard using this link ${element.dashboardLink}`,
-      html: SpeakerMagicLink(),
+      html: SpeakerMagicLink(eventDoc.eventName, element.invitationLink),
     };
 
     sgMail

@@ -514,6 +514,7 @@ const Root = () => {
 
   return (
     <>
+  <div id="openBeamer"></div>
       <div className="root-container-grid">
         {/* SideNav */}
         <SideNav

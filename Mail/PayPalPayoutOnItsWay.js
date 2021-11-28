@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (firstName, amount) => {
     return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -222,8 +222,8 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, XYZ community</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We have received your request for Payout of $18,000. Our team is on its way to deliver it safely to your verified Paypal account. You can check your PayPal Email in your community dashboard on which funds will be available within 6 hrs.</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${firstName}</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We have received your request for Payout of $${amount}. Our team is on its way to deliver it safely to your verified Paypal account. You can check your PayPal Email in your community dashboard on which funds will be available within 6 hrs.</span></p>
                               </div>
 
                             </td>

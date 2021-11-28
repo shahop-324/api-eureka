@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (firtsName) => {
   return `
     
     
@@ -222,7 +222,7 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${firstName}</span></p>
                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 18px; line-height: 28.8px;">This is confirmation mail to tell you that we have changed your bluemeet account password as per your request. If not done by you, then please reach out to us by replying to this email.</span></p>
                               </div>
 
@@ -297,7 +297,7 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:41px 55px 18px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="color: #003399; line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;"><strong>Get in touch</strong></span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;"><strong><a href="https://www.bluemeet.in/contact-us" style="text-decoration: none; color: "#ffffff">Get in touch </a></strong></span></p>
                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;">Info@bluemeet.in</span></p>
                               </div>
 

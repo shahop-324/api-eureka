@@ -1,5 +1,5 @@
-module.exports = () => {
-    return `
+module.exports = (communityName, payoutId) => {
+  return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -222,10 +222,10 @@ module.exports = () => {
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We have received a new Payout request from XYZ community requesting a Payout of $15000. Please process this Payout with care in their verified PayPal Account.</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We have received a new Payout request from ${communityName} community. Please process this Payout with care in their verified PayPal Account.</span></p>
                                 <p style="line-height: 160%; font-size: 14px;">&nbsp;</p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">Payout Id is ft26729876uhu7282</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">Payout amount is $72782</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">Payout Id is ${payoutId}</span></p>
+                               
                                 <p style="line-height: 160%; font-size: 14px;">&nbsp;</p>
                                 <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">Process the payment within 4 hrs and follow up with this community super admin.</span></p>
                               </div>
@@ -458,6 +458,5 @@ module.exports = () => {
 
 </html>
     
-    `
-}
-
+    `;
+};

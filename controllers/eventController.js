@@ -395,12 +395,17 @@ exports.createBooth = catchAsync(async (req, res, next) => {
 
             const msg = {
               to: element,
-              from: "shreyanshshah242@gmail.com",
+              from: "dinesh.shah@bluemeet.in",
               subject: `Your are invited as a exhibitor in ${eventGettingBooth.eventName}`,
               text: `use this link to join this event ${
                 eventGettingBooth.eventName
               } as a booth exhibitor. ${`http://bluemeet.in/event/booth/${newRegistration._id}`}`,
-              html: ExhibitorInvitation(),
+              html: ExhibitorInvitation(
+                communityGettingBooth.name,
+                eventGettingBooth.eventName,
+                `http://bluemeet.in/event/booth/${newRegistration._id}`,
+                existingUser.firstName
+              ),
             };
 
             sgMail
@@ -448,12 +453,16 @@ exports.createBooth = catchAsync(async (req, res, next) => {
 
             const msg = {
               to: element,
-              from: "shreyanshshah242@gmail.com",
+              from: "dinesh.shah@bluemeet.in",
               subject: `Your are invited as a exhibitor in ${eventGettingBooth.eventName}`,
               text: `use this link to join this event ${
                 eventGettingBooth.eventName
               } as a booth exhibitor. ${`http://bluemeet.in/event/booth/${newRegistration._id}`}`,
-              html: ExhibitorInvitation(),
+              html: ExhibitorInvitation(
+                communityGettingBooth.name,
+                eventGettingBooth.eventName,
+                `http://bluemeet.in/event/booth/${newRegistration._id}`
+              ),
             };
 
             sgMail
@@ -631,10 +640,13 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
       // 2.) Send new Invitation via mail to speaker
       const msg = {
         to: req.body.email, // Change to your recipient
-        from: "shreyanshshah242@gmail.com", // Change to your verified sender
+        from: "dinesh.shah@bluemeet.in", // Change to your verified sender
         subject: `Your are invited as speaker in ${eventGettingSpeaker.eventName}`,
         text: `use this link to join this event as a speaker. ${`http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
-        html: SpeakerMagicLink(),
+        html: SpeakerMagicLink(
+          eventGettingSpeaker.eventName,
+          `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`
+        ),
       };
 
       if (req.body.sendInvitation) {
@@ -739,10 +751,13 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
       // 2.) Send new Invitation via mail to speaker
       const msg = {
         to: req.body.email, // Change to your recipient
-        from: "shreyanshshah242@gmail.com", // Change to your verified sender
+        from: "dinesh.shah@bluemeet.in", // Change to your verified sender
         subject: `Your are invited as speaker in ${eventGettingSpeaker.eventName}`,
         text: `use this link to join this event as a speaker. ${`http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
-        html: SpeakerMagicLink(),
+        html: SpeakerMagicLink(
+          eventGettingSpeaker.eventName,
+          `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`
+        ),
       };
 
       if (req.body.sendInvitation) {
@@ -1058,7 +1073,7 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
       "allowEntryBeforeSessionBegin",
       "networkingEntry",
       "loungeEntry",
-      "boothEntry",
+      "boothEntry"
     );
 
     const eventBeforeUpdate = await Event.findById(req.params.id);

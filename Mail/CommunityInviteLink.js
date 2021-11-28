@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (link, communityName) => {
     return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -180,7 +180,7 @@ module.exports = () => {
 
                               <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.199999999999996px;"><strong><span style="line-height: 39.199999999999996px; font-size: 28px;">You are invited in XYZ community</span></strong>
+                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.199999999999996px;"><strong><span style="line-height: 39.199999999999996px; font-size: 28px;">You are invited in ${communityName} community</span></strong>
                                   </span>
                                 </p>
                               </div>
@@ -223,7 +223,7 @@ module.exports = () => {
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;"><span style="line-height: 32px; font-size: 20px;">Hi, 👋 </span></span>
                                 </p>
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;">You have been invited to manage XYZ community as team member on Bluemeet. To accept the invitation and join, please click on the button below.</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;">You have been invited to manage ${communityName} community as team member on Bluemeet. To accept the invitation and join, please click on the button below.</span></p>
                               </div>
 
                             </td>
@@ -239,7 +239,7 @@ module.exports = () => {
                               <div align="center">
                                 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:36px; v-text-anchor:middle; width:141px;" arcsize="11%" stroke="f" fillcolor="#3AAEE0"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
                                 <a href="" target="_blank" style="box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #3AAEE0; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
-                                  <span style="display:block;padding:10px 20px;line-height:120%;"><strong>Accept invitation</strong></span>
+                                  <span style="display:block;padding:10px 20px;line-height:120%;"><strong> <a href="${link}" style="color: #ffffff; text-decoration: 'none'">Accept invitation</a> </strong></span>
                                 </a>
                                 <!--[if mso]></center></v:roundrect></td></tr></table><![endif]-->
                               </div>

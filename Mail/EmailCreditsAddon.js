@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (superAdminName, communityName, emailCredits) => {
     return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -180,7 +180,7 @@ module.exports = () => {
 
                               <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-                                <p style="line-height: 140%; font-size: 14px;"><span style="font-size: 22px; line-height: 30.799999999999997px;"><span style="line-height: 30.799999999999997px; font-size: 22px;"><strong><span style="line-height: 30.799999999999997px; font-size: 22px;"><span style="line-height: 30.799999999999997px; font-size: 22px;">5000 Email credits applied to&nbsp;xyzzy </span></span>
+                                <p style="line-height: 140%; font-size: 14px;"><span style="font-size: 22px; line-height: 30.799999999999997px;"><span style="line-height: 30.799999999999997px; font-size: 22px;"><strong><span style="line-height: 30.799999999999997px; font-size: 22px;"><span style="line-height: 30.799999999999997px; font-size: 22px;">${emailCredits} Email credits applied to&nbsp;${communityName} </span></span>
                                   </strong>
                                   </span><span style="line-height: 30.799999999999997px; font-size: 22px;"><strong>community!</strong></span></span>
                                 </p>
@@ -222,8 +222,8 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We have successfully applied 5000 more email credits to your xyz Bluemeet community. </span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${superAdminName}</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We have successfully applied ${emailCredits} more email credits to your ${communityName} Bluemeet community. </span></p>
                                 <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">You can use these email credits within 60 days from now.</span></p>
                               </div>
 

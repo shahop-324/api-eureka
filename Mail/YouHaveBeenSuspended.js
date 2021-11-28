@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (eventName, userName, adminMessage) => {
     return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -180,7 +180,7 @@ module.exports = () => {
 
                               <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-                                <p style="line-height: 140%; font-size: 14px;"><span style="line-height: 19.599999999999998px; font-size: 14px;"><strong><span style="line-height: 19.599999999999998px; font-size: 14px;"><span style="font-size: 28px; line-height: 39.199999999999996px;">You have been suspended from&nbsp;xyz event</span></span>
+                                <p style="line-height: 140%; font-size: 14px;"><span style="line-height: 19.599999999999998px; font-size: 14px;"><strong><span style="line-height: 19.599999999999998px; font-size: 14px;"><span style="font-size: 28px; line-height: 39.199999999999996px;">You have been suspended from&nbsp;${eventName} event</span></span>
                                   </strong>
                                   </span>
                                 </p>
@@ -222,10 +222,10 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is to inform that you have been suspended from xyz event on Bluemeet by the organising community.</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${userName}</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is to inform that you have been suspended from ${eventName} event on Bluemeet by the organising community.</span></p>
                                 <p style="line-height: 160%; font-size: 14px;">&nbsp;</p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">Here's what organiser of this event have to say about this : &nbsp;You have been removed because of abusing inside event and violating community's code of conduct. </span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">Here's what organiser of this event have to say about this : &nbsp;${adminMessage} </span></p>
                               </div>
 
                             </td>

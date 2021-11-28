@@ -1,5 +1,5 @@
-module.exports = () => {
-    return `
+module.exports = (eventId) => {
+  return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -223,7 +223,7 @@ module.exports = () => {
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We have recieved a fresh report against XYZ event from ABC person. Please review this report and take Appropriate action as needed and follow up with ABC regarding this with conclusion.</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We have recieved a fresh report against event Id ${eventId}. Please review this report and take Appropriate action as needed and follow up with person who reported this with conclusion.</span></p>
                               </div>
 
                             </td>
@@ -454,6 +454,5 @@ module.exports = () => {
 
 </html>
     
-    `
-}
-
+    `;
+};

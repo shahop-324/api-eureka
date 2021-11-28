@@ -1,5 +1,5 @@
-module.exports = () => {
-    return `
+module.exports = (userName, eventName) => {
+  return `
     
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -180,7 +180,7 @@ module.exports = () => {
 
                               <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-                                <p style="line-height: 140%; font-size: 14px;"><span style="line-height: 19.599999999999998px; font-size: 14px;"><strong><span style="line-height: 19.599999999999998px; font-size: 14px;"><span style="font-size: 28px; line-height: 39.199999999999996px;">Report for XYZ event has been received</span></span>
+                                <p style="line-height: 140%; font-size: 14px;"><span style="line-height: 19.599999999999998px; font-size: 14px;"><strong><span style="line-height: 19.599999999999998px; font-size: 14px;"><span style="font-size: 28px; line-height: 39.199999999999996px;">Report for ${eventName} event has been received</span></span>
                                   </strong>
                                   </span>
                                 </p>
@@ -222,7 +222,7 @@ module.exports = () => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, Dinesh</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${userName}</span></p>
                                 <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is to inform you that we have successfully received your report against above mentioned event on Bluemeet. </span></p>
                                 <p style="line-height: 160%; font-size: 14px;">&nbsp;</p>
                                 <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">Our security and compliance team is reviewing it and appropriate action shall be taken immediately if needed.&nbsp;</span></p>
@@ -456,6 +456,5 @@ module.exports = () => {
 
 </html>
     
-    `
-}
-
+    `;
+};

@@ -1,10 +1,29 @@
-import React from "react";
+import React, {useEffect} from "react";
 import "./../Styles/StaticScreenNav.scss";
 import Footer from "../../Footer";
 import TopNavNew from "../Helper/TopNavNew";
 import StaticBanner from "./StaticBanner";
 
 const TermsOfService = () => {
+  const loadChatAssistant = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src =
+        "https://static.zdassets.com/ekr/snippet.js?key=a57217fd-2440-4b02-9089-cd5beb7109d4";
+      script.id = "ze-snippet";
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  useEffect(() => {
+    loadChatAssistant();
+  }, [])
   return (
     <>
       <div className="container-fluid p-0">

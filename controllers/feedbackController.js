@@ -28,9 +28,9 @@ exports.createFeedback = catchAsync(async (req, res, next) => {
   const msg = {
     to: req.user.email, // Change to your recipient
     from: "shreyanshshah242@gmail.com", // Change to your verified sender
-    subject: "We have recieved your feedback",
-    text: `Hey, we wanna say thank you for helping us get better by providing your valuable feedback.`,
-    html: FeedbackReceived(),
+    subject: "feedback@bluemeet.in",
+    text: `Hey, we just wanna say thank you for helping us get better by providing your valuable feedback.`,
+    html: FeedbackReceived(req.user.firstName),
   };
 
   sgMail
