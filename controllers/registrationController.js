@@ -4,6 +4,7 @@ const Community = require("../models/communityModel");
 const Registration = require("../models/registrationsModel");
 const sgMail = require("@sendgrid/mail");
 const mongoose = require("mongoose");
+const AttendeeMagicLink = require("../Mail/AttendeeMagicLink");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 const filterObj = (obj, ...allowedFields) => {
@@ -120,7 +121,7 @@ exports.sendInvite = catchAsync(async (req, res, next) => {
     from: "shreyanshshah242@gmail.com", // Change to your verified sender
     subject: "Your Event Invitation Link",
     text: `Hi, ${userName} use this link to join this event. ${invitationLink}.`,
-    // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    html: AttendeeMagicLink(),
   };
 
   sgMail
@@ -152,7 +153,7 @@ exports.sendBulkInvite = catchAsync(async (req, res, next) => {
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: "Your Event Invitation Link",
       text: `Hi, ${element.name} use this link to join this event (${element.eventName}). ${element.link}.`,
-      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+      html: AttendeeMagicLink(),
     };
 
     sgMail

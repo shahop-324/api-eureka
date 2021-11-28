@@ -18,6 +18,8 @@ const UserAccountRequest = require("../models/UserAccountRequest");
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
 const sgMail = require("@sendgrid/mail");
+const WelcomeToBluemeet = require("../Mail/WelcomeToBluemeet");
+const PasswordChanged = require("../Mail/PasswordChanged");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 exports.signInForSpeaker = catchAsync(async (req, res, next) => {
@@ -334,7 +336,7 @@ exports.signup = catchAsync(async (req, res, next) => {
           from: "shreyanshshah242@gmail.com", // Change to your verified sender
           subject: `Welcome to Bluemeet`,
           text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
-          // html: ForgotPasswordTemplate(user, resetURL),
+          html: WelcomeToBluemeet(),
         };
 
         sgMail
@@ -552,7 +554,7 @@ exports.signup = catchAsync(async (req, res, next) => {
           from: "shreyanshshah242@gmail.com", // Change to your verified sender
           subject: `Welcome to Bluemeet`,
           text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
-          // html: ForgotPasswordTemplate(user, resetURL),
+          html: WelcomeToBluemeet(),
         };
 
         sgMail
@@ -751,7 +753,7 @@ exports.signup = catchAsync(async (req, res, next) => {
           from: "shreyanshshah242@gmail.com", // Change to your verified sender
           subject: `Welcome to Bluemeet`,
           text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
-          // html: ForgotPasswordTemplate(user, resetURL),
+          html: WelcomeToBluemeet(),
         };
 
         sgMail
@@ -953,7 +955,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: "Your Password has been changed.",
       text: "Hi we have changed your password as requested by you. If you think its a mistake then please contact us via support room or write to us at support@bluemeet.in",
-      // html: ForgotPasswordTemplate(user, resetURL),
+      html: PasswordChanged(),
     };
 
     sgMail

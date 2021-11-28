@@ -8,6 +8,10 @@ const User = require("../models/userModel");
 const TeamInviteTemplate = require("../services/email/teamInviteTemplate");
 const sgMail = require("@sendgrid/mail");
 const Registration = require("../models/registrationsModel");
+const CommunityInviteLink = require("../Mail/CommunityInviteLink");
+const NewMemberAdded = require("../Mail/NewMemberAdded");
+const YouHaveBeenRemovedFromTeam = require("../Mail/YouHaveBeenRemovedFromTeam");
+const UserRemovedFromTeam = require("../Mail/UserRemovedFromTeam");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 exports.createNewInvitation = catchAsync(async (req, res, next) => {
@@ -74,7 +78,7 @@ exports.createNewInvitation = catchAsync(async (req, res, next) => {
     from: "shreyanshshah242@gmail.com", // Change to your verified sender
     subject: "Your Community Invitation Link",
     text: `use this link ${urlToBeSent} to accept invitation from this community.`,
-    html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    html: CommunityInviteLink(),
   };
 
   sgMail
@@ -197,7 +201,7 @@ exports.acceptInvitation = catchAsync(async (req, res, next) => {
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: "New member added to your Bluemeet community",
       text: `Hey ${CommunityDoc.superAdminName}. This is to inform you that ${userDoc.firstName} has accepted invitation to join your ${CommunityDoc.name} community on Bluemeet.`,
-      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+      html: NewMemberAdded(),
     };
 
     sgMail
@@ -379,7 +383,7 @@ exports.removeFromTeam = catchAsync(async (req, res, next) => {
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: `${userDoc.firstName} has been removed from your community.`,
       text: `Hey ${communityDoc.superAdminName}. This is to inform you that ${userDoc.firstName} has been removed from your ${communityDoc.name} community on Bluemeet.`,
-      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+      html: UserRemovedFromTeam(),
     };
 
     sgMail
@@ -398,7 +402,7 @@ exports.removeFromTeam = catchAsync(async (req, res, next) => {
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: `You have been removed from ${communityDoc.name}`,
       text: `Hey ${userDoc.firstName}. This is to inform you that you have been removed as community manager from ${CommunityDoc.name} community on Bluemeet.`,
-      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+      html: YouHaveBeenRemovedFromTeam(),
     };
 
     sgMail

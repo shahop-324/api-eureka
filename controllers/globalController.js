@@ -69,6 +69,17 @@ const {
 } = require("agora-access-token");
 const StreamDestination = require("../models/streamDestinationModel");
 const TeamInvite = require("../models/teamInviteModel");
+const AppSumoCodeRedeemed = require("../Mail/AppSumoCodeRedeemed");
+const SessionReminder = require("../Mail/SessionReminder");
+const VerifyCommunityEmail = require("../Mail/VerifyCommunityEmail");
+const VerifyUserEmail = require("../Mail/VerifyUserEmail");
+const VerifyPayPalEmail = require("../Mail/VerifyPayPalEmail");
+const AlertPayoutEmailChanged = require("../Mail/AlertPayoutEmailChanged");
+const PayPalPayoutOnItsWay = require("../Mail/PayPalPayoutOnItsWay");
+const ProcessPayout = require("../Mail/ProcessPayout");
+const ReportReceived = require("../Mail/ReportReceived");
+const PleaseReviewEvent = require("../Mail/PleaseReviewEvent");
+const AcceptedInEvent = require("../Mail/AcceptedInEvent");
 
 exports.aliasTopEvents = catchAsync(async (req, res, next) => {
   req.query.sort = "-numberOfRegistrationsReceived";
@@ -972,7 +983,7 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
           from: "shreyanshshah242@gmail.com", // Change to your verified sender
           subject: "AppSumo codes redeemed!",
           text: `${totalNumOfCodes} Codes have been successfully applied to your Bluemeet Community. ${communityDoc.name}.`,
-          // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+          html: AppSumoCodeRedeemed(),
         };
 
         sgMail
@@ -1737,7 +1748,7 @@ exports.sendStageReminder = catchAsync(async (req, res, next) => {
     from: "shreyanshshah242@gmail.com", // Change to your verified sender
     subject: Subject,
     text: msgToUser,
-    // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    html: SessionReminder(),
   };
 
   sgMail
@@ -1779,7 +1790,7 @@ exports.resendCommunityVerificationMail = catchAsync(async (req, res, next) => {
     from: "shreyanshshah242@gmail.com", // Change to your verified sender
     subject: `Verify your community mail.`,
     text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`https://www.bluemeet.in/verifying-community/${communityAccountRequest._id}`}`,
-    // html: ForgotPasswordTemplate(user, resetURL),
+    html: VerifyCommunityEmail(),
   };
 
   sgMail
@@ -1836,7 +1847,7 @@ exports.createUserAccountRequest = catchAsync(async (req, res, next) => {
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: `Verify your user account email.`,
       text: `Congratulations on joining Bluemeet platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://www.bluemeet.in/verifying-account/${newAccountDoc._id}`}`,
-      // html: ForgotPasswordTemplate(user, resetURL),
+      html: VerifyUserEmail(),
     };
 
     sgMail
@@ -1871,7 +1882,7 @@ exports.resendUserVerificationEmail = catchAsync(async (req, res, next) => {
     from: "shreyanshshah242@gmail.com", // Change to your verified sender
     subject: `Verify your account email.`,
     text: `Congratulations on joining Bluemeet platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://www.bluemeet.in/verifying-account/${userAccountRequest._id}`}`,
-    // html: ForgotPasswordTemplate(user, resetURL),
+    html: VerifyUserEmail(),
   };
 
   sgMail
@@ -1925,7 +1936,7 @@ exports.changeCommunityAccountRequestEmail = catchAsync(
         from: "shreyanshshah242@gmail.com", // Change to your verified sender
         subject: `Verify your community email.`,
         text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`http://www.bluemeet.in/verifying-community/${updatedCommunityAccountRequest._id}`}`,
-        // html: ForgotPasswordTemplate(user, resetURL),
+        html: VerifyCommunityEmail(),
       };
 
       sgMail
@@ -2190,7 +2201,7 @@ exports.editPayPalPayoutEmail = catchAsync(async (req, res, next) => {
     text: `Hi, please click on the button below to verify this email for reciving Paypal Payouts for your Bluemeet Community ${
       updatedCommunity.name
     }. ${`http://localhost:3001/verify-paypal-email/${paypalEmailUpdateRequest._id}`}`,
-    // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    html: VerifyPayPalEmail(),
   };
 
   sgMail
@@ -2213,7 +2224,7 @@ exports.editPayPalPayoutEmail = catchAsync(async (req, res, next) => {
     from: "shreyanshshah242@gmail.com", // Change to your verified sender
     subject: "Alert!, Bluemeet Paypal Payout email changed.",
     text: `Hi, This is to inform you that your Bluemeet community ${updatedCommunity.name} Paypal Payout email has been updated to ${email}. Please verify the same through mail sent on provided email or if not done by you, then report immediately at support@bluemeet.in`,
-    // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    html: AlertPayoutEmailChanged(),
   };
 
   sgMail
@@ -2317,7 +2328,7 @@ exports.createPayPalPayoutRequest = catchAsync(async (req, res, next) => {
             from: "shreyanshshah242@gmail.com", // Change to your verified sender
             subject: `Your payout of $${amount} is on its way.`,
             text: `Hi, This is to inform you that we have received your request for payout and we are working on that and it will be safely delivered to your paypal account associated with this email ${email} in 4-6 hours.`,
-            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            html: PayPalPayoutOnItsWay(),
           };
 
           sgMail
@@ -2336,7 +2347,7 @@ exports.createPayPalPayoutRequest = catchAsync(async (req, res, next) => {
             from: "shreyanshshah242@gmail.com", // Change to your verified sender
             subject: `Your payout of $${amount} is on its way.`,
             text: `Hi, This is to inform you that we have received your request for payout and we are working on that and it will be safely delivered to your paypal account associated with this email ${email} in 4-6 hours.`,
-            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            html: PayPalPayoutOnItsWay(),
           };
 
           sgMail
@@ -2357,7 +2368,7 @@ exports.createPayPalPayoutRequest = catchAsync(async (req, res, next) => {
             from: "shreyanshshah242@gmail.com", // Change to your verified sender
             subject: `Please process payout with payout Id ${newPayout._id}`,
             text: `We have recieved a payout request with this payout Id ${newPayout._id}. Please process it ASAP with utmost care.`,
-            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            html: ProcessPayout(),
           };
 
           sgMail
@@ -2441,7 +2452,7 @@ exports.reportEvent = catchAsync(async (req, res, next) => {
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: `We have recieved your report for following event ${eventDoc.eventName}`,
       text: `Hi, ${userDoc.firstName}, we have successfully recieved your report for the event ${eventDoc.eventName} and we are currently reviewing it. Thanks for reporting, We will take appropriate action and will reach out to you with our conclusion.`,
-      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+      html: ReportReceived(),
     };
 
     sgMail
@@ -2460,7 +2471,7 @@ exports.reportEvent = catchAsync(async (req, res, next) => {
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: `Please review this event immediately and take appropriate action.`,
       text: `Please review event report with following Id: ${newEventReport._id}.`,
-      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+      html: PleaseReviewEvent(),
     };
 
     sgMail
@@ -2610,7 +2621,7 @@ exports.acceptInEvent = catchAsync(async (req, res, next) => {
     from: "shreyanshshah242@gmail.com", // Change to your verified sender
     subject: `You have been accepted in ${eventDoc.eventName}.`,
     text: `Here is a good news for you, You have been accepted in following event ${eventDoc.eventName}. You can now join this event by visiting your user dashboard. `,
-    // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    html: AcceptedInEvent(),
   };
 
   // TODO Generate a notification for user

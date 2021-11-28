@@ -23,6 +23,12 @@ const ForgotPasswordTemplate = require("../services/email/ForgotPasswordTemplate
 const sgMail = require("@sendgrid/mail");
 const UUID = require("uuid/v4");
 const EventTransactionIdsCommunityWise = require("../models/eventTransactionIdsCommunityWise");
+const BluemeetAccountDeactivated = require("../Mail/BluemeetAccountDeactivated");
+const PasswordResetLink = require("../Mail/PasswordResetLink");
+const VerifyCommunityEmail = require("../Mail/VerifyCommunityEmail");
+const WelcomeToTeam = require("../Mail/WelcomeToTeam");
+const NewMemberAdded = require("../Mail/NewMemberAdded");
+
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
@@ -633,7 +639,7 @@ exports.deactivateMe = catchAsync(async (req, res, next) => {
         text: `Hi, ${
           updatedUser.firstName + " " + updatedUser.lastName
         } we have successfully deactivated your Bluemeet account as requested. You can still get back access to your account by logging in before ${Date.now()}. After that your account data will be deleted from Bluemeet permanently and cannot be restored in any way. Hope you enjoyed your journey with us. Looking forward to see you again. `,
-        // html: ForgotPasswordTemplate(user, resetURL),
+        html: BluemeetAccountDeactivated(),
       };
 
       sgMail
@@ -781,7 +787,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: "Your Password Reset Link",
       text: "use this link to reset your password. This link is valid for only 10 min.",
-      html: ForgotPasswordTemplate(user, resetURL),
+      html: PasswordResetLink(),
     };
 
     sgMail
@@ -844,7 +850,7 @@ exports.createNewCommunityRequest = catchAsync(async (req, res, next) => {
       text: `Hi ${user.firstName} ${
         user.lastName
       }. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`https://www.bluemeet.in/verifying-community/${accountRequest._id}`}`,
-      // html: ForgotPasswordTemplate(user, resetURL),
+      html: VerifyCommunityEmail(),
     };
 
     sgMail
@@ -958,7 +964,7 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
           from: "shreyanshshah242@gmail.com", // Change to your verified sender
           subject: `Welcome to ${req.body.name}`,
           text: `Hi ${userDoc.firstName} ${userDoc.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on Bluemeet. Happy Bluemeeting  🥳 🥳!`,
-          // html: ForgotPasswordTemplate(user, resetURL),
+          html: NewMemberAdded(),
         };
 
         const msgToCommunity = {
@@ -966,7 +972,7 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
           from: "shreyanshshah242@gmail.com", // Change to your verified sender
           subject: `Welcome to ${req.body.name}`,
           text: `Hi ${userDoc.firstName} ${userDoc.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on Bluemeet. Happy Bluemeeting  🥳 🥳!`,
-          // html: ForgotPasswordTemplate(user, resetURL),
+          html: WelcomeToTeam(),
         };
 
         sgMail

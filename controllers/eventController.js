@@ -20,6 +20,8 @@ const Registration = require("./../models/registrationsModel");
 const RoomTable = require("./../models/roomTableModel");
 const BoothTable = require("./../models/boothTableModel");
 const EventVideo = require("./../models/eventVideosModel");
+const ExhibitorInvitation = require("../Mail/ExhibitorInvitation");
+const SpeakerMagicLink = require("../Mail/SpeakerMagicLink");
 
 const { Video } = new Mux(
   process.env.MUX_TOKEN_ID,
@@ -398,7 +400,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
               text: `use this link to join this event ${
                 eventGettingBooth.eventName
               } as a booth exhibitor. ${`http://bluemeet.in/event/booth/${newRegistration._id}`}`,
-              // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+              html: ExhibitorInvitation(),
             };
 
             sgMail
@@ -451,7 +453,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
               text: `use this link to join this event ${
                 eventGettingBooth.eventName
               } as a booth exhibitor. ${`http://bluemeet.in/event/booth/${newRegistration._id}`}`,
-              // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+              html: ExhibitorInvitation(),
             };
 
             sgMail
@@ -632,7 +634,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         from: "shreyanshshah242@gmail.com", // Change to your verified sender
         subject: `Your are invited as speaker in ${eventGettingSpeaker.eventName}`,
         text: `use this link to join this event as a speaker. ${`http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
-        // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+        html: SpeakerMagicLink(),
       };
 
       if (req.body.sendInvitation) {
@@ -740,7 +742,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         from: "shreyanshshah242@gmail.com", // Change to your verified sender
         subject: `Your are invited as speaker in ${eventGettingSpeaker.eventName}`,
         text: `use this link to join this event as a speaker. ${`http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
-        // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+        html: SpeakerMagicLink(),
       };
 
       if (req.body.sendInvitation) {

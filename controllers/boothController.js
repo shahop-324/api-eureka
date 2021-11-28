@@ -15,6 +15,7 @@ const BoothTable = require("./../models/boothTableModel");
 const mongoose = require("mongoose");
 const apiFeatures = require("../utils/apiFeatures");
 const validator = require("validator");
+const ExhibitorInvitation = require("../Mail/ExhibitorInvitation");
 
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
@@ -221,7 +222,7 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
             text: `use this link to join this event ${
               eventDoc.eventName
             } as a booth exhibitor. ${`http://localhost:3001/event/booth/${newRegistration._id}`}`,
-            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            html: ExhibitorInvitation(),
           };
 
           sgMail
@@ -274,7 +275,7 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
             text: `use this link to join this event ${
               eventDoc.eventName
             } as a booth exhibitor. ${`http://localhost:3001/event/booth/${newRegistration._id}`}`,
-            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            html: ExhibitorInvitation(),
           };
 
           sgMail
@@ -393,7 +394,7 @@ exports.sendBoothInvitation = catchAsync(async (req, res, next) => {
           from: "shreyanshshah242@gmail.com", // Change to your verified sender
           subject: "Your Event Invitation Link",
           text: `Hi, use this link to join this event as a booth exhibitor. ${doc.invitationLink}.`,
-          // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+          html: ExhibitorInvitation(),
         };
 
         sgMail

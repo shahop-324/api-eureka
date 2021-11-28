@@ -77,6 +77,10 @@ const SessionBackstageMessage = require("./models/sessionBackstageModel");
 const EventAlert = require("./models/eventAlertsModel");
 const EventPoll = require("./models/eventPollModel");
 const AvailableForNetworking = require("./models/availableForNetworking");
+const YouHaveBeenSuspended = require("./Mail/YouHaveBeenSuspended");
+const AcceptedInEvent = require("./Mail/AcceptedInEvent");
+const YouHaveAWarning = require("./Mail/YouHaveAWarning");
+const WelcomeToBluemeet = require("./Mail/WelcomeToBluemeet");
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
@@ -126,10 +130,10 @@ io.on("connect", (socket) => {
 
       const msgToUser = {
         to: blockedUserDoc.email, // Change to your recipient
-        from: "shreyanshshah242@gmail.com", // Change to your verified sender
+        from: "", // Change to your verified sender
         subject: `You have been suspended from ${eventDoc.eventName}`,
         text: `You have been suspended from ${eventDoc.eventName}. Here is what event organisers have to say about this ${warning}`,
-        // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+        html: YouHaveBeenSuspended(),
       };
 
       // TODO Generate a notification for user
@@ -221,7 +225,7 @@ io.on("connect", (socket) => {
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: `You have been accepted in ${eventDoc.eventName}.`,
       text: `Here is a good news for you, You have been accepted in following event ${eventDoc.eventName}. You can now join this event by visiting your user dashboard. `,
-      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+      html: AcceptedInEvent(),
     };
 
     // TODO Generate a notification for user
@@ -374,7 +378,7 @@ io.on("connect", (socket) => {
         from: "shreyanshshah242@gmail.com", // Change to your verified sender
         subject: `You have been suspended from ${eventDoc.eventName}`,
         text: `You have been suspended from ${eventDoc.eventName}. Here is what event organisers have to say about this ${warning}`,
-        // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+        html: YouHaveBeenSuspended(),
       };
 
       // TODO Generate a notification for user
@@ -520,7 +524,7 @@ io.on("connect", (socket) => {
       to: msgSenderUserDoc.email, // Change to your recipient
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: `You have a warning from ${eventDoc.eventName}`,
-      text: `You have got a warning from organisers of ${eventDoc.eventName}. ${warning}`,
+      text: YouHaveAWarning(),
       // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
     };
 
@@ -5456,7 +5460,7 @@ io.on("connect", (socket) => {
             from: "shreyanshshah242@gmail.com", // Change to your verified sender
             subject: `Welcome to Bluemeet`,
             text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
-            // html: ForgotPasswordTemplate(user, resetURL),
+            html: WelcomeToBluemeet(),
           };
 
           sgMail
@@ -5642,7 +5646,7 @@ io.on("connect", (socket) => {
             from: "shreyanshshah242@gmail.com", // Change to your verified sender
             subject: `Welcome to Bluemeet`,
             text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
-            // html: ForgotPasswordTemplate(user, resetURL),
+            html: WelcomeToBluemeet(),
           };
 
           sgMail
@@ -5828,7 +5832,7 @@ io.on("connect", (socket) => {
           from: "shreyanshshah242@gmail.com", // Change to your verified sender
           subject: `Welcome to Bluemeet`,
           text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
-          // html: ForgotPasswordTemplate(user, resetURL),
+          html: WelcomeToBluemeet(),
         };
 
         sgMail
@@ -6061,7 +6065,7 @@ io.on("connect", (socket) => {
             from: "shreyanshshah242@gmail.com", // Change to your verified sender
             subject: `Welcome to Bluemeet`,
             text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
-            // html: ForgotPasswordTemplate(user, resetURL),
+            html: WelcomeToBluemeet(),
           };
 
           sgMail
@@ -6246,7 +6250,7 @@ io.on("connect", (socket) => {
             from: "shreyanshshah242@gmail.com", // Change to your verified sender
             subject: `Welcome to Bluemeet`,
             text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
-            // html: ForgotPasswordTemplate(user, resetURL),
+            html: WelcomeToBluemeet(),
           };
 
           sgMail
@@ -6432,7 +6436,7 @@ io.on("connect", (socket) => {
           from: "shreyanshshah242@gmail.com", // Change to your verified sender
           subject: `Welcome to Bluemeet`,
           text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
-          // html: ForgotPasswordTemplate(user, resetURL),
+          html: WelcomeToBluemeet(),
         };
 
         sgMail

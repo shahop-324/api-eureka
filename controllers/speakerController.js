@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 const Event = require("./../models/eventModel");
 const Registration = require("./../models/registrationsModel");
 const sgMail = require("@sendgrid/mail");
+const SpeakerMagicLink = require("../Mail/SpeakerMagicLink");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 const filterObj = (obj, ...allowedFields) => {
@@ -161,7 +162,7 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
             from: "shreyanshshah242@gmail.com", // Change to your verified sender
             subject: `Your are invited as speaker in ${eventDoc.eventName}`,
             text: `use this link to join this event as a speaker. ${`http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
-            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            html: SpeakerMagicLink(),
           };
 
           sgMail
@@ -221,7 +222,7 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
             from: "shreyanshshah242@gmail.com", // Change to your verified sender
             subject: `Your are invited as speaker in ${eventDoc.eventName}`,
             text: `use this link to join this event as a speaker. ${`http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
-            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            html: SpeakerMagicLink(),
           };
 
           sgMail
@@ -350,7 +351,7 @@ exports.sendInvitation = catchAsync(async (req, res, next) => {
     from: "shreyanshshah242@gmail.com", // Change to your verified sender
     subject: "Your Event Invitation Link",
     text: `Hi, ${speakerName} use this link to join this event as a speaker. ${invitationLink}. You have been invited in these sessions ${sessions}`,
-    // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    html: SpeakerMagicLink(),
   };
 
   sgMail
@@ -399,7 +400,7 @@ exports.sendBulkInvite = catchAsync(async (req, res, next) => {
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: "Your Event Invitation Link",
       text: `Hi, ${element.name} use this link to join this event (${eventDoc.eventName}). ${element.invitationLink}. And you can access your dashboard using this link ${element.dashboardLink}`,
-      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+      html: SpeakerMagicLink(),
     };
 
     sgMail

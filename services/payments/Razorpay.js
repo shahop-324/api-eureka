@@ -26,6 +26,13 @@ const RegistrationsIdsCommunityWise = require("../../models/registrationsIdsComm
 const { convert } = require("exchange-rates-api");
 const EventRegistrationTemplate = require("../email/eventRegistrationMail");
 const sgMail = require("@sendgrid/mail");
+const EventRegistrationConfirmation = require("../../Mail/EventRegistrationConfirmation");
+const CommunityBillingPlanChanged = require("../../Mail/CommunityBillingPlanChanged");
+const RegistrationAddOnApplied = require("../../Mail/RegistrationAddOnApplied");
+const OrganiserSeatAddon = require("../../Mail/OrganiserSeatAddon");
+const StreamingHourAddon = require("../../Mail/StreamingHourAddon");
+const EmailCreditsAddon = require("../../Mail/EmailCreditsAddon");
+const CloudStorageAddOn = require("../../Mail/CloudStorageAddOn");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 const razorpay = new Razorpay({
@@ -784,12 +791,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
           from: "shreyanshshah242@gmail.com", // Change to your verified sender
           subject: "Your Event Registration Confirmation.",
           text: `You have just successfully registered in an event. Checkout your Bluemeet user dashboard for more information. Thanks! Here is your magic link http://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`,
-          // html: EventRegistrationTemplate(
-          //   `${userDoingEventTransaction.firstName}  ${userDoingEventTransaction.lastName}`,
-          //   eventGettingEventTransaction.eventName,
-          //   ticketBeingPurchased.name,
-          //   amount/100
-          // ),
+          html: EventRegistrationConfirmation(),
         };
 
         sgMail
@@ -939,7 +941,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
           from: "shreyanshshah242@gmail.com", // Change to your verified sender
           subject: `Your Bluemeet plan has been changed!`,
           text: `We have successfully processed your request to change your Bluemeet plan. Please visit your community dashboard to get more details.`,
-          // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+          html: CommunityBillingPlanChanged(),
         };
 
         sgMail
@@ -1004,7 +1006,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             text: `We have successfully processed your request to add ${
               numOfRegistrations * 1
             } extra registrations to your community. You can use this add on till 60 days from today. Thanks, From Bluemeet Team.`,
-            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            html: RegistrationAddOnApplied(),
           };
 
           sgMail
@@ -1051,7 +1053,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             text: `We have successfully processed your request to add ${
               numOfOrganiserSeats * 1
             } extra organsiser seats to your community. You can use this add on till 30 days from today. Thanks, From Bluemeet Team.`,
-            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            html: OrganiserSeatAddon(),
           };
 
           sgMail
@@ -1098,7 +1100,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             text: `We have successfully processed your request to add ${
               streamingHours * 1
             } extra streaming hours to your community. You can use this add on till 60 days from today. Thanks, From Bluemeet Team.`,
-            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            html: StreamingHourAddon(),
           };
 
           sgMail
@@ -1145,7 +1147,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             text: `We have successfully processed your request to add ${
               emailCredits * 1
             } extra email credits to your community. You can use this add on till 60 days from today. Thanks, From Bluemeet Team.`,
-            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            html: EmailCreditsAddon(),
           };
 
           sgMail
@@ -1192,7 +1194,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             text: `We have successfully processed your request to add ${
               cloudStorage * 1
             } extra cloud storage to your community. You can use this add on till 30 days from today. Thanks, From Bluemeet Team.`,
-            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            html: CloudStorageAddOn(),
           };
 
           sgMail
@@ -1521,12 +1523,7 @@ exports.registerFreeTicket = catchAsync(async (req, res, next) => {
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: "Your Event Registration Confirmation.",
       text: `You have just successfully registered in an event. Checkout your Bluemeet user dashboard for more information. Thanks! Here is your magic link http://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`,
-      // html: EventRegistrationTemplate(
-      //   `${userDoingEventTransaction.firstName}  ${userDoingEventTransaction.lastName}`,
-      //   eventGettingEventTransaction.eventName,
-      //   ticketBeingPurchased.name,
-      //   amount/100
-      // ),
+      html: EventRegistrationConfirmation(),
     };
 
     sgMail

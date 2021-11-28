@@ -1,6 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const feedBack = require("../models/feedBackModel");
 const sgMail = require("@sendgrid/mail");
+const FeedbackReceived = require("../Mail/FeedbackReceived");
 
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
@@ -29,7 +30,7 @@ exports.createFeedback = catchAsync(async (req, res, next) => {
     from: "shreyanshshah242@gmail.com", // Change to your verified sender
     subject: "We have recieved your feedback",
     text: `Hey, we wanna say thank you for helping us get better by providing your valuable feedback.`,
-    // html: ForgotPasswordTemplate(user, resetURL),
+    html: FeedbackReceived(),
   };
 
   sgMail
