@@ -412,6 +412,7 @@ const Pricing = (props) => {
 
   return (
     <>
+     <div id="openBeamer"></div>
       <div className="container-fluid p-0">
         <div className="header-section-home header-section">
           {/* <TopNav /> */}

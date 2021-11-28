@@ -211,6 +211,7 @@ const EventPlatformHome = (props) => {
 
   return (
     <>
+     <div id="openBeamer"></div>
       <div className="container-fluid p-0" id="home-page">
         <div className="header-section-home header-section">
           {/* Here Goes Top Nav */}

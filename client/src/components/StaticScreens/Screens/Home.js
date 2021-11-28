@@ -237,6 +237,7 @@ const Home = () => {
 
   return (
     <>
+     <div id="openBeamer"></div>
       <StaticBanner />
       <div className="container-fluid p-0" id="home-page">
         <div className="header-section-home header-section">

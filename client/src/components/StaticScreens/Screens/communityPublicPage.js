@@ -404,6 +404,7 @@ const CommunityPublicPage = () => {
   return (
     <>
       <CssBaseline />
+      <div id="openBeamer"></div>
       <div>
         <div className="row nav-section">
           <nav className="navbar navbar-expand-lg navbar-light bg-light">

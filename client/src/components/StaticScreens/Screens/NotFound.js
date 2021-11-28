@@ -91,6 +91,7 @@ const NotFoundPage = () => {
 
   return (
     <>
+     <div id="openBeamer"></div>
       <div class="content" style={{ height: "100%", minHeight: "100vh" }}>
         <canvas class="snow" id="snow"></canvas>
         <div class="main-text">

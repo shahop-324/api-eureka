@@ -2045,7 +2045,10 @@ io.on("connect", (socket) => {
         }
       }
 
-      thisUserOnStage.camera = camera;
+      if(thisUserOnStage) {
+        thisUserOnStage.camera = camera;
+      }
+      
 
       // 3.) save Table Doc
 

@@ -129,6 +129,7 @@ const ContactUs = (props) => {
 
   return (
     <>
+     <div id="openBeamer"></div>
       <div
         className="container-fluid p-0"
         style={{ backgroundColor: "#152d35", width: "100vw" }}

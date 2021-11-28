@@ -5,6 +5,7 @@ import "./../Styles/InternalServerError.css";
 const InternalServerError = () => {
   return (
     <>
+     <div id="openBeamer"></div>
       <div className="background">
         <div className="ground"></div>
       </div>

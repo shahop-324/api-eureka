@@ -30,6 +30,7 @@ const AttractiveText = styled.a`
 const StaticBanner = () => {
   return (
     <>
+     <div id="openBeamer"></div>
       <Paper className="py-2">
         <NormalText>Looking for a lifetime deal?</NormalText>
         <a href="/deal/appsumo" style={{ textDecoration: "none" }}>

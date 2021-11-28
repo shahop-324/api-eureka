@@ -95,7 +95,7 @@ const AboutUs = () => {
 
   return (
     <>
-      
+      <div id="openBeamer"></div>
       <div
         className="container-fluid p-0 pb-5"
         style={{ backgroundColor: "#272727", width: "100vw" }}
