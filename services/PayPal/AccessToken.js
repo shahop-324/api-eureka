@@ -44,7 +44,7 @@ exports.getPayPalAccessToken = catchAsync(async (req, res, next) => {
           partner_logo_url:
             "https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg",
           return_url:
-            "http://localhost:3001/user/613ba3ea709a3f09cde05b31/community/billing/613ba54e29fd0d0d426bfeab",
+            "https://www.bluemeet.in/user/613ba3ea709a3f09cde05b31/community/billing/613ba54e29fd0d0d426bfeab",
           return_url_description:
             "the url to return the merchant after the paypal onboarding process.",
           show_add_credit_card: true,

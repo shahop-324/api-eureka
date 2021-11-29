@@ -68,12 +68,12 @@ const ResetPassword = (props) => {
           <div className="col col-md-6 col-lg-4 col-12 signin-illustration-container d-flex">
             <div className="col illustration-card">
               <div className="row">
-              <a href="/">
-                <img
-                  src={BluemeetLogoLight}
-                  alt="Bluemeet Logo"
-                  style={{ height: "50px" }}
-                />
+                <a href="/" className="companyName">
+                  <img
+                    src={BluemeetLogoLight}
+                    alt="Bluemeet Logo"
+                    style={{ height: "50px" }}
+                  />
                 </a>
                 <div className="welcome-message">
                   Let's reset your password...

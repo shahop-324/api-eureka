@@ -12,24 +12,23 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import Popover from "@mui/material/Popover";
 import { Divider } from "@material-ui/core";
-
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import SupportAgentRoundedIcon from "@mui/icons-material/SupportAgentRounded";
 import ModeEditOutlineRoundedIcon from "@mui/icons-material/ModeEditOutlineRounded";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import socket from "./../service/socket";
 import {
-  signOut,
   SetCurrentBoothId,
   toggleRatingWindow,
 } from "./../../../actions";
 import { useParams } from "react-router";
 import UpdateEventProfile from "./../HelperComponents/UpdateEventProfile";
 
-import α from 'color-alpha';
+import α from "color-alpha";
 
 const SideNavBody = styled.div`
-  background-color:  ${(props) => props && props.color ? α(props.color, 2) : "#233e44 !important"};
+  background-color: ${(props) =>
+    props && props.color ? α(props.color, 2) : "#233e44 !important"};
 `;
 
 const MenuText = styled.span`
@@ -53,7 +52,7 @@ const SideNav = ({
 
   const { currentBoothId } = useSelector((state) => state.booth);
 
-  const {eventDetails} = useSelector((state) => state.event);
+  const { eventDetails } = useSelector((state) => state.event);
 
   const handleCloseUpdateProfile = () => {
     setOpenUpdateProfile(false);
@@ -172,36 +171,6 @@ const SideNav = ({
               Sessions
             </div>
           </div>
-          {/* <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            
-            onClick={() => {
-              dispatch(SetCurrentBoothId(null));
-              handleStageClick();
-            }}
-          >
-            <div
-              className={
-                "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "2" ? "active-wrapper-h" : "")
-              }
-            >
-              <AirplayRoundedIcon
-                className={
-                  "icon-btn-venue " +
-                  (activeIndex === "2" ? "icon-btn-active-h" : "")
-                }
-              />
-            </div>
-            <div
-              className={
-                "icon-btn-text-venue " +
-                (activeIndex === "2" ? "icon-btn-text-active-h" : "")
-              }
-            >
-              Stage
-            </div>
-          </div> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
@@ -349,11 +318,7 @@ const SideNav = ({
               horizontal: "left",
             }}
           >
-            <MenuItem
-              onClick={handleClose}
-              className="mb-1"
-              disableRipple
-            >
+            <MenuItem onClick={handleClose} className="mb-1" disableRipple>
               <a
                 target="_blank"
                 rel="noreferrer"
@@ -393,18 +358,15 @@ const SideNav = ({
             <MenuItem className="mb-1" disableRipple>
               <div
                 onClick={() => {
-                  
-
-                  if(eventDetails.reviewedBy.includes(userId)) {
+                  if (eventDetails.reviewedBy.includes(userId)) {
                     // This user has already given his review
 
                     socket.emit("leaveEvent", { userId, eventId }, (error) => {
                       console.log(error);
                     });
-                    window.location.href = `/user/home`
+                    window.location.href = `/user/home`;
                     handleClose();
-                  }
-                  else {
+                  } else {
                     dispatch(toggleRatingWindow(true));
                     handleClose();
                   }

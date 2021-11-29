@@ -26,8 +26,14 @@ const SideNavLean = ({
   return (
     <>
       <div
-        className="h-side-nav lean-side-nav lean-nav-wrapper px-3 pb-4"
-        style={{ backgroundColor: "#ffffff", height: "93vh !important" }}
+        className="lean-side-nav lean-nav-wrapper px-3 pb-4"
+        style={{
+          backgroundColor: "#ffffff",
+          height: "93vh !important",
+          minWidth: "90px",
+
+          opacity: "1",
+        }}
       >
         <div className="main-icon-btn-container py-4">
           <div

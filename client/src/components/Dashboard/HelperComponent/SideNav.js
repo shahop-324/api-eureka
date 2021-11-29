@@ -20,7 +20,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
-import ShoppingBasketRoundedIcon from '@mui/icons-material/ShoppingBasketRounded';
+import ShoppingBasketRoundedIcon from "@mui/icons-material/ShoppingBasketRounded";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -64,7 +64,10 @@ const SideNav = ({
   };
   return (
     <>
-      <div className="side-nav-wrapper py-4" style={{height: "93vh", overflow: "auto", backgroundColor: "#ffffff"}}>
+      <div
+        className="side-nav-wrapper py-4"
+        style={{ height: "93vh", overflow: "auto", backgroundColor: "#ffffff" }}
+      >
         <div
           onClick={() => {
             handleGettingStartedClick();

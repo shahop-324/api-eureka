@@ -8,16 +8,10 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import LoginPNG from "./../../assets/images/Saly-3.png";
 import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
 import { useDispatch } from "react-redux";
-import {
-  errorTrackerForSignIn,
-  resetAuthError,
-} from "../../actions/index";
+import { errorTrackerForSignIn, resetAuthError } from "../../actions/index";
 import LinkedinAuth from "../LinkedinAuth";
 import GoogleAuth from "../GoogleAuth";
-import {
-  eventRegistrationSignIn,
-  eventBuyingPlan,
-} from "../../actions/index";
+import { eventRegistrationSignIn, eventBuyingPlan } from "../../actions/index";
 import { reduxForm, Field } from "redux-form";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -156,13 +150,13 @@ const Signin = (props) => {
           >
             <div className="col illustration-card">
               <div className="row">
-              <a href="/" className="companyName">
+                <a href="/" className="companyName">
                   {" "}
                   <img
-                  src={BluemeetLogoLight}
-                  alt="Bluemeet Logo"
-                  style={{ height: "50px" }}
-                />
+                    src={BluemeetLogoLight}
+                    alt="Bluemeet Logo"
+                    style={{ height: "50px" }}
+                  />
                 </a>
                 <div className="welcome-message">Hi, Welcome Back</div>
                 <div className="login-illustration">

@@ -381,7 +381,7 @@ app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res, next) {
   const oauth2 = new jsforce.OAuth2({
     clientId: process.env.SALESFORCE_CLIENT_ID,
     clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
-    redirectUri: "http://localhost:3001/bluemeet/salesforce/redirect",
+    redirectUri: "https://www.bluemeet.in/bluemeet/salesforce/redirect",
   });
   res.redirect(oauth2.getAuthorizationUrl({}));
 });
@@ -392,7 +392,7 @@ app.get(
     const oauth2 = new jsforce.OAuth2({
       clientId: process.env.SALESFORCE_CLIENT_ID,
       clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
-      redirectUri: "http://localhost:3001/bluemeet/salesforce/redirect",
+      redirectUri: "https://www.bluemeet.in/bluemeet/salesforce/redirect",
     });
     const conn = new jsforce.Connection({ oauth2: oauth2 });
     conn.authorize(req.query.code, function (err, userInfo) {

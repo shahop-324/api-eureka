@@ -2200,8 +2200,8 @@ exports.editPayPalPayoutEmail = catchAsync(async (req, res, next) => {
     subject: "Please verify your Paypal Payout email.",
     text: `Hi, please click on the button below to verify this email for reciving Paypal Payouts for your Bluemeet Community ${
       updatedCommunity.name
-    }. ${`http://localhost:3001/verify-paypal-email/${paypalEmailUpdateRequest._id}`}`,
-    html: VerifyPayPalEmail(`http://localhost:3001/verify-paypal-email/${paypalEmailUpdateRequest._id}`, updatedCommunity.name),
+    }. ${`https://www.bluemeet.in/verify-paypal-email/${paypalEmailUpdateRequest._id}`}`,
+    html: VerifyPayPalEmail(`https://www.bluemeet.in/verify-paypal-email/${paypalEmailUpdateRequest._id}`, updatedCommunity.name),
   };
 
   sgMail

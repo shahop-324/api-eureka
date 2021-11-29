@@ -198,8 +198,8 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
           });
 
           // Provide magic_link and invitation link
-          newRegistration.magic_link = `http://localhost:3001/event/booth/${newRegistration._id}`;
-          newRegistration.invitationLink = `http://localhost:3001/event/booth/${newRegistration._id}`;
+          newRegistration.magic_link = `https://www.bluemeet.in/event/booth/${newRegistration._id}`;
+          newRegistration.invitationLink = `https://www.bluemeet.in/event/booth/${newRegistration._id}`;
 
           // Add this event in users registered events and push this registration in users resgistrations doc.
           existingUser.registeredInEvents.push(eventDoc._id);
@@ -220,11 +220,11 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
             subject: `Your are invited as a exhibitor in ${eventDoc.eventName}`,
             text: `use this link to join this event ${
               eventDoc.eventName
-            } as a booth exhibitor. ${`http://localhost:3001/event/booth/${newRegistration._id}`}`,
+            } as a booth exhibitor. ${`https://www.bluemeet.in/event/booth/${newRegistration._id}`}`,
             html: ExhibitorInvitation(
               communityDoc.name,
               eventDoc.eventName,
-              `http://localhost:3001/event/booth/${newRegistration._id}`,
+              `https://www.bluemeet.in/event/booth/${newRegistration._id}`,
               existingUser.firstName
             ),
           };
@@ -261,8 +261,8 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
           });
 
           // Provide magic_link and invitation link
-          newRegistration.magic_link = `http://localhost:3001/event/booth/${newRegistration._id}`;
-          newRegistration.invitationLink = `http://localhost:3001/event/booth/${newRegistration._id}`;
+          newRegistration.magic_link = `https://www.bluemeet.in/event/booth/${newRegistration._id}`;
+          newRegistration.invitationLink = `https://www.bluemeet.in/event/booth/${newRegistration._id}`;
 
           // Save user doc and registration doc
           await newRegistration.save({
@@ -278,11 +278,11 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
             subject: `Your are invited as a exhibitor in ${eventDoc.eventName}`,
             text: `use this link to join this event ${
               eventDoc.eventName
-            } as a booth exhibitor. ${`http://localhost:3001/event/booth/${newRegistration._id}`}`,
+            } as a booth exhibitor. ${`https://www.bluemeet.in/event/booth/${newRegistration._id}`}`,
             html: ExhibitorInvitation(
               communityDoc.name,
               eventDoc.eventName,
-              `http://localhost:3001/event/booth/${newRegistration._id}`
+              `https://www.bluemeet.in/event/booth/${newRegistration._id}`
             ),
           };
 

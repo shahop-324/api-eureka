@@ -139,8 +139,8 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
 
           // Add invitaion and magic link to this registration
 
-          newSpeakerRegistration.magic_link = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
-          newSpeakerRegistration.invitationLink = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
+          newSpeakerRegistration.magic_link = `https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
+          newSpeakerRegistration.invitationLink = `https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
 
           await newSpeakerRegistration.save({
             new: true,
@@ -163,8 +163,8 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
             to: req.body.email, // Change to your recipient
             from: "no-reply@bluemeet.in", // Change to your verified sender
             subject: `Your are invited as speaker in ${eventDoc.eventName}`,
-            text: `use this link to join this event as a speaker. ${`http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
-            html: SpeakerMagicLink(eventDoc.eventName, `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`),
+            text: `use this link to join this event as a speaker. ${`https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`https://www.bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
+            html: SpeakerMagicLink(eventDoc.eventName, `https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`),
           };
 
           sgMail
@@ -210,8 +210,8 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
 
           // Add invitaion and magic link to this registration
 
-          newSpeakerRegistration.magic_link = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
-          newSpeakerRegistration.invitationLink = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
+          newSpeakerRegistration.magic_link = `https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
+          newSpeakerRegistration.invitationLink = `https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
 
           await newSpeakerRegistration.save({
             new: true,
@@ -223,8 +223,8 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
             to: req.body.email, // Change to your recipient
             from: "no-reply@bluemeet.in", // Change to your verified sender
             subject: `Your are invited as speaker in ${eventDoc.eventName}`,
-            text: `use this link to join this event as a speaker. ${`http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
-            html: SpeakerMagicLink(eventDoc.eventName, `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`),
+            text: `use this link to join this event as a speaker. ${`https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`https://www.bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
+            html: SpeakerMagicLink(eventDoc.eventName, `https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`),
           };
 
           sgMail

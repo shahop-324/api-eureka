@@ -66,7 +66,7 @@ const ForgotPassword = (props) => {
           <div className="col col-md-6 col-lg-4 col-12 signin-illustration-container d-flex">
             <div className="col illustration-card">
               <div className="row">
-                <a href="/">
+                <a href="/" className="companyName">
                   <img
                     src={BluemeetLogoLight}
                     alt="Bluemeet Logo"

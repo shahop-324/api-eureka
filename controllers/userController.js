@@ -778,7 +778,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // 3) Send it to user's email
   try {
-    const resetURL = `http://localhost:3001/resetPassword/${resetToken}`;
+    const resetURL = `https://www.bluemeet.in/resetPassword/${resetToken}`;
 
     // Send Grid is implemented here
 
@@ -787,7 +787,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       from: "security@bluemeet.in", // Change to your verified sender
       subject: "Your Password Reset Link",
       text: "use this link to reset your password. This link is valid for only 10 min.",
-      html: PasswordResetLink(user.firstName, `http://localhost:3001/resetPassword/${resetToken}`),
+      html: PasswordResetLink(user.firstName, `https://www.bluemeet.in/resetPassword/${resetToken}`),
     };
 
     sgMail
