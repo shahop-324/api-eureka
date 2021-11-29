@@ -176,6 +176,8 @@ const UserAccountHome = () => {
   useEffect(() => {
     console.log(params.code);
     dispatch(fetchUserAllPersonalData());
+    dispatch(navigationIndex(0));
+    history.push("/user/home/");
   }, [dispatch]);
 
   useEffect(() => {

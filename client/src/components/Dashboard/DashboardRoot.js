@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React from "react";
 import "./../../assets/Sass/Dashboard_Overview.scss";
@@ -61,6 +62,8 @@ const DashboardRoot = () => {
 
   useEffect(() => {
     dispatch(fetchCommunity(id));
+    dispatch(navigationIndexForCommunityDash(0));
+    history.push(`/user/${userId}/community/getting-started/${id}`);
   }, [id, dispatch]);
   useEffect(() => {
     return () => {

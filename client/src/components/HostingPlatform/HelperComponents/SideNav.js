@@ -401,7 +401,7 @@ const SideNav = ({
                     socket.emit("leaveEvent", { userId, eventId }, (error) => {
                       console.log(error);
                     });
-                    dispatch(signOut());
+                    window.location.href = `/user/home`
                     handleClose();
                   }
                   else {
@@ -411,7 +411,7 @@ const SideNav = ({
                 }}
               >
                 <LogoutRoundedIcon style={{ fontSize: "19px" }} />
-                <MenuText className="ms-3">Sign out</MenuText>
+                <MenuText className="ms-3">Leave event</MenuText>
               </div>
             </MenuItem>
           </Popover>

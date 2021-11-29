@@ -7,14 +7,6 @@ import { Carousel } from "react-responsive-carousel";
 import Intro from "./../../assets/Static/1.png";
 import KB from "./../../assets/Static/2.png";
 import Support from "./../../assets/Static/3.png";
-import SBC from "./../../assets/Static/sbcds.jpeg";
-import Car from "./../../assets/Static/car.jpeg";
-import Crypto from "./../../assets/Static/crypto.jpeg";
-import Investing from "./../../assets/Static/investing.jpeg";
-import Candid from "./../../assets/Static/candid.jpeg";
-import WIT from "./../../assets/Static/wit.png";
-import DevOps from "./../../assets/Static/devops.png";
-import Social from "./../../assets/Static/socialsharing.jpeg";
 import { useDispatch, useSelector } from "react-redux";
 import CreateNewEventForm from "./FormComponents/CreateNewEventForm";
 
@@ -25,7 +17,12 @@ import { useTheme } from "@material-ui/core/styles";
 import LatestEventCard from "./LatestEventCard";
 import GetHelp from "./GetHelp";
 
-import { fetchLatestEvent, fetchShowcaseEvents } from "../../actions";
+import {
+  fetchLatestEvent,
+  fetchShowcaseEvents,
+  generateEventAccessToken,
+  navigationIndexForHostingPlatform,
+} from "../../actions";
 import { useParams } from "react-router-dom";
 
 import Archive from "./HelperComponent/Archive";
@@ -247,10 +244,23 @@ const GetStarted = () => {
   // Find the latest event of this community and show it here otherwise ask the user to create their first event
   // Define latestEvent in eventSlice and create an action to fetch and create latest event of community
 
-  const renderDemoEvents = (events) => {
+  const renderDemoEvents = (events, userId, userEmail) => {
     return events.map((event) => {
       return (
-        <DemoEventCard className="demo-event-card">
+        <DemoEventCard
+          onClick={() => {
+            dispatch(navigationIndexForHostingPlatform(0));
+            dispatch(
+              generateEventAccessToken(
+                userId,
+                userEmail,
+                "attendee" // attendee || speaker || exhibitor || organiser ||  moderator ||  host
+              )
+            );
+            window.location.href = `/community/${event.communityId}/event/${event._id}/hosting-platform/lobby`;
+          }}
+          className="demo-event-card"
+        >
           <EventTag>{event.type}</EventTag>
           <EventImage
             src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.image}`}

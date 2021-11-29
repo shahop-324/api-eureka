@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
 import socket from "./../../HostingPlatform/service/socket";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
@@ -127,6 +128,8 @@ const EditEventRoot = () => {
       );
     });
     dispatch(fetchParticularEventOfCommunity(id));
+    dispatch(navigationIndexForEditEvent(0));
+    history.push(`/community/${communityId}/edit-event/${id}/event-overview`);
   }, [dispatch, id]);
 
   useEffect(() => {

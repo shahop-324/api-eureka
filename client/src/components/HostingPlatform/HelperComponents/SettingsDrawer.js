@@ -226,7 +226,7 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
                     socket.emit("leaveEvent", { userId, eventId }, (error) => {
                       console.log(error);
                     });
-                    dispatch(signOut());
+                    window.location.href = `/user/home`;
                   } else {
                     dispatch(toggleRatingWindow(true));
                   }
@@ -234,7 +234,7 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
                 className="btn btn-outline-danger btn-outline-text"
                 style={{ width: "100%", textDecoration: "none" }}
               >
-                Logout
+                Leave
               </Link>
             </div>
           </div>

@@ -138,7 +138,7 @@ const RatingComponent = ({ open, handleClose }) => {
     socket.emit("leaveEvent", { userId, eventId }, (error) => {
       console.log(error);
     });
-    dispatch(signOut());
+    window.location.href = `/user/home`;
   };
 
   const handleAskMeLater = () => {
@@ -146,7 +146,8 @@ const RatingComponent = ({ open, handleClose }) => {
     socket.emit("leaveEvent", { userId, eventId }, (error) => {
       console.log(error);
     });
-    dispatch(signOut());
+
+    window.location.href = `/user/home`;
   };
 
   return (

@@ -18,7 +18,7 @@
 }
 
 .event-name-head-text {
-  font-family: "Ubuntu";
+  font-family: 'Ubuntu';
   font-weight: 600;
   font-size: 1.1rem;
   color: #212121;
@@ -48,7 +48,7 @@ $bg-color-light-sea: #eef3f6;
 
 $color-icon: #231f20;
 
-$font-family: "Ubuntu";
+$font-family: 'Ubuntu';
 
 // SideNav Styling
 //===========================================================================================//
@@ -110,7 +110,7 @@ $font-family: "Ubuntu";
 }
 
 .button-text-dashboard-sidenav {
-  font-family: "Ubuntu";
+  font-family: 'Ubuntu';
   font-style: normal;
   font-weight: 600;
   font-size: 14px;
@@ -382,7 +382,7 @@ $font-family: "Ubuntu";
 }
 
 .consumed-value {
-  font-family: "Ubuntu";
+  font-family: 'Ubuntu';
   font-style: normal;
   font-weight: 500;
   font-size: 22px;
@@ -581,7 +581,7 @@ $font-family: "Ubuntu";
   height: 592px;
 }
 
-@media only screen and (max-width: "1480px") {
+@media only screen and (max-width: '1480px') {
   .overview-content-grid {
     grid-template-columns: 1fr;
   }
@@ -610,18 +610,18 @@ $font-family: "Ubuntu";
     margin-top: 0 !important;
   }
 }
-@media only screen and (min-width: "1480px") {
+@media only screen and (min-width: '1480px') {
   .team-overview-and-top-events-row-container {
     display: none;
     margin-top: 0 !important;
   }
 }
-@media only screen and (min-width: "1380px") {
+@media only screen and (min-width: '1380px') {
   .dash-root-menu {
     display: none;
   }
 }
-@media only screen and (max-width: "1380px") {
+@media only screen and (max-width: '1380px') {
   .dashboard-body {
     grid-template-columns: 1fr;
   }
@@ -640,7 +640,7 @@ $font-family: "Ubuntu";
   }
 }
 
-@media only screen and (min-width: "1441px") {
+@media only screen and (min-width: '1441px') {
   .publish-btn-lg {
     display: inline-block;
   }
@@ -664,7 +664,7 @@ $font-family: "Ubuntu";
   }
 }
 
-@media only screen and (max-width: "1440px") {
+@media only screen and (max-width: '1440px') {
   .publish-btn-lg {
     display: none;
   }
