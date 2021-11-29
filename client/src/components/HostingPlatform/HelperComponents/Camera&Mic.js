@@ -67,6 +67,8 @@ const CameraAndMic = () => {
   const { id } = useSelector((state) => state.eventAccessToken);
   const {audioVideoSettings} = useSelector((state) => state.selectedTab);
 
+  const {eventDetails} = useSelector((state) => state.event);
+
 
   useEffect(() => {
     dispatch(fetchEventRegistrations(eventId));
@@ -357,6 +359,12 @@ const CameraAndMic = () => {
                   updateRegistrationSettings(formValues, myRegistration._id)
                 );
               }}
+              style={{backgroundColor: eventDetails
+                ? eventDetails.color
+                : "#3175f2",
+              border: eventDetails
+                ? `1px solid ${eventDetails.color}`
+                : `1px solid #3175f2`,}}
               className="btn btn-primary btn-outline-text"
             >
               Save

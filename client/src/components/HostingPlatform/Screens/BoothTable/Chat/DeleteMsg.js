@@ -1,4 +1,5 @@
 import React from "react";
+import {useSelector} from 'react-redux';
 import { useParams } from "react-router-dom";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
@@ -91,6 +92,8 @@ const DeleteMsg = ({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const {eventDetails} = useSelector((state) => state.event);
+
   const deleteMsg = (msgId) => {
     socket.emit(
       "deleteBoothTableMessage", // !Change this to delete Booth Table Mesage
@@ -156,8 +159,14 @@ const DeleteMsg = ({
               onClick={() => {
                 deleteMsg(msgId);
               }}
+              style={{
+                backgroundColor: eventDetails ? eventDetails.color : "#152d35",
+                border: eventDetails
+                  ? `1px solid ${eventDetails.color}`
+                  : `1px solid #152d35`,
+                width: "100%",
+              }}
               className="btn btn-primary btn-outline-text"
-              style={{ width: "100%" }}
             >
               Delete
             </button>

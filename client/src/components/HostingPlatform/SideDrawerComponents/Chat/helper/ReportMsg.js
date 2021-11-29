@@ -131,6 +131,8 @@ const ReportMsg = ({
 
   const userId = userDetails._id;
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   return (
     <>
       <Dialog
@@ -197,6 +199,13 @@ const ReportMsg = ({
             style={{ border: "none" }}
           >
             <button
+              style={{
+                backgroundColor: eventDetails ? eventDetails.color : "#152d35",
+                border: eventDetails
+                  ? `1px solid ${eventDetails.color}`
+                  : `1px solid #152d35`,
+                width: "100%",
+              }}
               onClick={() => {
                 socket.emit(
                   "reportMsg",
@@ -214,7 +223,6 @@ const ReportMsg = ({
                 handleClose();
               }}
               className="btn btn-primary btn-outline-text"
-              style={{ width: "100%" }}
             >
               Report
             </button>

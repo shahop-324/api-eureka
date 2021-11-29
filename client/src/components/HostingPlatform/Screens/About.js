@@ -128,7 +128,7 @@ const SessionPlaybackPreview = styled.div`
   height: 100%;
   padding: 10px;
   height: 420px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   display: grid;
   grid-gap: 32px;
   grid-template-columns: 3fr 1.5fr;
@@ -425,6 +425,12 @@ const SessionComponent = ({ session }) => {
                 }}
                 className="btn btn-outline-text btn-primary"
                 style={{
+                  backgroundColor: eventDetails
+                    ? eventDetails.color
+                    : "#3175f2",
+                  border: eventDetails
+                    ? `1px solid ${eventDetails.color}`
+                    : `1px solid #3175f2`,
                   width: "100%",
                 }}
               >
@@ -438,7 +444,7 @@ const SessionComponent = ({ session }) => {
   );
 };
 
-const renderHisghlightedSessions = (sessions) => {
+const renderHighlightedSessions = (sessions) => {
   return sessions.map((session) => {
     return (
       <>
@@ -660,7 +666,7 @@ const About = () => {
 
           {typeof highlightedSessions !== "undefined" &&
           highlightedSessions.length > 0 ? (
-            <>{renderHisghlightedSessions(highlightedSessions)}</>
+            <>{renderHighlightedSessions(highlightedSessions)}</>
           ) : (
             <>
               <NoContent

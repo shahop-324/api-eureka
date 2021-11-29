@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {useParams} from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import "./../../../Styles/PeopleList.scss";
 import { makeStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
@@ -220,9 +220,10 @@ const renderIndividualChatSummary = (
 };
 
 const PrivateChatListComponent = () => {
-
   const params = useParams();
   const eventId = params.eventId;
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   const { userDetails } = useSelector((state) => state.user);
   const userId = userDetails._id;
@@ -282,7 +283,12 @@ const PrivateChatListComponent = () => {
             }}
             color="primary"
             aria-label="add"
-            style={{ backgroundColor: "#538BF7" }}
+            style={{
+              backgroundColor: eventDetails ? eventDetails.color : "#152d35",
+              border: eventDetails
+                ? `1px solid ${eventDetails.color}`
+                : `1px solid #152d35`,
+            }}
           >
             <AddIcon />
           </Fab>

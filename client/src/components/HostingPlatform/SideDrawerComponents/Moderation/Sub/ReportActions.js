@@ -35,7 +35,7 @@ const ReportActions = ({
 
   const { userDetails } = useSelector((state) => state.user);
 
-  const {eventDetails} = useSelector((state) => state.event);
+  const { eventDetails } = useSelector((state) => state.event);
 
   const userId = userDetails._id;
 
@@ -49,8 +49,6 @@ const ReportActions = ({
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-  
 
   return (
     <>
@@ -133,7 +131,14 @@ const ReportActions = ({
             <div className="mb-3">
               {removedFromEvent || eventDetails.blocked.includes(senderId) ? (
                 <Chip
-                  style={{ fontWeight: "500", width: "100%" }}
+                  style={{
+                    fontWeight: "500",
+                    width: "100%",
+                    color: eventDetails ? eventDetails.color : "#152d35",
+                    border: eventDetails
+                      ? `1px solid ${eventDetails.color}`
+                      : `1px solid #152d35`,
+                  }}
                   label="Removed from event"
                   color="primary"
                   variant="outlined"
@@ -155,7 +160,10 @@ const ReportActions = ({
             <div className="mb-3">
               {warned ? (
                 <Chip
-                  style={{ fontWeight: "500", width: "100%" }}
+                  style={{ fontWeight: "500", width: "100%", color: eventDetails ? eventDetails.color : "#152d35",
+                  border: eventDetails
+                    ? `1px solid ${eventDetails.color}`
+                    : `1px solid #152d35`, }}
                   label="Warned"
                   color="primary"
                   variant="outlined"
@@ -176,7 +184,10 @@ const ReportActions = ({
             <div className="mb-3">
               {deleted ? (
                 <Chip
-                  style={{ fontWeight: "500", width: "100%" }}
+                  style={{ fontWeight: "500", width: "100%", color: eventDetails ? eventDetails.color : "#152d35",
+                  border: eventDetails
+                    ? `1px solid ${eventDetails.color}`
+                    : `1px solid #152d35`, }}
                   label="Message Deleted"
                   color="primary"
                   variant="outlined"
@@ -192,7 +203,7 @@ const ReportActions = ({
                     // delete this message and transmit message to all in Realtime
                   }}
                   className="btn btn-primary btn-outline-text"
-                  style={{ width: "100%" }}
+                  style={{ width: "100%",  }}
                 >
                   Delete Message
                 </button>

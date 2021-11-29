@@ -16,14 +16,18 @@ import {
   updateRegistrationSettings,
 } from "./../../../actions";
 
-const RoyalBlueSwitch = withStyles({
+import α from "color-alpha";
+
+const RoyalSwitch = withStyles({
   switchBase: {
-    color: "#538BF7",
+    color: (props) => (props && props.color ? α(props.color, 0.85) : "#538BF7"),
     "&$checked": {
-      color: "#3474F3",
+      color: (props) =>
+        props && props.color ? α(props.color, 1.2) : "#3474f3",
     },
     "&$checked + $track": {
-      backgroundColor: "#145DF0",
+      backgroundColor: (props) =>
+        props && props.color ? α(props.color, 0.56) : "#145DF0",
     },
   },
   checked: {},
@@ -47,6 +51,8 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
   let myRegistration;
 
   const { registrations } = useSelector((state) => state.registration);
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   if (registrations) {
     myRegistration = registrations.find(
@@ -130,7 +136,10 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
                     <FormGroup row>
                       <FormControlLabel
                         control={
-                          <RoyalBlueSwitch
+                          <RoyalSwitch
+                            color={
+                              eventDetails ? eventDetails.color : "#538BF7"
+                            }
                             checked={messageNotifications}
                             onChange={(e) => {
                               setMessageNotifications(e.target.checked);
@@ -164,7 +173,10 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
                     <FormGroup row>
                       <FormControlLabel
                         control={
-                          <RoyalBlueSwitch
+                          <RoyalSwitch
+                            color={
+                              eventDetails ? eventDetails.color : "#538BF7"
+                            }
                             checked={alerts}
                             onChange={(e) => {
                               setAlerts(e.target.checked);
@@ -199,7 +211,10 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
                     <FormGroup row>
                       <FormControlLabel
                         control={
-                          <RoyalBlueSwitch
+                          <RoyalSwitch
+                            color={
+                              eventDetails ? eventDetails.color : "#538BF7"
+                            }
                             checked={pollNotification}
                             onChange={(e) => {
                               setPollNotification(e.target.checked);
@@ -234,7 +249,10 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
                     <FormGroup row>
                       <FormControlLabel
                         control={
-                          <RoyalBlueSwitch
+                          <RoyalSwitch
+                            color={
+                              eventDetails ? eventDetails.color : "#538BF7"
+                            }
                             checked={notificationSound}
                             onChange={(e) => {
                               setNotificationSound(e.target.checked);
@@ -268,7 +286,10 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
                     <FormGroup row>
                       <FormControlLabel
                         control={
-                          <RoyalBlueSwitch
+                          <RoyalSwitch
+                            color={
+                              eventDetails ? eventDetails.color : "#538BF7"
+                            }
                             checked={emailNotifications}
                             onChange={(e) => {
                               setEmailNotifications(e.target.checked);

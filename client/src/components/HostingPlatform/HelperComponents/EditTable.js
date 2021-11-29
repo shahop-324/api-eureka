@@ -13,6 +13,8 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import α from "color-alpha";
+import { withStyles } from "@material-ui/core/styles";
 
 const Input = styled.input`
   &:focus {
@@ -21,6 +23,20 @@ const Input = styled.input`
   &:hover {
     border: 1px solid #152d35 !important;
   }
+`;
+
+const TableImgPromopt = styled.div`
+  align-items: center;
+
+  height: 100px;
+  width: 100px;
+  border: 1px solid #212121;
+  background-color: #212121;
+  border-radius: 10px;
+
+  font-size: 0.75rem;
+  color: #ffffff;
+  font-weight: 400;
 `;
 
 const useStyles = makeStyles((theme) => ({
@@ -109,6 +125,8 @@ const EditTable = ({
   submitting,
   reset,
 }) => {
+  const { eventDetails } = useSelector((state) => state.event);
+
   const classes = useStyles();
 
   const dispatch = useDispatch();
@@ -134,9 +152,11 @@ const EditTable = ({
   );
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(
-    `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${
-      tableDetails ? tableDetails.image : "#"
-    }`
+    tableDetails
+      ? tableDetails.image
+        ? `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${tableDetails.image}`
+        : ""
+      : ""
   );
 
   const onFileChange = (event) => {
@@ -171,14 +191,27 @@ const EditTable = ({
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="row  d-flex align-items-center justify-content-center mb-4 px-3">
-              <div className="p-0 d-flex flex-row justify-content-center">
-                <Avatar
-                  variant="rounded"
-                  src={fileToPreview}
-                  className={classes.large}
-                />
+              <div className="p-0 d-flex flex-row justify-content-center mb-3">
+                {fileToPreview ? (
+                  <Avatar
+                    variant="rounded"
+                    src={fileToPreview}
+                    className={classes.large}
+                  />
+                ) : (
+                  <TableImgPromopt className="d-flex flex-row align-items-center justify-content-center">
+                    {" "}
+                    <span style={{ margin: "0 auto" }}>
+                      {" "}
+                      Add Room Logo{" "}
+                    </span>{" "}
+                  </TableImgPromopt>
+                )}
               </div>
-              <FormLabel htmlFor="communityHeadline">Logo</FormLabel>
+
+              <FormLabel htmlFor="communityHeadline" className="px-0">
+                Logo
+              </FormLabel>
               <Input
                 name="logo"
                 type="file"
@@ -240,7 +273,16 @@ const EditTable = ({
               <button
                 type="submit"
                 className="col-3 btn btn-primary btn-outline-text"
-                style={{ textAlign: "center" }}
+                style={{
+                  textAlign: "center",
+                  backgroundColor:
+                    eventDetails && eventDetails.color
+                      ? eventDetails.color
+                      : `#3A78F5`,
+                  border: eventDetails
+                    ? `1px solid ${eventDetails.color}`
+                    : `1px solid #3A78F5`,
+                }}
               >
                 Save Changes
               </button>

@@ -596,7 +596,7 @@ const StageSideDrawerComponent = ({ runningStatus }) => {
 
   return (
     <>
-      <SessionSideDrawer>
+      <SessionSideDrawer> 
         <SessionSideIconBtnNav
           style={{
             gridTemplateColumns: gridColumns,

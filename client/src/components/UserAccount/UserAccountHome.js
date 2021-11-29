@@ -29,7 +29,6 @@ import ForumRoundedIcon from "@mui/icons-material/ForumRounded";
 import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
 import VideoLibraryRoundedIcon from "@mui/icons-material/VideoLibraryRounded";
 import CampaignRoundedIcon from "@mui/icons-material/CampaignRounded";
-import OverlayLoader from "./../OverlayLoader";
 
 import { styled as MUIStyled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
@@ -386,7 +385,6 @@ const UserAccountHome = () => {
         handleClose={handleCloseNotifications}
       />
       <Wishlist open={openWishlist} handleClose={handleCloseWishlist} />
-      <OverlayLoader />
     </>
   );
 };

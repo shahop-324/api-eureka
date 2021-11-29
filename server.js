@@ -686,7 +686,7 @@ io.on("connect", (socket) => {
   socket.on("startCloudRecording", async ({ sessionId }, callback) => {
     const channelName = sessionId;
     const isPublisher = false;
-    const appID = "915628d494484dac856cba48faa55ccb";
+    const appID = "afe1eaa28f57452a865fa81190eed1c2";
     const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
     const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
 
@@ -706,11 +706,11 @@ io.on("connect", (socket) => {
       privilegeExpiredTs
     );
 
-    console.log("Channel name", channelName, "915628d494484dac856cba48faa55ccb");
+    console.log("Channel name", channelName, "afe1eaa28f57452a865fa81190eed1c2");
 
-    const customerKey = "4191a4f5b2da4c3b8736663520c1c61e";
+    const customerKey = "421e170e57a348b4a03714870d2ecb5b"; // AGORA CUSTOMER KEY
     // Customer secret
-    const customerSecret = "16eac8d5d6f141a59e6a2b39d234c08e";
+    const customerSecret = "a24dd1f68b6c4c8ea8030b09f8305341"; // AGORA CUSTOMER SECRET
 
     // Concatenate customer key and customer secret and use base64 to encode the concatenated string
     const plainCredential = customerKey + ":" + customerSecret;
@@ -720,7 +720,7 @@ io.on("connect", (socket) => {
 
     try {
       const response = await fetch(
-        `https://api.agora.io/v1/apps/915628d494484dac856cba48faa55ccb/cloud_recording/acquire`,
+        `https://api.agora.io/v1/apps/afe1eaa28f57452a865fa81190eed1c2/cloud_recording/acquire`,
         {
           method: "POST",
 
@@ -744,7 +744,7 @@ io.on("connect", (socket) => {
       const result = await response.json();
 
       const startResponse = await fetch(
-        `https://api.agora.io/v1/apps/915628d494484dac856cba48faa55ccb/cloud_recording/resourceid/${result.resourceId}/mode/mix/start`,
+        `https://api.agora.io/v1/apps/afe1eaa28f57452a865fa81190eed1c2/cloud_recording/resourceid/${result.resourceId}/mode/mix/start`,
         {
           method: "POST",
 
@@ -812,7 +812,7 @@ io.on("connect", (socket) => {
       const sid = sessionDoc.sid;
 
       const queryresponse = await fetch(
-        `https://api.agora.io/v1/apps/915628d494484dac856cba48faa55ccb/cloud_recording/resourceid/${resourceId}/sid/${sid}/mode/mix/query`,
+        `https://api.agora.io/v1/apps/afe1eaa28f57452a865fa81190eed1c2/cloud_recording/resourceid/${resourceId}/sid/${sid}/mode/mix/query`,
         {
           method: "GET",
 
@@ -863,9 +863,9 @@ io.on("connect", (socket) => {
     const resourceId = sessionDoc.resourceId;
     const sid = sessionDoc.sid;
 
-    const customerKey = "4191a4f5b2da4c3b8736663520c1c61e";
+    const customerKey = "421e170e57a348b4a03714870d2ecb5b";
     // Customer secret
-    const customerSecret = "16eac8d5d6f141a59e6a2b39d234c08e";
+    const customerSecret = "a24dd1f68b6c4c8ea8030b09f8305341";
 
     // Concatenate customer key and customer secret and use base64 to encode the concatenated string
     const plainCredential = customerKey + ":" + customerSecret;
@@ -874,7 +874,7 @@ io.on("connect", (socket) => {
     encodedCredential = btoa(plainCredential);
 
     const response = await fetch(
-      `https://api.agora.io/v1/apps/915628d494484dac856cba48faa55ccb/cloud_recording/resourceid/${resourceId}/sid/${sid}/mode/mix/stop`,
+      `https://api.agora.io/v1/apps/afe1eaa28f57452a865fa81190eed1c2/cloud_recording/resourceid/${resourceId}/sid/${sid}/mode/mix/stop`,
       {
         method: "POST",
 

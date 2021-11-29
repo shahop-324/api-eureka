@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const navigationSlice = createSlice({
   name: "navigation",
   initialState: {
+    showLoader: false,
     currentIndex: 0,
     currentIndexForCommunityDash: 0,
     currentIndexForEditEvent: 0,
@@ -31,6 +32,9 @@ const navigationSlice = createSlice({
     },
     activeIndexForEditBooth(state, action) {
       state.currentIndexForEditBooth = action.payload.currentIndex;
+    },
+    SetShowLoader(state, action) {
+      state.showLoader = action.payload.open;
     },
   },
 });

@@ -660,7 +660,7 @@ const Root = () => {
           </div>
         </div>
       </div>
-      <RatingComponent />
+      {/* <RatingComponent /> */}
     </>
   );
 };

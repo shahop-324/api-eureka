@@ -4,7 +4,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Loader from "./../../Loader";
 import styled from "styled-components";
-import { Dialog, IconButton, makeStyles } from "@material-ui/core";
+import { Dialog, makeStyles, IconButton } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import socket from "./../service/socket";
@@ -36,9 +36,26 @@ import TableScreenStreamSettings from "./StreamSettings/TableScreen";
 
 import α from "color-alpha";
 
+const StyledIconButton = styled.div`
+  display: inline-block;
+  background-color: #e9e9e9e7;
+  padding: 8px 10px;
+  border-radius: 18px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+
+const OpaqueLayer = styled.div`
+  height: 100%;
+  width: 100%;
+  background-color: #ffffff1e;
+`;
 
 const TableNum = styled.span`
   font-weight: 500;
@@ -56,7 +73,6 @@ let rtc = {
 };
 
 const TableScreenBody = styled.div`
- 
   background-color: ${(props) =>
     props && props.color
       ? `${α(props.color, 1)} !important`
@@ -68,8 +84,7 @@ const TableScreen = ({
   closeTableScreen,
   id, // * This is tableId
 }) => {
-
-  const {eventDetails} = useSelector((state) => state.event);
+  const { eventDetails } = useSelector((state) => state.event);
 
   const { registrations } = useSelector((state) => state.registration);
 
@@ -232,111 +247,108 @@ const TableScreen = ({
   };
 
   useEffect(() => {
+    // *********** Perform this procedure when microphone device is changed *********** //
 
+    AgoraRTC.onMicrophoneChanged = async (changedDevice) => {
+      if (rtc.localAudioTrack) {
+        // When plugging in a device, switch to a device that is newly plugged in.
+        if (changedDevice.state === "ACTIVE") {
+          rtc.localAudioTrack &&
+            rtc.localAudioTrack
+              .setDevice(changedDevice.device.deviceId)
+              .then(() => {
+                dispatch(
+                  showSnackbar(
+                    "success",
+                    `Microphone device changed to ${changedDevice.device.label}`
+                  )
+                );
+              })
+              .catch((e) => {
+                console.log(e);
+                dispatch(
+                  showSnackbar(
+                    "info",
+                    "Failed to switch to new microphone device"
+                  )
+                );
+              });
+          // Switch to an existing device when the current device is unplugged.
+        } else if (
+          changedDevice.device.label === rtc.localAudioTrack.getTrackLabel()
+        ) {
+          const oldMicrophones = await AgoraRTC.getMicrophones();
+          oldMicrophones[0] &&
+            rtc.localAudioTrack &&
+            rtc.localAudioTrack
+              .setDevice(oldMicrophones[0].deviceId)
+              .then(() => {
+                dispatch(
+                  showSnackbar(
+                    "success",
+                    `Microphone device changed to ${rtc.localAudioTrack.getTrackLabel()}`
+                  )
+                );
+              })
+              .catch((e) => {
+                console.log(e);
+                dispatch(
+                  showSnackbar("info", "Failed to switch microphone device")
+                );
+              });
+        }
+      }
+    };
 
-// *********** Perform this procedure when microphone device is changed *********** //
+    // ************** Perform this procedure when camera device is changed ************ //
 
-AgoraRTC.onMicrophoneChanged = async (changedDevice) => {
-  if (rtc.localAudioTrack) {
-    // When plugging in a device, switch to a device that is newly plugged in.
-    if (changedDevice.state === "ACTIVE") {
-      rtc.localAudioTrack &&
-        rtc.localAudioTrack
-          .setDevice(changedDevice.device.deviceId)
-          .then(() => {
-            dispatch(
-              showSnackbar(
-                "success",
-                `Microphone device changed to ${changedDevice.device.label}`
-              )
-            );
-          })
-          .catch((e) => {
-            console.log(e);
-            dispatch(
-              showSnackbar(
-                "info",
-                "Failed to switch to new microphone device"
-              )
-            );
-          });
-      // Switch to an existing device when the current device is unplugged.
-    } else if (
-      changedDevice.device.label === rtc.localAudioTrack.getTrackLabel()
-    ) {
-      const oldMicrophones = await AgoraRTC.getMicrophones();
-      oldMicrophones[0] &&
-        rtc.localAudioTrack &&
-        rtc.localAudioTrack
-          .setDevice(oldMicrophones[0].deviceId)
-          .then(() => {
-            dispatch(
-              showSnackbar(
-                "success",
-                `Microphone device changed to ${rtc.localAudioTrack.getTrackLabel()}`
-              )
-            );
-          })
-          .catch((e) => {
-            console.log(e);
-            dispatch(
-              showSnackbar("info", "Failed to switch microphone device")
-            );
-          });
-    }
-  }
-};
-
-// ************** Perform this procedure when camera device is changed ************ //
-
-AgoraRTC.onCameraChanged = async (changedDevice) => {
-  if (rtc.localVideoTrack) {
-    // When plugging in a device, switch to a device that is newly plugged in.
-    if (changedDevice.state === "ACTIVE") {
-      rtc.localVideoTrack &&
-        rtc.localVideoTrack
-          .setDevice(changedDevice.device.deviceId)
-          .then(() => {
-            dispatch(
-              showSnackbar(
-                "success",
-                `Camera device changed to ${changedDevice.device.label}`
-              )
-            );
-          })
-          .catch((e) => {
-            console.log(e);
-            dispatch(
-              showSnackbar("info", "Failed to switch to new camera device")
-            );
-          });
-      // Switch to an existing device when the current device is unplugged.
-    } else if (
-      changedDevice.device.label === rtc.localVideoTrack.getTrackLabel()
-    ) {
-      const oldCameras = await AgoraRTC.getCameras();
-      oldCameras[0] &&
-        rtc.localVideoTrack &&
-        rtc.localVideoTrack
-          .setDevice(oldCameras[0].deviceId)
-          .then(() => {
-            dispatch(
-              showSnackbar(
-                "success",
-                `Camera device changed to ${rtc.localVideoTrack.getTrackLabel()}`
-              )
-            );
-          })
-          .catch((e) => {
-            console.log(e);
-            dispatch(
-              showSnackbar("info", "Failed to switch camera device")
-            );
-          });
-    }
-  }
-};
-
+    AgoraRTC.onCameraChanged = async (changedDevice) => {
+      if (rtc.localVideoTrack) {
+        // When plugging in a device, switch to a device that is newly plugged in.
+        if (changedDevice.state === "ACTIVE") {
+          rtc.localVideoTrack &&
+            rtc.localVideoTrack
+              .setDevice(changedDevice.device.deviceId)
+              .then(() => {
+                dispatch(
+                  showSnackbar(
+                    "success",
+                    `Camera device changed to ${changedDevice.device.label}`
+                  )
+                );
+              })
+              .catch((e) => {
+                console.log(e);
+                dispatch(
+                  showSnackbar("info", "Failed to switch to new camera device")
+                );
+              });
+          // Switch to an existing device when the current device is unplugged.
+        } else if (
+          changedDevice.device.label === rtc.localVideoTrack.getTrackLabel()
+        ) {
+          const oldCameras = await AgoraRTC.getCameras();
+          oldCameras[0] &&
+            rtc.localVideoTrack &&
+            rtc.localVideoTrack
+              .setDevice(oldCameras[0].deviceId)
+              .then(() => {
+                dispatch(
+                  showSnackbar(
+                    "success",
+                    `Camera device changed to ${rtc.localVideoTrack.getTrackLabel()}`
+                  )
+                );
+              })
+              .catch((e) => {
+                console.log(e);
+                dispatch(
+                  showSnackbar("info", "Failed to switch camera device")
+                );
+              });
+        }
+      }
+    };
 
     dispatch(fetchEventRegistrations(eventId));
     handleChangeGrid();
@@ -833,166 +845,166 @@ AgoraRTC.onCameraChanged = async (changedDevice) => {
           margin: "0 auto 0 auto",
         }}
       >
-        <TableScreenBody color={eventDetails.color} className="px-4" id="table-full-screen-element">
-          <div className="table-screen-header d-flex flex-row align-items-center justify-content-between pt-3">
-            <div className="table-num-and-heading px-2">
-              <span
-                className="pe-4"
-                style={{
-                  fontSize: "1.1rem",
-                  fontWeight: "600",
-                  borderRight: "1px solid rgb(98, 98, 98",
-                }}
-              >
-                <TableNum>{`Table ${table.slice(31) * 1 + 1}`}</TableNum>
+        <TableScreenBody
+          color={eventDetails.color}
+          id="table-full-screen-element"
+        >
+          <OpaqueLayer className="px-4">
+            <div className="table-screen-header d-flex flex-row align-items-center justify-content-between pt-3">
+              <div className="table-num-and-heading px-2">
+                <span
+                  className="pe-4"
+                  style={{
+                    fontSize: "1.1rem",
+                    fontWeight: "600",
+                    borderRight: "1px solid rgb(98, 98, 98",
+                  }}
+                >
+                  <TableNum>{`Table ${table.slice(31) * 1 + 1}`}</TableNum>
 
-                {/* Table number */}
-              </span>
-              <span className="ps-4">
-                {tableDetails
-                  ? tableDetails.title
+                  {/* Table number */}
+                </span>
+                <span className="ps-4">
+                  {tableDetails
                     ? tableDetails.title
-                    : ""
-                  : ""}
-              </span>
-              {/* Table title */}
-            </div>
-            <div>
-              <IconButton
-                onClick={() => {
-                  leaveStreaming();
-                }}
-              >
-                <CloseRoundedIcon
-                  style={{ fill: "#ffffff" }}
-                  id="leave-table"
-                />
-              </IconButton>
-            </div>
-          </div>
-
-          <div
-            className="table-meet-body-dark-container py-4"
-            style={{
-              width: "100%",
-              height: "100%",
-              display: "grid",
-              gridTemplateColumns: "5fr 1.65fr",
-              gridGap: "20px",
-            }}
-          >
-            <div
-              className="d-flex flex-column justify-content-between"
-              style={{ width: "100%", height: "100%", maxHeight: "80vh" }}
-            >
-              {/* // Here we need to place stream body */}
-              {/* // ! */}
-              <StreamBody
-                screenTracks={screenTracks}
-                galleryViewInput={galleryViewInput}
-              ></StreamBody>
+                      ? tableDetails.title
+                      : ""
+                    : ""}
+                </span>
+                {/* Table title */}
+              </div>
               <div>
-                <hr style={{ color: "rgb(98, 98, 98)" }} />
+                <IconButton
+                  onClick={() => {
+                    leaveStreaming();
+                  }}
+                >
+                  <CloseRoundedIcon
+                    style={{ fill: "#ffffff" }}
+                    id="leave-table"
+                  />
+                </IconButton>
+              </div>
+            </div>
+
+            <div
+              className="table-meet-body-dark-container py-4"
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "grid",
+                gridTemplateColumns: "5fr 1.65fr",
+                gridGap: "18px",
+              }}
+            >
+              <div
+                className="d-flex flex-column justify-content-between"
+                style={{ width: "100%", height: "100%", maxHeight: "80vh" }}
+              >
+                {/* // Here we need to place stream body */}
+                {/* // ! */}
+                <StreamBody
+                  screenTracks={screenTracks}
+                  galleryViewInput={galleryViewInput}
+                ></StreamBody>
+                <div>
+                  <hr style={{ color: "rgb(98, 98, 98)" }} />
+                </div>
+                <div
+                  className="session-video-controls-grid "
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr 1fr",
+                    alignItems: "center",
+                  }}
+                >
+                  <div className="stage-left-controls d-flex flex-row  align-items-center"></div>
+
+                  <div className="" style={{ justifySelf: "center" }}>
+                    <StyledIconButton
+                      onClick={() => {
+                        localUserState.camera
+                          ? turnOffVideo()
+                          : userHasUnmutedVideo.current
+                          ? turnOnVideo()
+                          : unMuteMyVideo();
+                      }}
+                      className="me-4"
+                    >
+                      {localUserState.camera ? (
+                        <VideocamRoundedIcon style={{ fontSize: "18px" }} />
+                      ) : (
+                        <VideocamOffOutlinedIcon
+                          style={{ fontSize: "18px", color: "#BE1D1D" }}
+                        />
+                      )}
+                    </StyledIconButton>
+
+                    <StyledIconButton
+                      onClick={() => {
+                        localUserState.mic
+                          ? turnOffAudio()
+                          : userHasUnmutedAudio.current
+                          ? turnOnAudio()
+                          : unMuteMyAudio();
+                      }}
+                      className="me-4"
+                    >
+                      {localUserState.mic ? (
+                        <MicNoneRoundedIcon style={{ fontSize: "18px" }} />
+                      ) : (
+                        <MicOffOutlinedIcon
+                          style={{ fontSize: "18px", color: "#BE1D1D" }}
+                        />
+                      )}
+                    </StyledIconButton>
+
+                    <StyledIconButton
+                      onClick={() => {
+                        localUserState.screen
+                          ? stopPresenting()
+                          : dispatch(
+                              getRTCTokenForLoungeScreenShare(
+                                id,
+                                userId,
+                                startPresenting
+                              ) // We will use this fxn to request a token and start screen sharing
+                            );
+                      }}
+                      className="me-4"
+                    >
+                      {localUserState.screen ? (
+                        <CancelPresentationOutlinedIcon
+                          style={{ fontSize: "18px", color: "#1D5BBE" }}
+                        />
+                      ) : (
+                        <ScreenShareRoundedIcon style={{ fontSize: "18px" }} />
+                      )}
+                    </StyledIconButton>
+
+                    <StyledIconButton
+                      onClick={() => {
+                        setOpenSettings(true);
+                      }}
+                      aria-label="settings"
+                      className="mx-3"
+                    >
+                      <SettingsOutlinedIcon style={{ fontSize: "18px" }} />
+                    </StyledIconButton>
+                  </div>
+
+                  {/* // TODO Provide a leave button here */}
+                  <div className="d-flex flex-row justify-content-end"></div>
+                </div>
               </div>
               <div
-                className="session-video-controls-grid "
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr 1fr",
-                  alignItems: "center",
-                }}
+                className=""
+                style={{ display: "grid", gridTemplateColumns: "8fr 0.2fr" }}
               >
-                <div className="stage-left-controls d-flex flex-row  align-items-center"></div>
-
-                <div className="" style={{ justifySelf: "center" }}>
-                  <IconButton
-                    onClick={() => {
-                      localUserState.camera
-                        ? turnOffVideo()
-                        : userHasUnmutedVideo.current
-                        ? turnOnVideo()
-                        : unMuteMyVideo();
-                    }}
-                    className="me-4"
-                  >
-                    {localUserState.camera ? (
-                      <VideocamRoundedIcon style={{ fontSize: "20px" }} />
-                    ) : (
-                      <VideocamOffOutlinedIcon
-                        style={{ fontSize: "20px", color: "#BE1D1D" }}
-                      />
-                    )}
-                  </IconButton>
-
-                  <IconButton
-                    onClick={() => {
-                      localUserState.mic
-                        ? turnOffAudio()
-                        : userHasUnmutedAudio.current
-                        ? turnOnAudio()
-                        : unMuteMyAudio();
-                    }}
-                    className="me-4"
-                  >
-                    {localUserState.mic ? (
-                      <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
-                    ) : (
-                      <MicOffOutlinedIcon
-                        style={{ fontSize: "20px", color: "#BE1D1D" }}
-                      />
-                    )}
-                  </IconButton>
-
-                  <IconButton
-                    onClick={() => {
-                      localUserState.screen
-                        ? stopPresenting()
-                        : dispatch(
-                            getRTCTokenForLoungeScreenShare(
-                              id,
-                              userId,
-                              startPresenting
-                            ) // We will use this fxn to request a token and start screen sharing
-                          );
-                    }}
-                    className="me-4"
-                  >
-                    {localUserState.screen ? (
-                      <CancelPresentationOutlinedIcon
-                        style={{ fontSize: "20px", color: "#1D5BBE" }}
-                      />
-                    ) : (
-                      <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
-                    )}
-                  </IconButton>
-
-                  <IconButton
-                    onClick={() => {
-                      setOpenSettings(true);
-                    }}
-                    aria-label="settings"
-                    className="mx-3"
-                  >
-                    <SettingsOutlinedIcon
-                      style={{ fill: "#D3D3D3", size: "24" }}
-                    />
-                  </IconButton>
-                </div>
-
-                {/* // TODO Provide a leave button here */}
-                <div className="d-flex flex-row justify-content-end"></div>
+                <SideComponent peopleInThisRoom={people} tableId={table} />
               </div>
             </div>
-            <div
-              className=""
-              style={{ display: "grid", gridTemplateColumns: "8fr 0.2fr" }}
-            >
-              <SideComponent
-                peopleInThisRoom={people}
-                tableId={table}
-              />
-            </div>
-          </div>
+          </OpaqueLayer>
         </TableScreenBody>
       </Dialog>
       <Portal>

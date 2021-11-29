@@ -1,12 +1,20 @@
 import React, { useState } from "react";
-
+import styled from "styled-components";
 import "./../Styles/report.scss";
 import "./../../../Styles/root.scss";
-import Faker from "faker";
 import { Avatar } from "@material-ui/core";
 import ReportActions from "../Sub/ReportActions";
 import WhatsWrong from "../Sub/WhatsWrong";
 import ReportedMsg from "./ReportedMsg";
+import α from "color-alpha";
+import { useSelector } from "react-redux";
+
+const ReportContainer = styled.div`
+  border: ${(props) =>
+    props && props.color
+      ? `1px solid ${props.color}`
+      : `1px solid #3172f5`} !important;
+`;
 
 const ReportedMsgElement = ({
   reportedBy,
@@ -41,9 +49,15 @@ const ReportedMsgElement = ({
   const handleCloseActions = () => {
     setOpenActions(false);
   };
+
+  const { eventDetails } = useSelector((state) => state.event);
+
   return (
     <>
-      <div className="reported-msg-container px-4 py-3 mb-3">
+      <ReportContainer
+        color={eventDetails ? eventDetails.color : "#3172f5"}
+        className="reported-msg-container px-4 py-3 mb-3"
+      >
         <div className="d-flex flex-row align-items-center mb-4">
           <Avatar
             src={
@@ -85,11 +99,11 @@ const ReportedMsgElement = ({
 
         <div className="d-flex flex-row align-items-center">
           <button
+            style={{ width: "48%" }}
             onClick={() => {
               handleOpen();
             }}
             className="btn btn-light btn-outline-text me-3"
-            style={{ width: "48%" }}
           >
             What's wrong?
           </button>
@@ -98,12 +112,22 @@ const ReportedMsgElement = ({
               handleOpenActions();
             }}
             className="btn btn-primary btn-outline-text"
-            style={{ width: "48%" }}
+            style={{
+              width: "48%",
+              backgroundColor:
+                eventDetails && eventDetails.color
+                  ? eventDetails.color
+                  : "#3172F5",
+              border:
+                eventDetails && eventDetails.color
+                  ? `1px solid ${eventDetails.color}`
+                  : "1px solid #3172f5",
+            }}
           >
             Take action
           </button>
         </div>
-      </div>
+      </ReportContainer>
 
       <WhatsWrong
         open={open}
@@ -184,7 +208,10 @@ const renderReports = (reports) => {
 const ModerationReportedList = ({ reports }) => {
   return (
     <>
-      <div className="people-container pt-2 px-2" style={{ height: "75vh" }}>
+      <div
+        className="people-container pt-2 px-2"
+        style={{ height: "auto", minHeight: "75vh" }}
+      >
         <div className="scrollable-chat-element-container">
           {renderReports(reports)}
         </div>

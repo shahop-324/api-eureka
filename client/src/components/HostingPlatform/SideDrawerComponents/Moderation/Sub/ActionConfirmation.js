@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { showSnackbar } from "./../../../../../actions";
 import socket from "./../../../../HostingPlatform/service/socket";
@@ -8,6 +9,13 @@ import "./../Styles/report.scss";
 import { Avatar } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+
+const ConfirmationPreview = styled.div`
+  border: ${(props) =>
+    props && props.color
+      ? `1px solid ${props.color}`
+      : `1px solid #3172f5`} !important;
+`;
 
 const ActionConfirmation = ({
   name,
@@ -31,6 +39,8 @@ const ActionConfirmation = ({
   const [warningText, setWarningText] = useState(null);
 
   const { userDetails } = useSelector((state) => state.user);
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   const userId = userDetails._id;
 
@@ -84,7 +94,10 @@ const ActionConfirmation = ({
             <div className="confirm-action-heading mb-4">
               Confirm your action
             </div>
-            <div className="confirm-action-preview px-4 py-3 mb-3">
+            <ConfirmationPreview
+              color={eventDetails ? eventDetails.color : "#3172f5"}
+              className="confirm-action-preview px-4 py-3 mb-3"
+            >
               <div
                 className="mb-4"
                 style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
@@ -151,7 +164,7 @@ const ActionConfirmation = ({
                   placeholder="write what you want to convey to this user."
                 />
               </div>
-            </div>
+            </ConfirmationPreview>
 
             <div className="d-flex flex-row align-items-center justify-content-end">
               <button
@@ -163,6 +176,14 @@ const ActionConfirmation = ({
                 Cancel
               </button>
               <button
+                style={{
+                  backgroundColor: eventDetails
+                    ? eventDetails.color
+                    : "#152d35",
+                  border: eventDetails
+                    ? `1px solid ${eventDetails.color}`
+                    : `1px solid #152d35`,
+                }}
                 onClick={() => {
                   if (intent === "eventSuspension") {
                     //

@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import socket from "./service/socket";
-import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import styled from "styled-components";
 import Dialog from "@material-ui/core/Dialog";
-import { Divider } from "@material-ui/core";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
@@ -40,8 +38,6 @@ const Preview = styled.div`
 `;
 
 const CreateAlert = ({ open, handleClose }) => {
-  const dispatch = useDispatch();
-
   const theme = useTheme();
   const params = useParams();
   const eventId = params.eventId;
@@ -50,6 +46,7 @@ const CreateAlert = ({ open, handleClose }) => {
   const [alertText, setAlertText] = useState(null);
 
   const { userDetails } = useSelector((state) => state.user);
+  const { eventDetails } = useSelector((state) => state.event);
 
   const userId = userDetails._id;
 
@@ -94,6 +91,14 @@ const CreateAlert = ({ open, handleClose }) => {
                 cancel
               </button>
               <button
+                style={{
+                  backgroundColor: eventDetails
+                    ? eventDetails.color
+                    : "#152d35",
+                  border: eventDetails
+                    ? `1px solid ${eventDetails.color}`
+                    : `1px solid #152d35`,
+                }}
                 onClick={() => {
                   // Create alert via socket
                   socket.emit(

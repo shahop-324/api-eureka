@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import socket from "./../../../service/socket";
 import { useSelector } from "react-redux";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -17,6 +18,15 @@ TimeAgo.addDefaultLocale(en);
 
 // Create formatter (English).
 const timeAgo = new TimeAgo("en-US");
+
+const StyledButton = styled.button`
+  background-color: ${(props) =>
+    props.color ? props.color : "#1D4DD1"} !important;
+  border: ${(props) =>
+    props.color
+      ? `1px solid ${props.color} !important`
+      : `1px solid #152d35 !important`};
+`;
 
 const styles = {
   control: (base) => ({
@@ -128,6 +138,8 @@ const ReportMsg = ({
 
   const { userDetails } = useSelector((state) => state.user);
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   const userId = userDetails._id;
 
   return (
@@ -195,7 +207,8 @@ const ReportMsg = ({
             className="msg-to-report-container mb-3"
             style={{ border: "none" }}
           >
-            <button
+            <StyledButton
+              color={eventDetails.color}
               onClick={() => {
                 socket.emit(
                   "reportMsg",
@@ -213,10 +226,16 @@ const ReportMsg = ({
                 handleClose();
               }}
               className="btn btn-primary btn-outline-text"
-              style={{ width: "100%" }}
+              style={{
+                width: "100%",
+                backgroundColor: eventDetails.color,
+                border: eventDetails
+                  ? `1px solid ${eventDetails.color} !important`
+                  : `1px solid #152d35 !important`,
+              }}
             >
               Report
-            </button>
+            </StyledButton>
           </div>
         </div>
       </Dialog>

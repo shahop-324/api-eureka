@@ -12,6 +12,8 @@ import { Divider } from "@material-ui/core";
 
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 
 import {
   editSession,
@@ -22,6 +24,8 @@ import {
 } from "./../../../actions";
 import Switch from "@material-ui/core/Switch";
 import { withStyles } from "@material-ui/styles";
+
+import α from "color-alpha";
 
 const HeaderFooter = styled.div`
   background-color: #ebf4f6;
@@ -79,14 +83,16 @@ const PreviewContainer = styled.img`
   object-fit: cover;
 `;
 
-const RoyalBlueSwitch = withStyles({
+const RoyalSwitch = withStyles({
   switchBase: {
-    color: "#538BF7",
+    color: (props) => (props && props.color ? α(props.color, 0.85) : "#538BF7"),
     "&$checked": {
-      color: "#3474F3",
+      color: (props) =>
+        props && props.color ? α(props.color, 1.2) : "#3474f3",
     },
     "&$checked + $track": {
-      backgroundColor: "#145DF0",
+      backgroundColor: (props) =>
+        props && props.color ? α(props.color, 0.56) : "#145DF0",
     },
   },
   checked: {},
@@ -172,7 +178,8 @@ const EditSession = ({ open, handleClose, sessionId }) => {
                 <FormGroup row>
                   <FormControlLabel
                     control={
-                      <RoyalBlueSwitch
+                      <RoyalSwitch
+                        color={eventDetails.color}
                         checked={showInLobby}
                         onChange={(e) => {
                           console.log(e.target.checked);
@@ -213,7 +220,8 @@ const EditSession = ({ open, handleClose, sessionId }) => {
                 <FormGroup row>
                   <FormControlLabel
                     control={
-                      <RoyalBlueSwitch
+                      <RoyalSwitch
+                        color={eventDetails.color}
                         checked={sessionReplay}
                         onChange={(e) => {
                           console.log(e.target.checked);
@@ -244,7 +252,8 @@ const EditSession = ({ open, handleClose, sessionId }) => {
                 <FormGroup row>
                   <FormControlLabel
                     control={
-                      <RoyalBlueSwitch
+                      <RoyalSwitch
+                        color={eventDetails.color}
                         checked={allowEntry}
                         onChange={(e) => {
                           console.log(e.target.checked);
@@ -300,6 +309,14 @@ const EditSession = ({ open, handleClose, sessionId }) => {
                     style={{ width: "100%" }}
                   >
                     <button
+                      style={{
+                        backgroundColor: eventDetails
+                          ? eventDetails.color
+                          : "#3175f2",
+                        border: eventDetails
+                          ? `1px solid ${eventDetails.color}`
+                          : `1px solid #3175f2`,
+                      }}
                       onClick={() => {
                         dispatch(uploadSessionPreview(file, sessionId));
                       }}

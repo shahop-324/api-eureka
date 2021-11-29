@@ -27,6 +27,9 @@ const PeopleComponent = ({
   self,
 }) => {
   const dispatch = useDispatch();
+
+  const {eventDetails} = useSelector((state) => state.event);
+
   return (
     <>
       <div
@@ -48,16 +51,21 @@ const PeopleComponent = ({
             }}
             className="d-flex flex-row align-items-center justify-content-between"
           >
-            <div>
-              {designation}, {organisation}
-            </div>
+            {designation && organisation ? (
+              <div>
+                {designation} {organisation}
+              </div>
+            ) : <div></div>}
 
             {self ? (
               <Chip
                 label="You"
                 color="primary"
                 variant="outlined"
-                style={{ fontWeight: "500" }}
+                style={{ fontWeight: "500", color: eventDetails ? eventDetails.color : "#152d35",
+                border: eventDetails
+                  ? `1px solid ${eventDetails.color}`
+                  : `1px solid #152d35`, }}
               />
             ) : (
               <div
@@ -97,6 +105,8 @@ const PeopleList = ({ open, handleClose }) => {
 
   const renderPeople = (people, userId) => {
     return people.map((person) => {
+      console.log(person);
+      if(!person.bookedByUser) return <></>;
       return (
         <PeopleComponent
           name={person.userName}

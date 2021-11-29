@@ -25,6 +25,7 @@ import {
   updateRegistration,
 } from "../../../actions";
 import { useParams } from "react-router-dom";
+import α from "color-alpha";
 
 const options = [
   { value: "Technology", label: "Technology" },
@@ -165,14 +166,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RoyalBlueSwitch = withStyles({
+const RoyalSwitch = withStyles({
   switchBase: {
-    color: "#538BF7",
+    color: (props) => (props && props.color ? α(props.color, 0.85) : "#538BF7"),
     "&$checked": {
-      color: "#3474F3",
+      color: (props) =>
+        props && props.color ? α(props.color, 1.2) : "#3474f3",
     },
     "&$checked + $track": {
-      backgroundColor: "#145DF0",
+      backgroundColor: (props) =>
+        props && props.color ? α(props.color, 0.56) : "#145DF0",
     },
   },
   checked: {},
@@ -196,6 +199,8 @@ const UpdateEventProfile = ({
   let myRegistration;
 
   const { registrations } = useSelector((state) => state.registration);
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   if (registrations) {
     myRegistration = registrations.find(
@@ -617,7 +622,17 @@ const UpdateEventProfile = ({
                   </div>
 
                   <div className="row d-flex flex-row align-items-center justify-content-end ms-1 me-3">
-                    <button className="btn btn-outline-text btn-primary">
+                    <button
+                      style={{
+                        backgroundColor: eventDetails
+                          ? eventDetails.color
+                          : "#3175f2",
+                        border: eventDetails
+                          ? `1px solid ${eventDetails.color}`
+                          : `1px solid #3175f2`,
+                      }}
+                      className="btn btn-outline-text btn-primary"
+                    >
                       Save
                     </button>
                   </div>
@@ -988,7 +1003,10 @@ const UpdateEventProfile = ({
                       <FormGroup row>
                         <FormControlLabel
                           control={
-                            <RoyalBlueSwitch
+                            <RoyalSwitch
+                              color={
+                                eventDetails ? eventDetails.color : "#538BF7"
+                              }
                               checked={allowPrivateChat}
                               onChange={(e) => {
                                 console.log(e.target.checked);

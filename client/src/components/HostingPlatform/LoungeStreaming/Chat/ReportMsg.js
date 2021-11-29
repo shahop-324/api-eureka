@@ -120,6 +120,8 @@ const ReportMsg = ({
   const params = useParams();
   const eventId = params.eventId;
 
+  const {eventDetails} = useSelector((state) => state.event);
+
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -212,7 +214,13 @@ const ReportMsg = ({
                 handleClose();
               }}
               className="btn btn-primary btn-outline-text"
-              style={{ width: "100%" }}
+              style={{
+                backgroundColor: eventDetails ? eventDetails.color : "#152d35",
+                border: eventDetails
+                  ? `1px solid ${eventDetails.color}`
+                  : `1px solid #152d35`,
+                width: "100%",
+              }}
             >
               Report
             </button>

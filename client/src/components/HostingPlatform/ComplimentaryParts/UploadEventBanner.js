@@ -141,10 +141,16 @@ const UploadEventBanner = ({ open, handleClose }) => {
                 style={{ width: "100%" }}
               >
                 <button
+                  style={{
+                    backgroundColor: eventDetails
+                      ? eventDetails.color
+                      : "#152d35",
+                    border: eventDetails
+                      ? `1px solid ${eventDetails.color}`
+                      : `1px solid #152d35`,
+                  }}
                   onClick={() => {
-                    dispatch(
-                      uploadEventBanner(file, eventId, handleClose)
-                    );
+                    dispatch(uploadEventBanner(file, eventId, handleClose));
                   }}
                   className="btn btn-outline-text btn-primary me-3"
                 >
@@ -163,7 +169,9 @@ const UploadEventBanner = ({ open, handleClose }) => {
               <ProgressContainer>
                 <ProgressFill
                   style={{
-                    width: `${uploadBannerPercent ? `${uploadBannerPercent}%` : "0%"}`,
+                    width: `${
+                      uploadBannerPercent ? `${uploadBannerPercent}%` : "0%"
+                    }`,
                   }}
                   className="d-flex flex-row align-items-center py-2"
                 >

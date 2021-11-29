@@ -138,15 +138,17 @@ const RatingComponent = ({ open, handleClose }) => {
     socket.emit("leaveEvent", { userId, eventId }, (error) => {
       console.log(error);
     });
+    dispatch(toggleRatingWindow(false));
     window.location.href = `/user/home`;
   };
 
   const handleAskMeLater = () => {
     // Simply unsubscribe event and logout
+    dispatch(toggleRatingWindow(false));
     socket.emit("leaveEvent", { userId, eventId }, (error) => {
       console.log(error);
     });
-
+    dispatch(toggleRatingWindow(false));
     window.location.href = `/user/home`;
   };
 

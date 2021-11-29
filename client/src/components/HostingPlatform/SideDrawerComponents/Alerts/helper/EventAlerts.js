@@ -120,6 +120,8 @@ const EventAlerts = (props) => {
 
   const [openCreateAlert, setOpenCreateAlert] = useState(false);
 
+  const {eventDetails} = useSelector((state) => state.event);
+
   const handleCloseCreateAlert = () => {
     setOpenCreateAlert(false);
   };
@@ -147,12 +149,16 @@ const EventAlerts = (props) => {
 
           <div className="chat-msg-input-container d-flex flex-row justify-content-between">
             <button
+            
               type="button"
               onClick={() => {
                 setOpenCreateAlert(true);
               }}
               className="btn btn-primary btn-outline-text"
-              style={{ width: "100%" }}
+              style={{ width: "100%", backgroundColor: eventDetails ? eventDetails.color : "#152d35",
+              border: eventDetails
+                ? `1px solid ${eventDetails.color}`
+                : `1px solid #152d35`, }}
             >
               Create an alert
             </button>
@@ -161,6 +167,7 @@ const EventAlerts = (props) => {
       </div>
 
       <CreateAlert
+
         open={openCreateAlert}
         handleClose={handleCloseCreateAlert}
       />

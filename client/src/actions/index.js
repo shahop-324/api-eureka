@@ -135,9 +135,27 @@ export const showNotification = (message) => async (dispatch, getState) => {
   );
 };
 
+export const showLoader = () => async (dispatch, getState) => {
+  dispatch(
+    navigationActions.SetShowLoader({
+      open: true,
+    })
+  );
+};
+
+export const hideLoader = () => async (dispatch, getState) => {
+  dispatch(
+    navigationActions.SetShowLoader({
+      open: false,
+    })
+  );
+};
+
 export const signInForSpeaker =
   (id, communityId, eventId) => async (dispatch) => {
     console.log(id);
+
+    dispatch(showLoader());
 
     try {
       const res = await eureka.post(`/eureka/v1/speakers/signin/${id}`);
@@ -151,13 +169,18 @@ export const signInForSpeaker =
       history.push(
         `/compatibility-test/community/${communityId}/event/${eventId}/`
       );
+
+      dispatch(hideLoader());
     } catch (err) {
       dispatch(authActions.hasError(err.response.data.message));
       console.log(err);
+      dispatch(showSnackbar("error", "failed to signin, Please try again"));
+      dispatch(hideLoader());
     }
   };
 
 export const signIn = (res, intent, eventId) => async (dispatch) => {
+  dispatch(showLoader());
   try {
     dispatch(
       authActions.SignIn({
@@ -185,10 +208,13 @@ export const signIn = (res, intent, eventId) => async (dispatch) => {
     } else {
       history.push("/user/home");
     }
+    dispatch(hideLoader());
   } catch (err) {
     // dispatch(authActions.hasError(err.response.data.message));
     // console.log(err.response);
     console.log(err);
+    dispatch(showSnackbar("error", "Failed to sign in, Please try again"));
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForSignIn = () => async (dispatch, getState) => {
@@ -203,6 +229,7 @@ export const fetchReferralCode =
 export const createUserAccountRequest =
   (formValues, intent, eventId, setSignupClicked, referralCode) =>
   async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}createUserAccountRequest`,
@@ -251,16 +278,20 @@ export const createUserAccountRequest =
 
         history.push(`/verify-account/${res.id}`);
       }
+
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to create account. Please try again.")
       );
       setSignupClicked(false);
+      dispatch(hideLoader());
     }
   };
 
 export const verifyUserEmailAndSignup = (id) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(
       `${BaseURL}users/verifyUserEmailAndSignup/${id}`,
@@ -313,6 +344,7 @@ export const verifyUserEmailAndSignup = (id) => async (dispatch, getState) => {
         history.push("/user/home");
       }
     }
+    dispatch(hideLoader());
   } catch (error) {
     console.log(error);
     dispatch(
@@ -321,10 +353,12 @@ export const verifyUserEmailAndSignup = (id) => async (dispatch, getState) => {
         "Failed to verify user identity. Please try to sign in."
       )
     );
+    dispatch(hideLoader());
   }
 };
 
 export const signUp = (formValues, intent, eventId) => async (dispatch) => {
+  dispatch(showLoader());
   try {
     const res = await eureka.post("/eureka/v1/users/signup", {
       ...formValues,
@@ -350,9 +384,11 @@ export const signUp = (formValues, intent, eventId) => async (dispatch) => {
     } else {
       history.push("/user/home");
     }
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(authActions.hasError(err.response.data.message));
-    alert(err.response.data.message);
+    dispatch(showSnackbar("error", "Failed to sign up, Please try again."));
+    dispatch(hideLoader());
   }
 };
 
@@ -361,6 +397,7 @@ export const errorTrackerForSignUp = () => async (dispatch, getState) => {
 };
 export const linkedinSignIn =
   (code, intent, eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await eureka.get(`/getUserCredentials/?code=${code}`);
       console.log(res.data);
@@ -368,13 +405,15 @@ export const linkedinSignIn =
 
       result.referralCode = getState().user.referralCode;
       socket.emit("linkedinSignIn", { result });
+      dispatch(hideLoader());
     } catch (err) {
       console.log(err);
+      dispatch(hideLoader());
+      dispatch(showSnackbar("Failed to signin, Please try again"));
     }
   };
 
 export const newLinkedinLogin = (res, intent, eventId) => async (dispatch) => {
-  console.log(res.data.user);
   dispatch(
     authActions.SignIn({
       token: res.token,
@@ -410,6 +449,7 @@ export const errorTrackerForLinkedinSignIn =
     dispatch(authActions.disabledError());
   };
 export const googleSignIn = (res, intent, eventId) => async (dispatch) => {
+  dispatch(showLoader());
   try {
     dispatch(
       authActions.SignIn({
@@ -439,8 +479,13 @@ export const googleSignIn = (res, intent, eventId) => async (dispatch) => {
     } else {
       history.push("/user/home");
     }
+    dispatch(hideLoader());
   } catch (err) {
     console.log(err);
+    dispatch(hideLoader());
+    dispatch(
+      showSnackbar("error", "Failed to signin via Google, Please try again")
+    );
   }
 };
 
@@ -481,6 +526,8 @@ export const signOut = () => async (dispatch, getState) => {
 export const createCommunityRequest =
   (formValues, file, userId, handleClose) => async (dispatch, getState) => {
     console.log(formValues);
+
+    dispatch(showLoader());
 
     const key = `${userId}/${UUID()}.jpeg`;
 
@@ -546,6 +593,7 @@ export const createCommunityRequest =
                     "This email is registered on another community."
                   )
                 );
+                dispatch(hideLoader());
               } else {
                 handleClose();
 
@@ -568,12 +616,16 @@ export const createCommunityRequest =
                     openState: true,
                   })
                 );
+                dispatch(hideLoader());
               }
             } catch (e) {
               dispatch(communityActions.hasError(e.message));
+              dispatch(hideLoader());
             }
           }
         );
+
+        dispatch(hideLoader());
       } else {
         const communityCreating = async () => {
           let res = await fetch(`${BaseURL}users/newCommunityRequest`, {
@@ -597,6 +649,7 @@ export const createCommunityRequest =
           }
 
           res = await res.json();
+          dispatch(hideLoader());
           return res;
         };
         // console.log(res);
@@ -610,8 +663,10 @@ export const createCommunityRequest =
                 "This email is already used by another community."
               )
             );
+            dispatch(hideLoader());
           } else {
             handleClose();
+            dispatch(hideLoader());
 
             dispatch(
               communityActions.CreateCommunityRequest({
@@ -636,10 +691,12 @@ export const createCommunityRequest =
           }
         } catch (e) {
           dispatch(communityActions.hasError(e.message));
+          dispatch(hideLoader());
         }
       }
     } catch (err) {
       console.log(err);
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForCreateCommunity =
@@ -649,6 +706,8 @@ export const errorTrackerForCreateCommunity =
 
 export const communitySignIn = (id, userId) => async (dispatch, getState) => {
   dispatch(communityAuthActions.startLoading());
+
+  dispatch(showLoader());
 
   const loginCommunity = async () => {
     let res = await fetch(
@@ -685,8 +744,12 @@ export const communitySignIn = (id, userId) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
+
     window.location.href = `/user/${userId}/community/getting-started/${res.communityDoc.id}`;
   } catch (e) {
+    dispatch(hideLoader());
+    dispatch("Failed to get community, Please try again.");
     dispatch(communityActions.hasError(e.message));
   }
 };
@@ -702,7 +765,8 @@ export const googleSignOut = () => async (dispatch, getState) => {
 
 //events actions
 export const fetchEvents = (query) => async (dispatch) => {
-  console.log(query);
+  dispatch(showLoader());
+
   dispatch(eventActions.startLoading());
 
   try {
@@ -714,9 +778,11 @@ export const fetchEvents = (query) => async (dispatch) => {
         events: res.data.data.events,
       })
     );
+    dispatch(hideLoader());
   } catch (e) {
     console.log(e);
     dispatch(eventActions.hasError(e.message));
+    dispatch(hideLoader());
   }
 };
 
@@ -726,6 +792,7 @@ export const errorTrackerForFetchEvents = () => async (dispatch, getState) => {
 
 export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
   dispatch(communityActions.startCommunityLoading());
+  dispatch(showLoader());
   const fetchData = async () => {
     let res = await fetch(
       `${BaseURL}users/personalData`,
@@ -786,8 +853,13 @@ export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
         user: res.data.personalData,
       })
     );
+    dispatch(hideLoader());
   } catch (e) {
     dispatch(eventActions.hasError(e.message));
+    dispatch(hideLoader());
+    dispatch(
+      showSnackbar("error", "Failed to fetch user data, Please try again")
+    );
   }
 };
 export const errorTrackerForPersonalData = () => async (dispatch, getState) => {
@@ -795,6 +867,7 @@ export const errorTrackerForPersonalData = () => async (dispatch, getState) => {
 };
 
 export const fetchUserRegisteredEvents = () => async (dispatch, getState) => {
+  dispatch(showLoader());
   dispatch(eventActions.startLoading());
   const fetchData = async () => {
     let res = await fetch(
@@ -832,7 +905,15 @@ export const fetchUserRegisteredEvents = () => async (dispatch, getState) => {
         events: res.data.registeredInEventsList.registeredInEvents,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
+    dispatch(hideLoader());
+    dispatch(
+      showSnackbar(
+        "error",
+        "Failed to fetch registered events, Please try again"
+      )
+    );
     dispatch(eventActions.hasError(err.message));
   }
 };
@@ -844,6 +925,8 @@ export const errorTrackerForRegisteredEvents =
 
 export const fetchMyPopulatedFavouriteEvents =
   () => async (dispatch, getState) => {
+    dispatch(showLoader());
+
     dispatch(eventActions.startLoading());
 
     const fetchData = async () => {
@@ -882,16 +965,20 @@ export const fetchMyPopulatedFavouriteEvents =
           events: res.data.favouriteEvents,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
       dispatch(eventActions.hasError(error.message));
       dispatch(
         showSnackbar("error", "Failed to fetch wishlist, Please try again.")
       );
+      dispatch(hideLoader());
     }
   };
 
 export const fetchMyFavouriteEvents = () => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
+
+  dispatch(showLoader());
 
   const fetchData = async () => {
     let res = await fetch(
@@ -929,16 +1016,20 @@ export const fetchMyFavouriteEvents = () => async (dispatch, getState) => {
         events: res.data.favouriteEvents,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
     dispatch(eventActions.hasError(error.message));
     dispatch(
       showSnackbar("error", "Failed to fetch wishlist, Please try again.")
     );
+    dispatch(hideLoader());
   }
 };
 
 export const addToFavouriteEvents = (eventId) => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
+
+  dispatch(showLoader());
 
   const addTofavourites = async () => {
     let res = await fetch(
@@ -984,18 +1075,23 @@ export const addToFavouriteEvents = (eventId) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
+
     dispatch(showSnackbar("success", "Added to wishlist."));
   } catch (error) {
     dispatch(eventActions.hasError(error.message));
     dispatch(
       showSnackbar("success", "Failed to add to wishlist, Please try again.")
     );
+    dispatch(hideLoader());
   }
 };
 
 export const removeFromFavouriteEvents =
   (eventId) => async (dispatch, getState) => {
     dispatch(eventActions.startLoading());
+
+    dispatch(showLoader());
 
     const removeFromFavourites = async () => {
       let res = await fetch(
@@ -1041,8 +1137,10 @@ export const removeFromFavouriteEvents =
         })
       );
 
+      dispatch(hideLoader());
       dispatch(showSnackbar("success", "Removed from wishlist."));
     } catch (error) {
+      dispatch(hideLoader());
       dispatch(eventActions.hasError(error.message));
       dispatch(
         showSnackbar(
@@ -1056,6 +1154,8 @@ export const removeFromFavouriteEvents =
 export const fetchEventLandingPage =
   (id, countAsView) => async (dispatch, getState) => {
     dispatch(eventActions.startLoading());
+
+    dispatch(showLoader());
 
     try {
       const res = await fetch(
@@ -1093,17 +1193,21 @@ export const fetchEventLandingPage =
           tickets: result.tickets,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
       dispatch(
         showSnackbar("error", "Unable to load event. Please try again.")
       );
       dispatch(eventActions.hasError(error));
       console.log(error);
+      dispatch(hideLoader());
     }
   };
 
 export const fetchEvent = (id) => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
+
+  dispatch(showLoader());
 
   try {
     const res = await eureka.get(`eureka/v1/users/event/${id}`);
@@ -1113,14 +1217,18 @@ export const fetchEvent = (id) => async (dispatch, getState) => {
         event: res.data.data.response,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(eventActions.hasError(err.message));
     console.log(err.response.data);
+    dispatch(hideLoader());
+    dispatch(showSnackbar("error", "Failed to fetch event, Please try again"));
   }
 };
 
 export const getHighlightedSessions =
   (eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await eureka.get(
         `eureka/v1/getHighlightedSessions/${eventId}`
@@ -1131,7 +1239,9 @@ export const getHighlightedSessions =
           sessions: res.data.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar(
@@ -1148,6 +1258,7 @@ export const errorTrackerForFetchEvent = () => async (dispatch, getState) => {
 export const fetchParticularEventOfCommunity =
   (id) => async (dispatch, getState) => {
     dispatch(eventActions.startLoading());
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}community/events/${id}`,
@@ -1177,14 +1288,20 @@ export const fetchParticularEventOfCommunity =
           event: result.data.event,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
       dispatch(eventActions.hasError(err.message));
       console.log(err);
+      dispatch(hideLoader());
+      dispatch(
+        showSnackbar("error", "Failed to fetch event, Please try again")
+      );
     }
   };
 
 export const acceptInEvent =
   (eventId, userId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}acceptInEvent/${eventId}/${userId}`,
@@ -1221,6 +1338,7 @@ export const acceptInEvent =
           "This person has been successfully accepted in this event."
         )
       );
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
       dispatch(
@@ -1229,10 +1347,12 @@ export const acceptInEvent =
           "Failed to unsuspend this user, Please try again."
         )
       );
+      dispatch(hideLoader());
     }
   };
 
 export const resetEventLabels = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(
       `${BaseURL}resetEventLabels/${eventId}`,
@@ -1261,8 +1381,10 @@ export const resetEventLabels = (eventId) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "Labels resetted successfully"));
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to reset labels, Please try again.")
@@ -1277,6 +1399,8 @@ export const errorTrackerForFetchParticularEventOfCommunity =
 export const fetchEventsOfParticularCommunity =
   (term, page, limit) => async (dispatch, getState) => {
     dispatch(eventActions.startLoading());
+
+    dispatch(showLoader());
 
     const fetchEvents = async () => {
       let fullLocation = `${BaseURL}community/events`;
@@ -1330,8 +1454,13 @@ export const fetchEventsOfParticularCommunity =
         })
       );
       // );
+      dispatch(hideLoader());
     } catch (err) {
       dispatch(eventActions.hasError(err.message));
+      dispatch(
+        showSnackbar("error", "Failed to fetch event, Please try again")
+      );
+      dispatch(hideLoader());
     }
   };
 
@@ -1342,6 +1471,8 @@ export const errorTrackerForFetchEventsOfParticularCommunity =
 
 export const createEvent = (formValues) => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
+
+  dispatch(showLoader());
 
   const creatingEvent = async () => {
     console.log(formValues);
@@ -1393,6 +1524,7 @@ export const createEvent = (formValues) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 4000);
+    dispatch(hideLoader());
   } catch (err) {
     console.log(err);
     dispatch(
@@ -1405,6 +1537,7 @@ export const createEvent = (formValues) => async (dispatch, getState) => {
       dispatch(snackbarActions.closeSnackBar());
     }, 4000);
     dispatch(eventActions.hasError(err.message));
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForCreateEvent = () => async (dispatch, getState) => {
@@ -1413,6 +1546,7 @@ export const errorTrackerForCreateEvent = () => async (dispatch, getState) => {
 
 export const editEvent =
   (formValues, id, unarchive) => async (dispatch, getState) => {
+    dispatch(showLoader());
     dispatch(eventActions.startLoading());
     const editingEvent = async () => {
       console.log(id);
@@ -1472,6 +1606,7 @@ export const editEvent =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     } catch (err) {
       console.log(err);
 
@@ -1487,6 +1622,7 @@ export const editEvent =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForeditEvent = () => async (dispatch, getState) => {
@@ -1495,6 +1631,7 @@ export const errorTrackerForeditEvent = () => async (dispatch, getState) => {
 
 export const updateEventCustomisation =
   (formValues, eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     dispatch(eventActions.startLoading());
     try {
       console.log(eventId);
@@ -1542,6 +1679,7 @@ export const updateEventCustomisation =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -1557,11 +1695,14 @@ export const updateEventCustomisation =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const uploadEventImage = (file, id) => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
+
+  dispatch(showLoader());
 
   const key = `${id}/${UUID()}.jpeg`;
 
@@ -1620,6 +1761,7 @@ export const uploadEventImage = (file, id) => async (dispatch, getState) => {
           setTimeout(function () {
             dispatch(snackbarActions.closeSnackBar());
           }, 6000);
+          dispatch(hideLoader());
         } catch (error) {
           eventActions.hasError(error.message);
           console.log(error);
@@ -1633,7 +1775,10 @@ export const uploadEventImage = (file, id) => async (dispatch, getState) => {
           setTimeout(function () {
             dispatch(snackbarActions.closeSnackBar());
           }, 4000);
+          dispatch(hideLoader());
         }
+      } else {
+        dispatch(hideLoader());
       }
     }
   );
@@ -1646,6 +1791,7 @@ export const errorTrackerForUploadEventImage =
 
 export const editEventDescription =
   (formValues, id) => async (dispatch, getState) => {
+    dispatch(showLoader());
     dispatch(eventActions.startLoading());
     const editingEvent = async () => {
       console.log(id);
@@ -1697,8 +1843,16 @@ export const editEventDescription =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     } catch (err) {
       dispatch(eventActions.hasError(err.message));
+      dispatch(hideLoader());
+      dispatch(
+        showSnackbar(
+          "error",
+          "Failed to update event description, Please try again"
+        )
+      );
     }
   };
 
@@ -1715,6 +1869,7 @@ export const deleteEvent = () => (dispatch, getState) => {
 export const createSpeaker =
   (formValues, file, id) => async (dispatch, getState) => {
     dispatch(speakerActions.startLoadingDetail());
+    dispatch(showLoader());
     try {
       if (file) {
         const key = `${id}/${UUID()}.jpeg`;
@@ -1783,6 +1938,7 @@ export const createSpeaker =
                 setTimeout(function () {
                   dispatch(snackbarActions.closeSnackBar());
                 }, 6000);
+                dispatch(hideLoader());
               } catch (error) {
                 console.log(error);
 
@@ -1795,7 +1951,10 @@ export const createSpeaker =
                 setTimeout(function () {
                   dispatch(snackbarActions.closeSnackBar());
                 }, 4000);
+                dispatch(hideLoader());
               }
+            } else {
+              dispatch(hideLoader());
             }
           }
         );
@@ -1839,6 +1998,8 @@ export const createSpeaker =
         setTimeout(function () {
           dispatch(snackbarActions.closeSnackBar());
         }, 6000);
+
+        dispatch(hideLoader());
       }
     } catch (err) {
       dispatch(speakerActions.detailHasError(err.message));
@@ -1851,6 +2012,7 @@ export const createSpeaker =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 4000);
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForCreateSpeaker =
@@ -1861,6 +2023,8 @@ export const errorTrackerForCreateSpeaker =
 export const fetchSpeakers =
   (id, term, sessionId) => async (dispatch, getState) => {
     dispatch(speakerActions.startLoading());
+
+    dispatch(showLoader());
 
     const getSpeakers = async () => {
       let fullLocation = `${BaseURL}events/${id}/speakers`;
@@ -1906,6 +2070,7 @@ export const fetchSpeakers =
           speakers: res.data.speakers,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
       dispatch(speakerActions.hasError(err.message));
       console.log(err);
@@ -1920,6 +2085,7 @@ export const fetchSpeakers =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForFetchSpeakers =
@@ -1930,6 +2096,8 @@ export const errorTrackerForFetchSpeakers =
 export const fetchParticularSpeakerOfEvent =
   (id) => async (dispatch, getState) => {
     dispatch(speakerActions.startLoadingDetail());
+
+    dispatch(showLoader());
 
     const fetchingSpeaker = async () => {
       const res = await fetch(
@@ -1963,6 +2131,7 @@ export const fetchParticularSpeakerOfEvent =
           speaker: result.data.speaker,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
       dispatch(speakerActions.detailHasError(err.message));
       console.log(err);
@@ -1977,6 +2146,7 @@ export const fetchParticularSpeakerOfEvent =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
@@ -1987,7 +2157,7 @@ export const errorTrackerForFetchParticularSpeakerOfEvent =
 
 export const fetchSpeaker = (id) => async (dispatch, getState) => {
   dispatch(speakerActions.startLoading());
-
+  dispatch(showLoader());
   const fetchingSpeaker = async () => {
     //console.log(id, "I am passing from particularEvent action");
 
@@ -2027,6 +2197,7 @@ export const fetchSpeaker = (id) => async (dispatch, getState) => {
         user: result.data.speaker,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     console.log(err);
 
@@ -2042,6 +2213,7 @@ export const fetchSpeaker = (id) => async (dispatch, getState) => {
     }, 6000);
 
     dispatch(speakerActions.hasError(err.message));
+    dispatch(hideLoader());
   }
 };
 
@@ -2052,6 +2224,7 @@ export const errorTrackerForFetchSpeaker = () => async (dispatch, getState) => {
 export const editSpeaker =
   (formValues, file, id) => async (dispatch, getState) => {
     dispatch(speakerActions.startLoadingDetail());
+    dispatch(showLoader());
 
     try {
       if (file) {
@@ -2135,6 +2308,7 @@ export const editSpeaker =
                 setTimeout(function () {
                   dispatch(snackbarActions.closeSnackBar());
                 }, 4000);
+                dispatch(hideLoader());
               }
             } else {
               dispatch(
@@ -2146,6 +2320,7 @@ export const editSpeaker =
               setTimeout(function () {
                 dispatch(snackbarActions.closeSnackBar());
               }, 4000);
+              dispatch(hideLoader());
             }
           }
         );
@@ -2192,6 +2367,7 @@ export const editSpeaker =
         setTimeout(function () {
           dispatch(snackbarActions.closeSnackBar());
         }, 4000);
+        dispatch(hideLoader());
       }
     } catch (err) {
       dispatch(speakerActions.detailHasError(err.message));
@@ -2204,6 +2380,7 @@ export const editSpeaker =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 4000);
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForEditSpeaker = () => async (dispatch, getState) => {
@@ -2212,6 +2389,9 @@ export const errorTrackerForEditSpeaker = () => async (dispatch, getState) => {
 
 export const deleteSpeaker = (id) => async (dispatch, getState) => {
   dispatch(speakerActions.startLoading());
+
+  dispatch(showLoader());
+
   const deletingSpeaker = async () => {
     let res = await fetch(`${BaseURL}speakers/${id}/delete`, {
       method: "DELETE",
@@ -2251,6 +2431,7 @@ export const deleteSpeaker = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 4000);
+    dispatch(hideLoader());
   } catch (err) {
     console.log(err);
     dispatch(speakerActions.hasError(err.message));
@@ -2264,6 +2445,7 @@ export const deleteSpeaker = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 4000);
+    dispatch(hideLoader());
   }
 };
 
@@ -2276,6 +2458,7 @@ export const errorTrackerForDeletingSpeaker =
 export const createBooth =
   (formValues, file, id, handleClose) => async (dispatch, getState) => {
     dispatch(boothActions.startLoading());
+    dispatch(showLoader());
 
     try {
       if (file) {
@@ -2348,6 +2531,7 @@ export const createBooth =
                 setTimeout(function () {
                   dispatch(snackbarActions.closeSnackBar());
                 }, 6000);
+                dispatch(hideLoader());
               } catch (error) {
                 eventActions.hasError(error.message);
                 console.log(error);
@@ -2362,7 +2546,10 @@ export const createBooth =
                 setTimeout(function () {
                   dispatch(snackbarActions.closeSnackBar());
                 }, 4000);
+                dispatch(hideLoader());
               }
+            } else {
+              dispatch(hideLoader());
             }
           }
         );
@@ -2409,6 +2596,7 @@ export const createBooth =
         setTimeout(function () {
           dispatch(snackbarActions.closeSnackBar());
         }, 6000);
+        dispatch(hideLoader());
       }
     } catch (err) {
       dispatch(boothActions.hasError(err.message));
@@ -2422,6 +2610,7 @@ export const createBooth =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 4000);
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForCreateBooth = () => async (dispatch, getState) => {
@@ -2430,6 +2619,8 @@ export const errorTrackerForCreateBooth = () => async (dispatch, getState) => {
 
 export const fetchBooths = (id, term, tag) => async (dispatch, getState) => {
   dispatch(boothActions.startLoading());
+  dispatch(showLoader());
+
   const getBooths = async () => {
     console.log(id);
 
@@ -2478,6 +2669,7 @@ export const fetchBooths = (id, term, tag) => async (dispatch, getState) => {
         booths: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(boothActions.hasError(err.message));
     console.log(err);
@@ -2491,6 +2683,7 @@ export const fetchBooths = (id, term, tag) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 4000);
+    dispatch(hideLoader());
   }
 };
 
@@ -2499,6 +2692,7 @@ export const errorTrackerForFetchBooths = () => async (dispatch, getState) => {
 };
 
 export const fetchBooth = (id) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     console.log(id);
 
@@ -2526,6 +2720,7 @@ export const fetchBooth = (id) => async (dispatch, getState) => {
         booth: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(boothActions.hasError(err.message));
     console.log(err);
@@ -2539,6 +2734,7 @@ export const fetchBooth = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 4000);
+    dispatch(hideLoader());
   }
 };
 
@@ -2548,6 +2744,7 @@ export const errorTrackerForFetchBooth = () => async (dispatch, getState) => {
 
 export const editBooth =
   (formValues, file, id) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       if (file) {
         const key = `${id}/${UUID()}.jpeg`;
@@ -2606,6 +2803,7 @@ export const editBooth =
                 dispatch(
                   showSnackbar("success", "Booth Updated successfully!")
                 );
+                dispatch(hideLoader());
               } catch (error) {
                 eventActions.hasError(error.message);
                 console.log(error);
@@ -2616,7 +2814,10 @@ export const editBooth =
                     "Failed to update booth, Please try again."
                   )
                 );
+                dispatch(hideLoader());
               }
+            } else {
+              dispatch(hideLoader());
             }
           }
         );
@@ -2663,6 +2864,7 @@ export const editBooth =
         setTimeout(function () {
           dispatch(snackbarActions.closeSnackBar());
         }, 6000);
+        dispatch(hideLoader());
       }
     } catch (err) {
       boothActions.hasError(err.message);
@@ -2676,6 +2878,7 @@ export const editBooth =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 4000);
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForEditBooth = () => async (dispatch, getState) => {
@@ -2683,6 +2886,7 @@ export const errorTrackerForEditBooth = () => async (dispatch, getState) => {
 };
 
 export const deleteBooth = (id) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}booths/${id}/deleteBooth`, {
       method: "DELETE",
@@ -2720,6 +2924,7 @@ export const deleteBooth = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(boothActions.hasError(err.message));
 
@@ -2733,6 +2938,7 @@ export const deleteBooth = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForDeleteBooth = () => async (dispatch, getState) => {
@@ -2742,6 +2948,8 @@ export const errorTrackerForDeleteBooth = () => async (dispatch, getState) => {
 export const createSponsor =
   (formValues, file, id) => async (dispatch, getState) => {
     dispatch(sponsorActions.startLoading());
+
+    dispatch(showLoader());
 
     const key = `${id}/${UUID()}.jpeg`;
 
@@ -2810,6 +3018,7 @@ export const createSponsor =
                 setTimeout(function () {
                   dispatch(snackbarActions.closeSnackBar());
                 }, 6000);
+                dispatch(hideLoader());
               } catch (err) {
                 dispatch(communityActions.hasError(err.message));
 
@@ -2822,7 +3031,10 @@ export const createSponsor =
                 setTimeout(function () {
                   dispatch(snackbarActions.closeSnackBar());
                 }, 4000);
+                dispatch(hideLoader());
               }
+            } else {
+              dispatch(hideLoader());
             }
           }
         );
@@ -2865,6 +3077,7 @@ export const createSponsor =
         setTimeout(function () {
           dispatch(snackbarActions.closeSnackBar());
         }, 6000);
+        dispatch(hideLoader());
       }
     } catch (err) {
       console.log(err);
@@ -2879,6 +3092,7 @@ export const createSponsor =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 4000);
+      dispatch(hideLoader());
     }
   };
 
@@ -2889,6 +3103,7 @@ export const errorTrackerForCreateSponsor =
 
 export const fetchSponsor = (id) => async (dispatch, getState) => {
   dispatch(sponsorActions.startLoadingDetail());
+  dispatch(showLoader());
   try {
     console.log(id);
 
@@ -2916,6 +3131,7 @@ export const fetchSponsor = (id) => async (dispatch, getState) => {
         sponsor: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     console.log(err);
 
@@ -2930,6 +3146,7 @@ export const fetchSponsor = (id) => async (dispatch, getState) => {
     }, 4000);
 
     dispatch(sponsorActions.detailHasError(err.message));
+    dispatch(hideLoader());
   }
 };
 
@@ -2940,6 +3157,7 @@ export const errorTrackerForFetchSponsor = () => async (dispatch, getState) => {
 export const fetchSponsors =
   (id, term, sponsorStatus) => async (dispatch, getState) => {
     dispatch(sponsorActions.startLoading());
+    dispatch(showLoader());
 
     const getSponsors = async () => {
       let fullLocation = `${BaseURL}sponsors/${id}`;
@@ -2983,6 +3201,7 @@ export const fetchSponsors =
           sponsors: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
       dispatch(sponsorActions.hasError(err.message));
       console.log(err.response.data);
@@ -2996,6 +3215,7 @@ export const fetchSponsors =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 4000);
+      dispatch(hideLoader());
     }
   };
 
@@ -3007,6 +3227,8 @@ export const errorTrackerForFetchSponsors =
 export const editSponsor =
   (formValues, file, id) => async (dispatch, getState) => {
     dispatch(sponsorActions.startLoadingDetail());
+
+    dispatch(showLoader());
 
     const key = `${id}/${UUID()}.jpeg`;
 
@@ -3076,6 +3298,7 @@ export const editSponsor =
                 setTimeout(function () {
                   dispatch(snackbarActions.closeSnackBar());
                 }, 6000);
+                dispatch(hideLoader());
               } catch (err) {
                 dispatch(communityActions.hasError(err.message));
 
@@ -3088,7 +3311,10 @@ export const editSponsor =
                 setTimeout(function () {
                   dispatch(snackbarActions.closeSnackBar());
                 }, 4000);
+                dispatch(hideLoader());
               }
+            } else {
+              dispatch(hideLoader());
             }
           }
         );
@@ -3130,6 +3356,7 @@ export const editSponsor =
         setTimeout(function () {
           dispatch(snackbarActions.closeSnackBar());
         }, 6000);
+        dispatch(hideLoader());
       }
     } catch (err) {
       dispatch(sponsorActions.detailHasError(err.message));
@@ -3142,6 +3369,7 @@ export const editSponsor =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 4000);
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForEditSponsor = () => async (dispatch, getState) => {
@@ -3150,6 +3378,8 @@ export const errorTrackerForEditSponsor = () => async (dispatch, getState) => {
 
 export const deleteSponsor = (id) => async (dispatch, getState) => {
   dispatch(sponsorActions.startLoading());
+  dispatch(showLoader());
+
   try {
     let res = await fetch(`${BaseURL}sponsors/${id}/delete`, {
       method: "DELETE",
@@ -3185,6 +3415,7 @@ export const deleteSponsor = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 4000);
+    dispatch(hideLoader());
   } catch (err) {
     console.log(err);
     dispatch(sponsorActions.hasError(err.message));
@@ -3198,6 +3429,7 @@ export const deleteSponsor = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForDeleteSponsor =
@@ -3207,6 +3439,7 @@ export const errorTrackerForDeleteSponsor =
 
 export const createTicket = (formValues, id) => async (dispatch, getState) => {
   dispatch(ticketActions.startLoading());
+  dispatch(showLoader());
   try {
     console.log(id);
     console.log(formValues);
@@ -3239,12 +3472,14 @@ export const createTicket = (formValues, id) => async (dispatch, getState) => {
     );
 
     dispatch(showSnackbar("success", "Ticket created successfully!"));
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(ticketActions.hasError(err.message));
 
     dispatch(
       showSnackbar("error", "Failed to create ticket, Please try again.")
     );
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForCreateTicket = () => async (dispatch, getState) => {
@@ -3253,6 +3488,8 @@ export const errorTrackerForCreateTicket = () => async (dispatch, getState) => {
 
 export const fetchTickets = (id, term) => async (dispatch, getState) => {
   dispatch(ticketActions.startLoading());
+
+  dispatch(showLoader());
 
   const getTickets = async () => {
     console.log(id);
@@ -3299,6 +3536,7 @@ export const fetchTickets = (id, term) => async (dispatch, getState) => {
         tickets: res.data.tickets,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(ticketActions.hasError(err.message));
     console.log(err);
@@ -3306,6 +3544,7 @@ export const fetchTickets = (id, term) => async (dispatch, getState) => {
     dispatch(
       showSnackbar("error", "Failed to fetch tickets, Please try again.")
     );
+    dispatch(hideLoader());
   }
 };
 
@@ -3315,7 +3554,7 @@ export const errorTrackerForFetchTickets = () => async (dispatch, getState) => {
 
 export const fetchTicket = (id) => async (dispatch, getState) => {
   dispatch(ticketActions.startLoadingDetail());
-
+  dispatch(showLoader());
   try {
     console.log(id);
 
@@ -3342,17 +3581,20 @@ export const fetchTicket = (id) => async (dispatch, getState) => {
         ticket: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(ticketActions.detailHasError(err.message));
     dispatch(
       showSnackbar("error", "Failed to fetch ticket, Please try again.")
     );
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForFetchTicket = () => async (dispatch, getState) => {
   dispatch(ticketActions.disabledDetailError());
 };
 export const editTicket = (formValues, id) => async (dispatch, getState) => {
+  dispatch(showLoader());
   dispatch(ticketActions.startLoadingDetail());
   try {
     console.log(id);
@@ -3385,12 +3627,15 @@ export const editTicket = (formValues, id) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
+
     dispatch(showSnackbar("success", "Ticket updated successfully!"));
   } catch (err) {
     dispatch(ticketActions.detailHasError(err.message));
     dispatch(
       showSnackbar("error", "Failed to update ticket, Please try again.")
     );
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForEditTicket = () => async (dispatch, getState) => {
@@ -3399,6 +3644,7 @@ export const errorTrackerForEditTicket = () => async (dispatch, getState) => {
 
 export const deleteTicket = (id) => async (dispatch, getState) => {
   dispatch(ticketActions.startLoading());
+  dispatch(showLoader());
 
   try {
     let res = await fetch(`${BaseURL}events/${id}/deleteTicket`, {
@@ -3424,13 +3670,14 @@ export const deleteTicket = (id) => async (dispatch, getState) => {
         id: res.data,
       })
     );
-
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "Ticket deleted successfully!"));
   } catch (err) {
     dispatch(ticketActions.hasError(err.message));
     dispatch(
       showSnackbar("error", "Failed to delete ticket, Please try again.")
     );
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForDeleteTicket = () => async (dispatch, getState) => {
@@ -3485,6 +3732,7 @@ export const setBoothNavigationIndex = (activeIndex) => (dispatch) => {
 
 //alias routes
 export const madeJustForYou = () => async (dispatch) => {
+  dispatch(showLoader());
   dispatch(eventActions.startLoading());
   try {
     const res = await eureka.get("eureka/v1/exploreEvents/madeJustForYou");
@@ -3495,6 +3743,7 @@ export const madeJustForYou = () => async (dispatch) => {
         events: res.data.data.events,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(eventActions.hasError(err.message));
     dispatch(
@@ -3506,6 +3755,7 @@ export const madeJustForYou = () => async (dispatch) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 
@@ -3515,6 +3765,7 @@ export const errorTrackerForMadeJustForYou =
   };
 
 export const fetchLobbyUsers = (users) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     console.log(users);
     dispatch(
@@ -3522,6 +3773,7 @@ export const fetchLobbyUsers = (users) => async (dispatch, getState) => {
         users: users,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     console.log(err);
 
@@ -3534,10 +3786,12 @@ export const fetchLobbyUsers = (users) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 
 export const fetchUsers = (id) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     console.log(id);
 
@@ -3564,6 +3818,7 @@ export const fetchUsers = (id) => async (dispatch, getState) => {
         speakers: res.data.speakers.speaker,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     console.log(err);
 
@@ -3578,6 +3833,7 @@ export const fetchUsers = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForFetchSpeakers2 =
@@ -3586,6 +3842,7 @@ export const errorTrackerForFetchSpeakers2 =
   };
 export const fetchUser = (formValues) => async (dispatch, getState) => {
   dispatch(userActions.startLoading());
+  dispatch(showLoader());
 
   try {
     const res = await fetch(`${BaseURL}users/Me`, {
@@ -3612,6 +3869,7 @@ export const fetchUser = (formValues) => async (dispatch, getState) => {
         user: result.data.userData,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     console.log(err);
 
@@ -3626,6 +3884,7 @@ export const fetchUser = (formValues) => async (dispatch, getState) => {
     }, 6000);
 
     dispatch(userActions.hasError(err.message));
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForFetchuser = () => async (dispatch, getState) => {
@@ -3634,6 +3893,7 @@ export const errorTrackerForFetchuser = () => async (dispatch, getState) => {
 
 export const editUser = (formValues, file) => async (dispatch, getState) => {
   dispatch(userActions.startLoading());
+  dispatch(showLoader());
   const key = `${UUID()}.jpeg`;
 
   if (file) {
@@ -3700,6 +3960,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
               setTimeout(function () {
                 dispatch(snackbarActions.closeSnackBar());
               }, 6000);
+              dispatch(hideLoader());
             } catch (err) {
               dispatch(communityActions.hasError(err.message));
 
@@ -3712,7 +3973,10 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
               setTimeout(function () {
                 dispatch(snackbarActions.closeSnackBar());
               }, 4000);
+              dispatch(hideLoader());
             }
+          } else {
+            dispatch(hideLoader());
           }
         }
       );
@@ -3730,6 +3994,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     }
   } else {
     try {
@@ -3771,6 +4036,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       dispatch(userActions.hasError(error.message));
       console.log(error);
@@ -3785,6 +4051,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     }
   }
 };
@@ -3795,6 +4062,7 @@ export const errorTrackerForEditUser = () => async (dispatch, getState) => {
 
 export const editUserPassword = (formValues) => async (dispatch, getState) => {
   dispatch(userActions.startLoading());
+  dispatch(showLoader());
   try {
     console.log(formValues);
 
@@ -3819,10 +4087,12 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
     const result = await res.json();
 
     if (result.wrongPassword) {
+      dispatch(hideLoader());
       dispatch(
         showSnackbar("error", "You have entered wrong current password.")
       );
     } else {
+      dispatch(hideLoader());
       dispatch(
         userActions.EditUser({
           user: result.data.userData,
@@ -3846,6 +4116,7 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
       }, 6000);
     }
   } catch (err) {
+    dispatch(hideLoader());
     dispatch(userActions.hasError(err.message));
 
     dispatch(
@@ -3871,6 +4142,7 @@ export const errorTrackerForEditUserPassword2 =
 export const deleteUser = () => (dispatch, getState) => {};
 
 export const fetchCommunity = (id) => async (dispatch, getState) => {
+  dispatch(showLoader());
   dispatch(communityActions.startLoading());
   try {
     const res = await fetch(`${BaseURL}community/${id}/getCommunity`, {
@@ -3897,6 +4169,7 @@ export const fetchCommunity = (id) => async (dispatch, getState) => {
         community: result.data.community,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(communityActions.hasError(err.message));
     console.log(err);
@@ -3911,6 +4184,7 @@ export const fetchCommunity = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForFetchCommunity =
@@ -3920,6 +4194,7 @@ export const errorTrackerForFetchCommunity =
 
 export const editCommunity = (id, formValues) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}community/${id}/updateCommunity`, {
       method: "PATCH",
@@ -3959,6 +4234,7 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(communityActions.hasError(err.message));
 
@@ -3972,11 +4248,13 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 
 export const downgradeToFree =
   (communityId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}community/downgradeToFree`, {
         method: "POST",
@@ -4017,7 +4295,9 @@ export const downgradeToFree =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
 
       dispatch(
@@ -4035,6 +4315,7 @@ export const downgradeToFree =
 
 export const restartMembership =
   (communityId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}community/restartMembership`, {
         method: "POST",
@@ -4074,6 +4355,7 @@ export const restartMembership =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -4087,6 +4369,7 @@ export const restartMembership =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
@@ -4096,6 +4379,7 @@ export const errorTrackerForEditCommunity =
   };
 
 export const deleteCommunity = (id) => async (dispatch, getState) => {
+  dispatch(showLoader());
   dispatch(communityActions.startLoading());
   try {
     const res = await fetch(
@@ -4120,8 +4404,13 @@ export const deleteCommunity = (id) => async (dispatch, getState) => {
         community: result.community,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(communityActions.hasError(err.message));
+    dispatch(
+      showSnackbar("error", "Failed to delete community, Please try again")
+    );
+    dispatch(hideLoader());
   }
 };
 ///session actions
@@ -4130,6 +4419,7 @@ export const errorTrackerForDeleteCommunity =
     dispatch(communityActions.disabledError());
   };
 export const createSession = (formValues, id) => async (dispatch, getState) => {
+  dispatch(showLoader());
   dispatch(sessionActions.startLoading());
   try {
     console.log(id);
@@ -4172,6 +4462,7 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
+    dispatch(hideLoader());
   } catch (err) {
     console.log(err);
 
@@ -4187,6 +4478,7 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForCreateSession =
@@ -4194,6 +4486,7 @@ export const errorTrackerForCreateSession =
     dispatch(communityActions.disabledError());
   };
 export const fetchSessions = (id, term) => async (dispatch, getState) => {
+  dispatch(showLoader());
   dispatch(sessionActions.startLoading());
   const getSessions = async () => {
     console.log(id);
@@ -4239,6 +4532,7 @@ export const fetchSessions = (id, term) => async (dispatch, getState) => {
         sessions: res.data.sessions,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(
       snackbarActions.openSnackBar({
@@ -4253,6 +4547,7 @@ export const fetchSessions = (id, term) => async (dispatch, getState) => {
 
     dispatch(sessionActions.hasError(err.message));
     console.log(err);
+    dispatch(hideLoader());
   }
 };
 
@@ -4263,6 +4558,7 @@ export const errorTrackerForFetchSessions =
 
 export const fetchSessionsForUser =
   (id, term) => async (dispatch, getState) => {
+    dispatch(showLoader());
     dispatch(sessionActions.startLoading());
     try {
       console.log(id);
@@ -4301,6 +4597,7 @@ export const fetchSessionsForUser =
           sessions: res.data.sessions,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
       console.log(err);
       dispatch(sessionActions.hasError(err.message));
@@ -4315,6 +4612,7 @@ export const fetchSessionsForUser =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForFetchSessionsForUser =
@@ -4323,6 +4621,7 @@ export const errorTrackerForFetchSessionsForUser =
   };
 export const fetchSession = (id) => async (dispatch, getState) => {
   dispatch(sessionActions.startLoading());
+  dispatch(showLoader());
   try {
     console.log(id);
 
@@ -4353,6 +4652,7 @@ export const fetchSession = (id) => async (dispatch, getState) => {
         sessions: res.data.sessions.session,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     console.log(err);
     dispatch(sessionActions.hasError(err.message));
@@ -4367,6 +4667,7 @@ export const fetchSession = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForFetchSession = () => async (dispatch, getState) => {
@@ -4374,6 +4675,7 @@ export const errorTrackerForFetchSession = () => async (dispatch, getState) => {
 };
 export const fetchSessionForSessionStage =
   (id) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       console.log(id);
 
@@ -4394,6 +4696,7 @@ export const fetchSessionForSessionStage =
           session: res.data.session,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
       dispatch(
         snackbarActions.openSnackBar({
@@ -4406,6 +4709,7 @@ export const fetchSessionForSessionStage =
         closeSnackbar();
       }, 6000);
       dispatch(sessionActions.hasError(err.message));
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForFetchSessionForSessionStage =
@@ -4414,6 +4718,7 @@ export const errorTrackerForFetchSessionForSessionStage =
   };
 export const fetchParticularSessionOfEvent =
   (id) => async (dispatch, getState) => {
+    dispatch(showLoader());
     dispatch(sessionActions.startLoadingDetail());
     try {
       const existingSession = getState().session.sessions.find((session) => {
@@ -4452,12 +4757,14 @@ export const fetchParticularSessionOfEvent =
             session: result.data.session,
           })
         );
+        dispatch(hideLoader());
       } else {
         dispatch(
           sessionActions.FetchSession({
             session: existingSession,
           })
         );
+        dispatch(hideLoader());
       }
     } catch (err) {
       dispatch(
@@ -4473,6 +4780,7 @@ export const fetchParticularSessionOfEvent =
 
       dispatch(sessionActions.detailHasError(err.message));
       console.log(err);
+      dispatch(hideLoader());
     }
   };
 
@@ -4483,6 +4791,8 @@ export const errorTrackerForFetchParticularSessionOfEvent =
 
 export const editSession = (formValues, id) => async (dispatch, getState) => {
   dispatch(sessionActions.startLoadingDetail());
+  dispatch(showLoader());
+
   try {
     console.log(formValues);
 
@@ -4524,6 +4834,7 @@ export const editSession = (formValues, id) => async (dispatch, getState) => {
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(sessionActions.detailHasError(err.message));
 
@@ -4537,6 +4848,7 @@ export const editSession = (formValues, id) => async (dispatch, getState) => {
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForEditSession = () => async (dispatch, getState) => {
@@ -4544,6 +4856,7 @@ export const errorTrackerForEditSession = () => async (dispatch, getState) => {
 };
 export const deleteSession = (id) => async (dispatch, getState) => {
   dispatch(sessionActions.startLoading());
+  dispatch(showLoader());
 
   try {
     console.log(id);
@@ -4583,6 +4896,7 @@ export const deleteSession = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
+    dispatch(showLoader());
   } catch (err) {
     dispatch(sessionActions.hasError(err.message));
     console.log(err);
@@ -4597,6 +4911,7 @@ export const deleteSession = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForDeleteSession =
@@ -4605,6 +4920,7 @@ export const errorTrackerForDeleteSession =
   };
 export const fetchNetworking = (id) => async (dispatch, getState) => {
   dispatch(networkingActions.startLoading());
+  dispatch(showLoader());
 
   const getNetworkSettings = async () => {
     console.log(id);
@@ -4638,9 +4954,11 @@ export const fetchNetworking = (id) => async (dispatch, getState) => {
         settings: res.data.networkingSettings,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(networkingActions.hasError(err.message));
     console.log(err);
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForFetchNetworking =
@@ -4651,6 +4969,8 @@ export const errorTrackerForFetchNetworking =
 export const editNetworking =
   (formValues, id) => async (dispatch, getState) => {
     dispatch(networkingActions.startLoading());
+    dispatch(showLoader());
+
     try {
       console.log(id);
 
@@ -4681,9 +5001,11 @@ export const editNetworking =
           settings: res.data.networkingSettings,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
       networkingActions.hasError(err.message);
       console.log(err);
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForEditNetworking =
@@ -4693,6 +5015,7 @@ export const errorTrackerForEditNetworking =
 
 export const createCoupon =
   (formValues, eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     dispatch(couponActions.startLoading());
     try {
       console.log(formValues);
@@ -4728,6 +5051,7 @@ export const createCoupon =
       );
 
       dispatch(showSnackbar("success", "Coupon created successfully!"));
+      dispatch(hideLoader());
     } catch (err) {
       dispatch(couponActions.hasError(err.message));
       console.log(err);
@@ -4735,6 +5059,7 @@ export const createCoupon =
       dispatch(
         showSnackbar("error", "Failed to create coupon, Please try again.")
       );
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForCreateCoupon = () => async (dispatch, getState) => {
@@ -4742,6 +5067,7 @@ export const errorTrackerForCreateCoupon = () => async (dispatch, getState) => {
 };
 
 export const fetchEventCoupons = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}getCoupons/${eventId}`, {
       method: "GET",
@@ -4773,17 +5099,20 @@ export const fetchEventCoupons = (eventId) => async (dispatch, getState) => {
         tickets: res.tickets,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
     dispatch(couponActions.hasError(error.message));
 
     dispatch(
       showSnackbar("error", "Failed to fetch coupons, Please try again.")
     );
+    dispatch(hideLoader());
   }
 };
 
 export const fetchCoupons = (eventId) => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
+  dispatch(showLoader());
 
   const getCoupons = async () => {
     let res = await fetch(`${BaseURL}community/coupons/${eventId}`, {
@@ -4820,12 +5149,14 @@ export const fetchCoupons = (eventId) => async (dispatch, getState) => {
         tickets: res.tickets,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(couponActions.hasError(err.message));
 
     dispatch(
       showSnackbar("error", "Failed to fetch coupons, Please try again.")
     );
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForFetchCoupons = () => async (dispatch, getState) => {
@@ -4834,7 +5165,7 @@ export const errorTrackerForFetchCoupons = () => async (dispatch, getState) => {
 
 export const fetchCoupon = (id) => async (dispatch, getState) => {
   dispatch(couponActions.startLoadingDetail());
-
+  dispatch(showLoader());
   try {
     console.log(id);
 
@@ -4861,6 +5192,7 @@ export const fetchCoupon = (id) => async (dispatch, getState) => {
         coupon: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(couponActions.detailHasError(err.message));
     console.log(err);
@@ -4868,6 +5200,7 @@ export const fetchCoupon = (id) => async (dispatch, getState) => {
     dispatch(
       showSnackbar("error", "Failed to fetch coupon, Please try again.")
     );
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForFetchCoupon = () => async (dispatch, getState) => {
@@ -4875,6 +5208,7 @@ export const errorTrackerForFetchCoupon = () => async (dispatch, getState) => {
 };
 
 export const editCoupon = (formValues, id) => async (dispatch, getState) => {
+  dispatch(showLoader());
   dispatch(couponActions.startLoadingDetail());
   try {
     let res = await fetch(`${BaseURL}community/${id}/updateCoupon`, {
@@ -4905,6 +5239,7 @@ export const editCoupon = (formValues, id) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "Coupon updated successfully!"));
   } catch (err) {
     dispatch(couponActions.detailHasError(err.message));
@@ -4913,6 +5248,7 @@ export const editCoupon = (formValues, id) => async (dispatch, getState) => {
     dispatch(
       showSnackbar("error", "Failed to update coupon, Please try again.")
     );
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForEditCoupon = () => async (dispatch, getState) => {
@@ -4921,6 +5257,7 @@ export const errorTrackerForEditCoupon = () => async (dispatch, getState) => {
 
 export const deleteCoupon = (id) => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
+  dispatch(showLoader());
 
   try {
     console.log(id);
@@ -4949,6 +5286,7 @@ export const deleteCoupon = (id) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "Coupon deleted successfully!"));
   } catch (err) {
     dispatch(couponActions.hasError(err.message));
@@ -4957,6 +5295,7 @@ export const deleteCoupon = (id) => async (dispatch, getState) => {
     dispatch(
       showSnackbar("error", "Failed to delete coupon, Please try again.")
     );
+    dispatch(hideLoader());
   }
 };
 export const errorTrackerForDeleteCoupon = () => async (dispatch, getState) => {
@@ -4966,6 +5305,7 @@ export const errorTrackerForDeleteCoupon = () => async (dispatch, getState) => {
 export const getStripeConnectLink =
   (userId, communityId) => async (dispatch, getState) => {
     console.log("I entered connect to stripe action");
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}stripe/getConnectFlowLink`, {
         method: "POST",
@@ -4984,13 +5324,16 @@ export const getStripeConnectLink =
       res = await res.json();
       console.log(res);
       window.location.href = res.links.url;
+      dispatch(hideLoader());
     } catch (err) {
+      dispatch(hideLoader());
       console.log(err);
     }
   };
 
 export const getEventRegistrationCheckoutSession =
   (formValues) => async (dispatch, getState) => {
+    dispatch(showLoader());
     console.log(formValues);
     try {
       const res = await fetch(`${BaseURL}stripe/createCheckoutSession`, {
@@ -5008,12 +5351,15 @@ export const getEventRegistrationCheckoutSession =
       console.log(result);
 
       window.location.href = result.session.url;
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
     }
   };
 
 export const createQuery = (formValues) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     console.log(formValues);
 
@@ -5037,13 +5383,16 @@ export const createQuery = (formValues) => async (dispatch, getState) => {
     //     coupon: res.data,
     //   })
     // );
+    dispatch(hideLoader());
   } catch (err) {
+    dispatch(hideLoader());
     console.log(err);
   }
 };
 
 export const createCommunityFeedback =
   (formValues) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       console.log(formValues);
 
@@ -5067,7 +5416,9 @@ export const createCommunityFeedback =
       //     coupon: res.data,
       //   })
       // );
+      dispatch(hideLoader());
     } catch (err) {
+      dispatch(hideLoader());
       console.log(err);
     }
   };
@@ -5075,6 +5426,7 @@ export const createCommunityFeedback =
 export const fetchQueriesForCommunity =
   (term, event, answerStatus, userRegistrationStatus) =>
   async (dispatch, getState) => {
+    dispatch(showLoader());
     dispatch(queriesActions.startLoading());
 
     console.log(term, event, answerStatus, userRegistrationStatus);
@@ -5129,9 +5481,11 @@ export const fetchQueriesForCommunity =
           queries: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
       dispatch(queriesActions.hasError(err.message));
       console.log(err.response.data);
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForfetchQueriesForCommunity =
@@ -5141,6 +5495,7 @@ export const errorTrackerForfetchQueriesForCommunity =
 
 export const answerQuery = (answerText, id) => async (dispatch, getState) => {
   dispatch(queriesActions.startLoading());
+  dispatch(showLoader());
 
   try {
     let res = await fetch(`${BaseURL}community/queries/createAnswer`, {
@@ -5170,9 +5525,10 @@ export const answerQuery = (answerText, id) => async (dispatch, getState) => {
         query: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
     console.log(err);
-
+    dispatch(hideLoader());
     dispatch(queriesActions.hasError(err.message));
   }
 };
@@ -5189,6 +5545,7 @@ export const googleLinkClicked = () => async (dispatch, getState) => {
 };
 
 export const forgotPassword = (formValues) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}forgotPassword`, {
       method: "POST",
@@ -5210,7 +5567,9 @@ export const forgotPassword = (formValues) => async (dispatch, getState) => {
         "We have sent a password reset link if there is an account with this email."
       )
     );
+    dispatch(hideLoader());
   } catch (err) {
+    dispatch(hideLoader());
     console.log(err);
     dispatch(showSnackbar("error", "There is no user with this email."));
   }
@@ -5218,6 +5577,7 @@ export const forgotPassword = (formValues) => async (dispatch, getState) => {
 export const resetPassword =
   (formValues, token) => async (dispatch, getState) => {
     dispatch(userActions.startLoading());
+    dispatch(showLoader());
 
     try {
       let res = await fetch(`${BaseURL}users/resetPassword/${token}`, {
@@ -5255,6 +5615,8 @@ export const resetPassword =
 
       dispatch(showSnackbar("success", "Password changed successfully!"));
 
+      dispatch(hideLoader());
+
       window.location.href = REACT_APP_MY_ENV
         ? "http://localhost:3001/user/home"
         : "https://www.bluemeet.in/user/home";
@@ -5268,6 +5630,7 @@ export const resetPassword =
           "Token is invalid or has expired. Please try again by requesting new reset link."
         )
       );
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForResetPassword =
@@ -5277,6 +5640,7 @@ export const errorTrackerForResetPassword =
   };
 export const fetchRegistrationsOfParticularCommunity =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     dispatch(registrationActions.startLoading());
 
     const fetchRegistration = async () => {
@@ -5311,9 +5675,11 @@ export const fetchRegistrationsOfParticularCommunity =
           registrations: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
       dispatch(registrationActions.hasError(err.message));
       console.log(err);
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForfetchRegistrationsOfParticularCommunity =
@@ -5324,6 +5690,7 @@ export const errorTrackerForfetchRegistrationsOfParticularCommunity =
 export const fetchRegistrationsOfParticularEvent =
   (eventId) => async (dispatch, getState) => {
     dispatch(registrationActions.startLoading());
+    dispatch(showLoader());
 
     const fetchRegistration = async () => {
       console.log(eventId);
@@ -5359,14 +5726,17 @@ export const fetchRegistrationsOfParticularEvent =
           registrations: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
       dispatch(registrationActions.hasError(err.message));
       console.log(err);
+      dispatch(hideLoader());
     }
   };
 
 export const fetchEventRegistrations =
   (eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}getEventRegistrations/${eventId}`, {
         method: "GET",
@@ -5392,8 +5762,10 @@ export const fetchEventRegistrations =
           registrations: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
+      dispatch(hideLoader());
     }
   };
 
@@ -5405,6 +5777,7 @@ export const errorTrackerForFetchRegistrationsOfParticularEvent =
 export const fetchParticularRegistration =
   (id) => async (dispatch, getState) => {
     dispatch(registrationActions.startLoading());
+    dispatch(showLoader());
     try {
       console.log(id);
 
@@ -5431,7 +5804,9 @@ export const fetchParticularRegistration =
           registration: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
+      dispatch(hideLoader());
       console.log(err);
       dispatch(registrationActions.hasError(err.message));
     }
@@ -5443,6 +5818,7 @@ export const errorTrackerForFetchParticularRegistration =
 
 export const createNewInvitation =
   (formValues) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       console.log(formValues);
 
@@ -5466,8 +5842,10 @@ export const createNewInvitation =
           invitation: res.newlyCreatedInvitation,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
       console.log(err);
+      dispatch(hideLoader());
     }
   };
 
@@ -5578,6 +5956,7 @@ export const fetchNumberOfPeopleOnBoothTable =
 export const getRTMTokenForSpeaker =
   (eventId, speakerId) => async (dispatch, getState) => {
     dispatch(RTMActions.startLoading());
+    dispatch(showLoader());
 
     const fetchingRTMToken = async () => {
       let res = await fetch(`${BaseURL}getRTMTokenForSpeaker`, {
@@ -5631,8 +6010,10 @@ export const getRTMTokenForSpeaker =
           RTMClient: client,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
       dispatch(RTMActions.hasError(err.message));
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForGetRTMTokenForSpeaker =
@@ -5642,6 +6023,7 @@ export const errorTrackerForGetRTMTokenForSpeaker =
 
 export const getRTMToken = (eventId) => async (dispatch, getState) => {
   dispatch(RTMActions.startLoading());
+  dispatch(showLoader());
 
   const fetchingRTMToken = async () => {
     let res = await fetch(`${BaseURL}getRTMToken`, {
@@ -5695,7 +6077,9 @@ export const getRTMToken = (eventId) => async (dispatch, getState) => {
         RTMClient: client,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
+    dispatch(hideLoader());
     dispatch(RTMActions.hasError(err.message));
   }
 };
@@ -5865,6 +6249,7 @@ export const updateReportedMsg = (msg) => async (dispatch, getState) => {
 
 export const fetchEventReportedMessages =
   (eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}fetchEventReportedMessages/${eventId}`, {
         method: "GET",
@@ -5889,7 +6274,9 @@ export const fetchEventReportedMessages =
           reports: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to fetch reports, Please try again.")
@@ -5899,6 +6286,7 @@ export const fetchEventReportedMessages =
 
 export const fetchPreviousEventChatMessages =
   (eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     dispatch(eventChatActions.startLoading());
     try {
       console.log(eventId);
@@ -5926,7 +6314,9 @@ export const fetchPreviousEventChatMessages =
           eventChats: res.data.chatMessages,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
+      dispatch(hideLoader());
       console.log(err);
     }
   };
@@ -5937,6 +6327,7 @@ export const errorTrackerForFetchPreviousEventChatMessages =
 
 export const fetchPreviousEventPolls =
   (eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     dispatch(eventPollActions.startLoading());
     try {
       console.log(eventId);
@@ -5964,7 +6355,9 @@ export const fetchPreviousEventPolls =
           eventPolls: res.data.polls,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
+      dispatch(hideLoader());
       console.log(err);
     }
   };
@@ -5975,6 +6368,7 @@ export const errorTrackerForFetchPreviousEventPolls =
 
 export const fetchPreviousBackstageChatMessages =
   (sessionId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       console.log(sessionId);
 
@@ -6001,14 +6395,17 @@ export const fetchPreviousBackstageChatMessages =
           backstageChats: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
+      dispatch(hideLoader());
     }
   };
 
 export const fetchPreviousSessionChatMessages =
   (sessionId) => async (dispatch, getState) => {
     dispatch(sessionChatActions.startLoading());
+    dispatch(showLoader());
     try {
       console.log(sessionId);
 
@@ -6035,8 +6432,10 @@ export const fetchPreviousSessionChatMessages =
           sessionChats: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
       console.log(err);
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForFetchPreviousSessionChatMessages =
@@ -6047,6 +6446,7 @@ export const errorTrackerForFetchPreviousSessionChatMessages =
 export const fetchPreviousEventAlerts =
   (eventId) => async (dispatch, getState) => {
     dispatch(eventAlertActions.startLoading());
+    dispatch(showLoader());
     try {
       console.log(eventId);
 
@@ -6072,8 +6472,10 @@ export const fetchPreviousEventAlerts =
           eventAlerts: res.data.alerts,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
       console.log(err);
+      dispatch(hideLoader());
     }
   };
 export const errorTrackerForFetchPreviousEventAlerts =
@@ -6085,6 +6487,7 @@ export const getRTCTokenAndSession =
   (sessionId, channel, role, eventId, communityId) =>
   async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
+    dispatch(showLoader());
 
     const fetchingRTCToken = async () => {
       let res = await fetch(`${BaseURL}getLiveStreamingTokenAndSession`, {
@@ -6128,7 +6531,9 @@ export const getRTCTokenAndSession =
       history.push(
         `/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`
       );
+      dispatch(hideLoader());
     } catch (err) {
+      dispatch(hideLoader());
       dispatch(showSnackbar("error", "Failed to get token, Please try again."));
       dispatch(RTCActions.hasError(err.message));
     }
@@ -6144,6 +6549,7 @@ export const fetchLiveStageTokenAndStartStreaming =
     resetPreviousStateRef
   ) =>
   async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}getLiveStageToken`, {
         method: "POST",
@@ -6188,7 +6594,9 @@ export const fetchLiveStageTokenAndStartStreaming =
       resetPreviousStateRef();
 
       startLiveStream(channel, res.token);
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
     }
   };
@@ -6196,6 +6604,7 @@ export const fetchLiveStageTokenAndStartStreaming =
 export const fetchBackstageTokenAndStartStreaming =
   (userId, channel, sessionId, startLiveStream, setShowPauseTimer) =>
   async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}getBackstageToken`, {
         method: "POST",
@@ -6235,7 +6644,9 @@ export const fetchBackstageTokenAndStartStreaming =
 
       setShowPauseTimer(false);
       startLiveStream(channel, res.token);
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
     }
   };
@@ -6243,6 +6654,7 @@ export const fetchBackstageTokenAndStartStreaming =
 export const getRTCTokenForJoiningTable =
   (tableId, userId, launchTableScreen) => async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
+    dispatch(showLoader());
 
     const fetchingRTCToken = async () => {
       let res = await fetch(`${BaseURL}getLiveStreamingTokenForJoiningTable`, {
@@ -6278,7 +6690,9 @@ export const getRTCTokenForJoiningTable =
       );
 
       launchTableScreen();
+      dispatch(hideLoader());
     } catch (err) {
+      dispatch(hideLoader());
       console.log(err);
       dispatch(showSnackbar("error", "Failed to get token, Please try again."));
       dispatch(RTCActions.hasError(err.message));
@@ -6288,6 +6702,8 @@ export const getRTCTokenForJoiningTable =
 export const getRTCTokenForJoiningBoothTable =
   (tableId, userId, launchTableScreen) => async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
+    dispatch(showLoader());
+
     try {
       let res = await fetch(`${BaseURL}getTokenForBoothTable`, {
         method: "POST",
@@ -6316,8 +6732,10 @@ export const getRTCTokenForJoiningBoothTable =
         })
       );
 
+      dispatch(hideLoader());
       launchTableScreen();
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(showSnackbar("error", "Failed to get token, Please try again."));
       dispatch(RTCActions.hasError(error.message));
@@ -6327,6 +6745,8 @@ export const getRTCTokenForJoiningBoothTable =
 export const getRTCTokenForNetworking =
   (handleOpen) => async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
+
+    dispatch(showLoader());
 
     try {
       let res = await fetch(`${BaseURL}getLiveStreamingTokenForNetworking`, {
@@ -6365,6 +6785,7 @@ export const getRTCTokenForNetworking =
           openState: false,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
       dispatch(RTCActions.hasError(error.message));
@@ -6379,12 +6800,14 @@ export const getRTCTokenForNetworking =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const getRTCTokenForScreenShare =
   (sessionId, uid, startPresenting) => async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
+    dispatch(showLoader());
 
     const fetchingRTCToken = async () => {
       let res = await fetch(`${BaseURL}getLiveStreamingTokenForScreenShare`, {
@@ -6421,17 +6844,20 @@ export const getRTCTokenForScreenShare =
       );
 
       startPresenting(res.token, `screen-${uid}`);
+      dispatch(hideLoader());
     } catch (err) {
       console.log(err);
       dispatch(RTCActions.hasError(err.message));
       dispatch(
         showSnackbar("error", "Failed to share screen, Please try again.")
       );
+      dispatch(hideLoader());
     }
   };
 
 export const getRTCTokenForNetworkingScreenShare =
   (tableId, uid, startPresenting) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       dispatch(RTCActions.startLoading());
 
@@ -6462,8 +6888,10 @@ export const getRTCTokenForNetworkingScreenShare =
         })
       );
 
+      dispatch(hideLoader());
       startPresenting(res.token, `screen-${uid}`);
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(RTCActions.hasError(error.message));
       dispatch(
@@ -6474,6 +6902,7 @@ export const getRTCTokenForNetworkingScreenShare =
 
 export const getRTCTokenForLoungeScreenShare =
   (tableId, uid, startPresenting) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       dispatch(RTCActions.startLoading());
 
@@ -6504,8 +6933,10 @@ export const getRTCTokenForLoungeScreenShare =
         })
       );
 
+      dispatch(hideLoader());
       startPresenting(res.token, `screen-${uid}`);
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(RTCActions.hasError(error.message));
       dispatch(
@@ -6516,6 +6947,7 @@ export const getRTCTokenForLoungeScreenShare =
 
 export const getRTCTokenForBoothScreenShare =
   (tableId, uid, startPresenting) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       dispatch(RTCActions.startLoading());
 
@@ -6546,8 +6978,10 @@ export const getRTCTokenForBoothScreenShare =
         })
       );
 
+      dispatch(hideLoader());
       startPresenting(res.token, `screen-${uid}`);
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(RTCActions.hasError(error.message));
       dispatch(
@@ -6559,6 +6993,7 @@ export const getRTCTokenForBoothScreenShare =
 export const getRTCTokenForNonUser =
   (sessionId, role, eventId, communityId, userId) =>
   async (dispatch, getState) => {
+    dispatch(showLoader());
     dispatch(RTCActions.startLoading());
 
     const fetchingRTCToken = async () => {
@@ -6599,8 +7034,9 @@ export const getRTCTokenForNonUser =
       history.push(
         `/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`
       );
+      dispatch(hideLoader());
     } catch (err) {
-      alert(err);
+      dispatch(hideLoader());
       dispatch(RTCActions.hasError(err.message));
     }
   };
@@ -6623,6 +7059,7 @@ export const resetCommunityError = () => async (dispatch, getState) => {
 
 export const createDemoRequest = (formValues) => async (dispatch, getState) => {
   dispatch(demoActions.startLoading());
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}demo/requestDemo`, {
       method: "POST",
@@ -6662,7 +7099,9 @@ export const createDemoRequest = (formValues) => async (dispatch, getState) => {
         "We have recieved your request and we will be in touch very soon."
       )
     );
+    dispatch(hideLoader());
   } catch (err) {
+    dispatch(hideLoader());
     dispatch(demoActions.hasError(err.message));
     dispatch(
       showSnackbar("error", "Failed to submit your request, Please try again.")
@@ -6676,6 +7115,7 @@ export const errorTrackerForCreateDemo = () => async (dispatch, getState) => {
 
 export const signupForEmailNewsletter =
   (email) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}newsletter/signUpViaEmail`, {
         method: "POST",
@@ -6701,6 +7141,7 @@ export const signupForEmailNewsletter =
       dispatch(
         showSnackbar("success", "Ok, We will send you our newsletters.")
       );
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
       dispatch(
@@ -6709,10 +7150,12 @@ export const signupForEmailNewsletter =
           "Failed to subscribe to newsletter. Please try again."
         )
       );
+      dispatch(hideLoader());
     }
   };
 
 export const contactUs = (formValues) => async (dispatch, getState) => {
+  dispatch(showLoader());
   dispatch(contactUsActions.startLoading());
   try {
     let res = await fetch(`${BaseURL}contactUs/contact`, {
@@ -6744,12 +7187,14 @@ export const contactUs = (formValues) => async (dispatch, getState) => {
         "We have recieved your ticket. We will be in touch soon."
       )
     );
+    dispatch(hideLoader());
   } catch (err) {
     dispatch(
       showSnackbar("error", "Failed to submit your ticket. Please try again.")
     );
     dispatch(contactUsActions.hasError(err.message));
     console.log(err);
+    dispatch(hideLoader());
   }
 };
 
@@ -6759,7 +7204,8 @@ export const errorTrackerForContactUs = () => async (dispatch, getState) => {
 
 export const generatePayoutLink =
   ({ communityId, communityName, phoneNumber, email, amount }) =>
-  async (dispatch) => {
+  async (dispatch, getState) => {
+    dispatch(showLoader());
     const reqBody = {
       account_number: "HbV3YvH7Zo0cDj",
       contact: {
@@ -6805,13 +7251,16 @@ export const generatePayoutLink =
       }
       res = await res.json();
       console.log(res.token);
+      dispatch(hideLoader());
     } catch (e) {
+      dispatch(hideLoader());
       console.log(e);
     }
   };
 
 export const fundTransferRequest =
   (formValues) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}fund/transferRequest`, {
         method: "POST",
@@ -6838,12 +7287,15 @@ export const fundTransferRequest =
       alert(
         "Your fund transfer request is recieved successfully! Please check your email."
       );
+      dispatch(hideLoader());
     } catch (err) {
+      dispatch(hideLoader());
       console.log(err);
     }
   };
 
 export const switchToFreePlan = (communityId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}communityPlan/switchToFree`, {
       method: "POST",
@@ -6868,13 +7320,16 @@ export const switchToFreePlan = (communityId) => async (dispatch, getState) => {
     console.log(res.data);
 
     alert("Successfully switched to free plan!");
+    dispatch(hideLoader());
   } catch (err) {
+    dispatch(hideLoader());
     console.log(err);
   }
 };
 
 export const addNewAffiliate = (formValues) => async (dispatch, getState) => {
   dispatch(affiliateActions.startLoading());
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}affiliate/createNewAffiliate`, {
       method: "POST",
@@ -6905,13 +7360,16 @@ export const addNewAffiliate = (formValues) => async (dispatch, getState) => {
         affiliate: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
+    dispatch(hideLoader());
     dispatch(affiliateActions.hasError(err.message));
     console.log(err);
   }
 };
 
 export const fetchEventAffiliates = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   dispatch(affiliateActions.startLoading());
   try {
     let res = await fetch(`${BaseURL}events/getAffliates/${eventId}`, {
@@ -6937,7 +7395,9 @@ export const fetchEventAffiliates = (eventId) => async (dispatch, getState) => {
         affiliates: res.data.affiliates,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
+    dispatch(hideLoader());
     dispatch(affiliateActions.hasError(err.message));
     console.log(err);
   }
@@ -6945,6 +7405,7 @@ export const fetchEventAffiliates = (eventId) => async (dispatch, getState) => {
 
 export const captureUserInterestInEvent =
   (eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     // dispatch(affiliateActions.startLoading());
     try {
       let res = await fetch(
@@ -6967,7 +7428,9 @@ export const captureUserInterestInEvent =
       }
       res = await res.json();
       console.log(res);
+      dispatch(hideLoader());
     } catch (err) {
+      dispatch(hideLoader());
       console.log(err);
     }
   };
@@ -6975,6 +7438,7 @@ export const captureUserInterestInEvent =
 export const fetchInterestedPeopleList =
   (eventId) => async (dispatch, getState) => {
     dispatch(interestedPeopleActions.startLoading());
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}interestedPeople/fetchInterestedPeople/${eventId}`,
@@ -7002,7 +7466,9 @@ export const fetchInterestedPeopleList =
           interestedPeople: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
+      dispatch(hideLoader());
       dispatch(interestedPeopleActions.hasError(err.message));
       console.log(err);
     }
@@ -7010,6 +7476,7 @@ export const fetchInterestedPeopleList =
 
 export const fetchAvailableForNetworking =
   (eventId, id) => async (dispatch, getState) => {
+    dispatch(showLoader());
     // dispatch(interestedPeopleActions.startLoading());
     try {
       let res = await fetch(`${BaseURL}availableForNetworking/${eventId}`, {
@@ -7035,6 +7502,7 @@ export const fetchAvailableForNetworking =
         })
       );
     } catch (err) {
+      dispatch(hideLoader());
       dispatch(availableForNetworkingActions.hasError(err.message));
       console.log(err);
     }
@@ -7159,6 +7627,7 @@ export const eventBuyingPlan = (intent) => async (dispatch, getState) => {
 };
 export const fetchMailChimpAudiences =
   (eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     dispatch(communityActions.startLoading());
     try {
       console.log(eventId, "i am counting on you eventID index.js ");
@@ -7172,9 +7641,10 @@ export const fetchMailChimpAudiences =
           mailChimpAudiences: mailChimpAudienceList.data,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
+      dispatch(hideLoader());
       dispatch(communityActions.hasError(err.message));
-      // console.log(err);
     }
   };
 
@@ -7206,6 +7676,7 @@ export const getPayPalConnectLink = () => async (dispatch, getState) => {
 
 export const getCommunityTawkLink =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     dispatch(tawkActions.startLoading());
     try {
       const res = await fetch(`${BaseURL}getTawkLink/${communityId}`, {
@@ -7230,13 +7701,16 @@ export const getCommunityTawkLink =
           link: result.data.tawkLink,
         })
       );
+      dispatch(hideLoader());
     } catch (err) {
+      dispatch(hideLoader());
       dispatch(tawkActions.hasError(err.message));
     }
   };
 
 export const getEventbriteOrganisations =
   (privateToken) => async (dispatch, getState) => {
+    dispatch(showLoader());
     dispatch(eventbriteActions.startLoading());
     try {
       const res = await fetch(
@@ -7267,7 +7741,9 @@ export const getEventbriteOrganisations =
           organizations: result.organizations,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       dispatch(eventbriteActions.hasError(error.message));
     }
   };
@@ -7275,6 +7751,7 @@ export const getEventbriteOrganisations =
 export const getEventbriteEventsByOrganisation =
   (privateToken, orgId) => async (dispatch, getState) => {
     dispatch(eventbriteActions.startLoading());
+    dispatch(showLoader());
 
     try {
       const res = await fetch(
@@ -7306,7 +7783,9 @@ export const getEventbriteEventsByOrganisation =
           events: result.events,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       dispatch(eventbriteActions.hasError(error.message));
     }
   };
@@ -7315,6 +7794,7 @@ export const createEventbriteWebhookForEventRegistrations =
   (privateToken, orgId, eventId, bluemeetEventId) =>
   async (dispatch, getState) => {
     dispatch(eventbriteActions.startLoading());
+    dispatch(showLoader());
 
     try {
       const res = await fetch(
@@ -7379,14 +7859,17 @@ export const createEventbriteWebhookForEventRegistrations =
           webhookData: result,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
       dispatch(eventbriteActions.hasError(error.message));
+      dispatch(hideLoader());
     }
   };
 
 export const saveEventbriteConfigurationForEvent =
   (bluemeetEventId, orgId, eventId, webhookData) =>
   async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}event/saveEventbriteConf/${bluemeetEventId}`,
@@ -7416,8 +7899,10 @@ export const saveEventbriteConfigurationForEvent =
       const result = await res.json();
       console.log(result);
 
+      dispatch(hideLoader());
       console.log("Successfully configured eventbrite integration.");
     } catch (error) {
+      dispatch(hideLoader());
       console.log("error saving eventbrite configuration to database");
     }
   };
@@ -7425,6 +7910,7 @@ export const saveEventbriteConfigurationForEvent =
 export const generateAPICredentials =
   (communityId, userId, label) => async (dispatch, getState) => {
     dispatch(apiKeyActions.startLoading());
+    dispatch(showLoader());
     try {
       // Submit a request to generate new set of API Key and secret
       const res = await fetch(
@@ -7460,7 +7946,9 @@ export const generateAPICredentials =
           apiKey: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(apiKeyActions.hasError(error.message));
     }
@@ -7468,6 +7956,7 @@ export const generateAPICredentials =
 
 export const fetchApiKeys = (communityId) => async (dispatch, getState) => {
   dispatch(apiKeyActions.startLoading());
+  dispatch(showLoader());
 
   try {
     const res = await fetch(`${BaseURL}community/getApiKeys/${communityId}`, {
@@ -7495,10 +7984,11 @@ export const fetchApiKeys = (communityId) => async (dispatch, getState) => {
         apiKeys: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
     console.log(error);
     dispatch(apiKeyActions.hasError(error.message));
-
+    dispatch(hideLoader());
     dispatch(
       showSnackbar(
         "error",
@@ -7509,6 +7999,7 @@ export const fetchApiKeys = (communityId) => async (dispatch, getState) => {
 };
 
 export const updateAPIKey = (id, enabled) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(
       `${BaseURL}community/updateApiKey/${id}/${enabled}`,
@@ -7531,6 +8022,7 @@ export const updateAPIKey = (id, enabled) => async (dispatch, getState) => {
     );
 
     dispatch(showSnackbar("success", "Api Credential updated successfully!"));
+    dispatch(hideLoader());
   } catch (error) {
     console.log(error);
 
@@ -7540,10 +8032,12 @@ export const updateAPIKey = (id, enabled) => async (dispatch, getState) => {
         "Failed to update API credential, Please try again."
       )
     );
+    dispatch(hideLoader());
   }
 };
 
 export const deleteAPIKey = (id) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}community/deleteApiKey/${id}`, {
       method: "PATCH",
@@ -7562,6 +8056,8 @@ export const deleteAPIKey = (id) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
+
     dispatch(showSnackbar("success", "API Credential deleted successfully!"));
   } catch (error) {
     console.log(error);
@@ -7571,11 +8067,14 @@ export const deleteAPIKey = (id) => async (dispatch, getState) => {
         "Failed to delete API credential, Please try again."
       )
     );
+
+    dispatch(hideLoader());
   }
 };
 
 export const getStripeConnectAccountStatus =
   (userId, communityId, accountId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}stripe/getStripeConnectStatus/${accountId}/${communityId}`,
@@ -7602,14 +8101,17 @@ export const getStripeConnectAccountStatus =
       if (!result.charges_enabled && !result.details_submitted) {
         window.location.href = `/not-onboarded-yet/user/${userId}/community/${communityId}/account/${accountId}`;
       }
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
+      dispatch(hideLoader());
     }
   };
 
 export const createNewRole =
   (formValues, communityId, userId, roleTitle) =>
   async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}role/createNewRole/${communityId}/${userId}`,
@@ -7633,14 +8135,17 @@ export const createNewRole =
       const result = await res.json();
       console.log(result);
 
+      dispatch(hideLoader());
       //  Dispatch in roles slice in redux store
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
     }
   };
 
 export const editRoleCapabilities =
   (formValues, roleId, communityId, userId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}role/editRoleCapabilities/${communityId}/${userId}/${roleId}`,
@@ -7663,15 +8168,17 @@ export const editRoleCapabilities =
 
       const result = await res.json();
       console.log(result);
-
+      dispatch(hideLoader());
       //  Dispatch in roles slice in redux store
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
     }
   };
 
 export const deleteRole =
   (roleId, communityId, userId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}role/deleteRole/${communityId}/${userId}/${roleId}`,
@@ -7693,14 +8200,16 @@ export const deleteRole =
 
       const result = await res.json();
       console.log(result);
-
+      dispatch(hideLoader());
       //  Dispatch in roles slice in redux store
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
     }
   };
 
 export const fetchRoles = (communityId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   console.log("I reached in fetch roles");
   try {
     const res = await fetch(`${BaseURL}role/getRoles/${communityId}/`, {
@@ -7720,7 +8229,9 @@ export const fetchRoles = (communityId) => async (dispatch, getState) => {
         roles: result.roles,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
   }
 };
@@ -7872,6 +8383,7 @@ export const uploadVideoForEvent =
   };
 
 export const deleteEventVideo = (videoId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     console.log(videoId);
     let res = await fetch(`${BaseURL}events/deleteVideo`, {
@@ -7903,8 +8415,10 @@ export const deleteEventVideo = (videoId) => async (dispatch, getState) => {
     );
     console.log(res);
 
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "Video Deleted successfully!"));
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     showSnackbar("error", "Failed to delete video, Please try again.");
   }
@@ -7913,6 +8427,7 @@ export const deleteEventVideo = (videoId) => async (dispatch, getState) => {
 export const unlinkVideo =
   (videoId, eventId, handleClose) => async (dispatch, getState) => {
     console.log(videoId, eventId);
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}unlinkVideo`, {
         method: "POST",
@@ -7938,9 +8453,10 @@ export const unlinkVideo =
       );
 
       handleClose();
-
+      dispatch(hideLoader());
       dispatch(showSnackbar("success", "Video Unlinked successfully!"));
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to unlink video, Please try again.")
@@ -7950,6 +8466,7 @@ export const unlinkVideo =
 
 export const linkVideo =
   (videoId, eventId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}linkVideo`, {
         method: "POST",
@@ -7978,8 +8495,10 @@ export const linkVideo =
         })
       );
 
+      dispatch(hideLoader());
       handleClose();
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to link video, Please try again.")
@@ -7988,6 +8507,7 @@ export const linkVideo =
   };
 
 export const fetchEventVideos = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     console.log(eventId);
     let res = await fetch(`${BaseURL}fetchEventVideos`, {
@@ -8018,13 +8538,16 @@ export const fetchEventVideos = (eventId) => async (dispatch, getState) => {
         videos: res.videos,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
   }
 };
 
 export const acceptInvitation =
   (invitationId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}team-invites/accept-invitation/${invitationId}/`,
@@ -8039,13 +8562,16 @@ export const acceptInvitation =
 
       const result = await res.json();
       console.log(result);
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
     }
   };
 
 export const fetchPendingInvitations =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}team-invites/fetchPendingInvitations/`,
@@ -8067,13 +8593,16 @@ export const fetchPendingInvitations =
           invitations: result.pendingInvitations,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
     }
   };
 
 export const fetchCommunityManagers =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}team-invites/fetchCommunityManagers/`,
@@ -8095,7 +8624,9 @@ export const fetchCommunityManagers =
           communityManagers: result.communityManagers.eventManagers,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
 
       dispatch(
@@ -8105,6 +8636,7 @@ export const fetchCommunityManagers =
   };
 
 export const getSuperAdmin = (communityId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(
       `${BaseURL}team-invites/getSuperAdmin/${communityId}`,
@@ -8126,7 +8658,9 @@ export const getSuperAdmin = (communityId) => async (dispatch, getState) => {
         superAdmin: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to fetch super admin, Please try again.")
@@ -8136,6 +8670,7 @@ export const getSuperAdmin = (communityId) => async (dispatch, getState) => {
 
 export const removeFromTeam =
   (email, communityId, status) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}team-invites/removeFromTeam/${email}/${status}`,
@@ -8169,6 +8704,7 @@ export const removeFromTeam =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -8182,11 +8718,13 @@ export const removeFromTeam =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const updateCommunity =
   (id, formValues, file) => async (dispatch, getState) => {
+    dispatch(showLoader());
     const key = `${id}/${UUID()}.jpeg`;
 
     if (file) {
@@ -8256,6 +8794,7 @@ export const updateCommunity =
               setTimeout(function () {
                 dispatch(snackbarActions.closeSnackBar());
               }, 6000);
+              dispatch(hideLoader());
             } catch (err) {
               dispatch(communityActions.hasError(err.message));
 
@@ -8268,7 +8807,10 @@ export const updateCommunity =
               setTimeout(function () {
                 dispatch(snackbarActions.closeSnackBar());
               }, 4000);
+              dispatch(hideLoader());
             }
+          } else {
+            dispatch(hideLoader());
           }
         }
       );
@@ -8312,6 +8854,7 @@ export const updateCommunity =
         setTimeout(function () {
           dispatch(snackbarActions.closeSnackBar());
         }, 6000);
+        dispatch(hideLoader());
       } catch (error) {
         dispatch(communityActions.hasError(error.message));
 
@@ -8324,12 +8867,14 @@ export const updateCommunity =
         setTimeout(function () {
           dispatch(snackbarActions.closeSnackBar());
         }, 4000);
+        dispatch(hideLoader());
       }
     }
   };
 
 export const editRegistrationForm =
   (formValues, eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}events/${eventId}/updateRegistrationForm`,
@@ -8371,6 +8916,7 @@ export const editRegistrationForm =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -8386,11 +8932,13 @@ export const editRegistrationForm =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const updateRegistration =
   (formValues, registrationId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}registrations/updateRegistration/${registrationId}`,
@@ -8436,6 +8984,7 @@ export const updateRegistration =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -8449,11 +8998,13 @@ export const updateRegistration =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const updateRegistrationSettings =
   (formValues, registrationId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}registrations/updateRegistrationSettings/${registrationId}`,
@@ -8500,6 +9051,7 @@ export const updateRegistrationSettings =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -8513,12 +9065,14 @@ export const updateRegistrationSettings =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const sendSpeakerInvitation =
   (name, email, speakerId, invitationLink, sessions) =>
   async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}speakers/${speakerId}/sendInvitation`,
@@ -8566,7 +9120,9 @@ export const sendSpeakerInvitation =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       dispatch(
         snackbarActions.openSnackBar({
           message: "Sending invitation failed. Please try again later.",
@@ -8581,6 +9137,7 @@ export const sendSpeakerInvitation =
   };
 
 export const sendBoothInvitation = (boothId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(
       `${BaseURL}booths/${boothId}/sendBoothInvitation`,
@@ -8614,6 +9171,7 @@ export const sendBoothInvitation = (boothId) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
+    dispatch(hideLoader());
   } catch (error) {
     dispatch(
       snackbarActions.openSnackBar({
@@ -8625,11 +9183,13 @@ export const sendBoothInvitation = (boothId) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 
 export const sendAttendeeInvite =
   (registrationId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}registrations/sendInvite/${registrationId}`,
@@ -8663,6 +9223,7 @@ export const sendAttendeeInvite =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -8676,11 +9237,13 @@ export const sendAttendeeInvite =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const sendBulkAttendeeEmail =
   (infoObject) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}registrations/sendBulkInvite`, {
         method: "POST",
@@ -8709,10 +9272,12 @@ export const sendBulkAttendeeEmail =
         })
       );
 
+      dispatch(hideLoader());
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
 
       dispatch(
@@ -8730,6 +9295,7 @@ export const sendBulkAttendeeEmail =
 
 export const sendBulkSpeakerEmail =
   (infoObject, eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}speakers/sendBulkInvite/:eventId`, {
         method: "POST",
@@ -8761,6 +9327,7 @@ export const sendBulkSpeakerEmail =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -8774,6 +9341,7 @@ export const sendBulkSpeakerEmail =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
@@ -8808,6 +9376,7 @@ export const setPermittedPeople =
 
 export const getCommunityVideos =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       console.log(communityId);
       let res = await fetch(`${BaseURL}community/getCommunityVideo`, {
@@ -8838,12 +9407,15 @@ export const getCommunityVideos =
           videos: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
     }
   };
 
 export const getEventVideos = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     console.log(eventId);
 
@@ -8875,13 +9447,16 @@ export const getEventVideos = (eventId) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
     console.log(res);
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
   }
 };
 
 export const deleteVideo = (videoId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     console.log(videoId);
     let res = await fetch(`${BaseURL}community/deleteVideo`, {
@@ -8912,8 +9487,10 @@ export const deleteVideo = (videoId) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "Video deleted successfully!"));
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to delete video, Please try again.")
@@ -8923,6 +9500,7 @@ export const deleteVideo = (videoId) => async (dispatch, getState) => {
 
 export const LinkCommunityVideoToEvent =
   (eventId, videoId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}community/updateVideo`, {
         method: "PATCH",
@@ -8947,8 +9525,10 @@ export const LinkCommunityVideoToEvent =
       }
       res = await res.json();
 
+      dispatch(hideLoader());
       console.log(res);
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
     }
   };
@@ -9040,6 +9620,7 @@ export const addVibe =
   };
 
 export const getVibes = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}events/getVibes/${eventId}`, {
       method: "GET",
@@ -9066,12 +9647,15 @@ export const getVibes = (eventId) => async (dispatch, getState) => {
     );
 
     console.log(res);
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
   }
 };
 
 export const deleteVibe = (vibeId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}events/deleteVibe/${vibeId}`, {
       method: "DELETE",
@@ -9099,8 +9683,10 @@ export const deleteVibe = (vibeId) => async (dispatch, getState) => {
 
     console.log(res);
 
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "Vibe deleted successfully!"));
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("error", "Failed to delete vibe, Please try again."));
   }
@@ -9122,6 +9708,7 @@ export const setVibeToPreview = (imgURL) => async (dispatch, getState) => {
 
 export const createRTMPDestination =
   (formValues, eventId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}createRTMPDestination/${eventId}`, {
         method: "POST",
@@ -9163,6 +9750,7 @@ export const createRTMPDestination =
       }, 6000);
 
       handleClose();
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
       dispatch(
@@ -9176,6 +9764,7 @@ export const createRTMPDestination =
         closeSnackbar();
       }, 6000);
       handleClose();
+      dispatch(hideLoader());
     }
   };
 
@@ -9183,6 +9772,7 @@ export const createRTMPDestination =
 
 export const fetchStreamDestinations =
   (eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}getRTMPDestinations/${eventId}`, {
         method: "GET",
@@ -9209,7 +9799,9 @@ export const fetchStreamDestinations =
           streamDestinations: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
     }
   };
@@ -9218,6 +9810,7 @@ export const fetchStreamDestinations =
 
 export const fetchOneStreamDestination =
   (destinationId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     console.log("This fxn was called.");
     try {
       let res = await fetch(
@@ -9248,7 +9841,9 @@ export const fetchOneStreamDestination =
           streamDestination: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
     }
   };
@@ -9257,6 +9852,7 @@ export const fetchOneStreamDestination =
 
 export const updateStreamDestination =
   (destinationId, formValues) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}updateStreamDestination/${destinationId}`,
@@ -9289,8 +9885,10 @@ export const updateStreamDestination =
         })
       );
 
+      dispatch(hideLoader());
       dispatch(showSnackbar("success", "Stream destination updated!"));
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar(
@@ -9305,6 +9903,7 @@ export const updateStreamDestination =
 
 export const deleteStreamDestination =
   (destinationId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}deleteStreamDestination/${destinationId}`,
@@ -9337,6 +9936,7 @@ export const deleteStreamDestination =
       dispatch(
         showSnackbar("success", "Stream destination deleted successfully!")
       );
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
       dispatch(
@@ -9345,6 +9945,7 @@ export const deleteStreamDestination =
           "Failed to delete stream destination, Please try again."
         )
       );
+      dispatch(hideLoader());
     }
   };
 
@@ -9361,6 +9962,7 @@ export const setCurrentMailTemplate =
 
 export const createMail =
   (formValues, eventId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}mail/createNewMail/${eventId}`, {
         method: "POST",
@@ -9392,9 +9994,11 @@ export const createMail =
 
       handleClose();
 
+      dispatch(hideLoader());
       dispatch(showSnackbar("success", "New mail added successfully!"));
     } catch (error) {
       console.log(error);
+      dispatch(hideLoader());
 
       dispatch(
         showSnackbar("error", "Failed to create mail, Please try again.")
@@ -9405,6 +10009,7 @@ export const createMail =
 // Get Mails
 
 export const fetchMails = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}mail/getMails/${eventId}`, {
       method: "GET",
@@ -9431,7 +10036,9 @@ export const fetchMails = (eventId) => async (dispatch, getState) => {
         mails: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
 
     dispatch(
@@ -9443,6 +10050,7 @@ export const fetchMails = (eventId) => async (dispatch, getState) => {
 // Get one mail details
 
 export const getOneMail = (mailId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}mail/getMailDetails/${mailId}`, {
       method: "GET",
@@ -9469,7 +10077,9 @@ export const getOneMail = (mailId) => async (dispatch, getState) => {
         mail: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
 
     dispatch(
@@ -9485,6 +10095,7 @@ export const getOneMail = (mailId) => async (dispatch, getState) => {
 
 export const updateMail =
   (formValues, mailId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}mail/updateMail/${mailId}`, {
         method: "PATCH",
@@ -9527,8 +10138,10 @@ export const updateMail =
 
       handleClose();
 
+      dispatch(hideLoader());
       // window.location.reload();
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
 
       dispatch(
@@ -9552,6 +10165,7 @@ export const updateMail =
 
 export const deleteMail =
   (mailId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}mail/deleteMail/${mailId}`, {
         method: "DELETE",
@@ -9591,7 +10205,9 @@ export const deleteMail =
       }, 6000);
 
       handleClose();
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to delete mail, Please try again later.")
@@ -9602,6 +10218,7 @@ export const deleteMail =
 // Send mail
 
 export const SendMail = (mailId, recepients) => async (dispatch, getState) => {
+  dispatch(showLoader());
   //  recepients will be an array of emails to which email will be sent
   try {
     let res = await fetch(`${BaseURL}mail/sendMail/${mailId}`, {
@@ -9644,7 +10261,9 @@ export const SendMail = (mailId, recepients) => async (dispatch, getState) => {
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
 
     dispatch(
@@ -9664,6 +10283,7 @@ export const SendMail = (mailId, recepients) => async (dispatch, getState) => {
 
 export const sendTestMail =
   (mailId, recieverMail, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}mail/sendTestMail/${mailId}`, {
         method: "POST",
@@ -9703,6 +10323,7 @@ export const sendTestMail =
       }, 6000);
 
       handleClose();
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -9717,10 +10338,12 @@ export const sendTestMail =
         closeSnackbar();
       }, 6000);
       handleClose();
+      dispatch(hideLoader());
     }
   };
 
 export const fetchCodes = () => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}getCodes`, {
       method: "GET",
@@ -9745,7 +10368,9 @@ export const fetchCodes = () => async (dispatch, getState) => {
         codes: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       snackbarActions.openSnackBar({
@@ -9762,6 +10387,7 @@ export const fetchCodes = () => async (dispatch, getState) => {
 
 export const redeemCodes =
   (communityId, userId, codes) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}redeemAppSumoCode`, {
         method: "POST",
@@ -9804,6 +10430,7 @@ export const redeemCodes =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -9817,6 +10444,7 @@ export const redeemCodes =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
@@ -9873,6 +10501,7 @@ export const resetEventVibeUploadProgress =
 
 export const fetchCommunityTransactions =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}getCommunityTransactions/${communityId}`,
@@ -9901,7 +10530,9 @@ export const fetchCommunityTransactions =
           transactions: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
 
       // Show snack bar that failed to fetch transactions.
@@ -9910,6 +10541,7 @@ export const fetchCommunityTransactions =
 
 export const connectMailchimp =
   (code, communityId, userId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await eureka.get(
         `/eureka/v1/oauth/mailchimp/callback/?code=${code}&communityId=${communityId}`
@@ -9934,6 +10566,7 @@ export const connectMailchimp =
       }, 6000);
 
       history.push(`/user/${userId}/community/integrations/${communityId}`);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
       dispatch(
@@ -9946,11 +10579,13 @@ export const connectMailchimp =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const connectSalesforce =
   (code, communityId, userId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await eureka.get(
         `/eureka/v1/oauth/salesforce/callback/?code=${code}&communityId=${communityId}`
@@ -9974,6 +10609,7 @@ export const connectSalesforce =
         closeSnackbar();
       }, 6000);
 
+      dispatch(hideLoader());
       history.push(`/user/${userId}/community/integrations/${communityId}`);
     } catch (error) {
       console.log(error);
@@ -9987,11 +10623,13 @@ export const connectSalesforce =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const disconnectMailchimp =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}community/disconnectMailchimp/${communityId}`,
@@ -10031,6 +10669,7 @@ export const disconnectMailchimp =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -10044,11 +10683,13 @@ export const disconnectMailchimp =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const disconnectSalesforce =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}community/disconnectSalesforce/${communityId}`,
@@ -10088,6 +10729,7 @@ export const disconnectSalesforce =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -10101,11 +10743,13 @@ export const disconnectSalesforce =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const requestIntegration =
   (formValues) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}requestIntegration`, {
         method: "POST",
@@ -10140,6 +10784,7 @@ export const requestIntegration =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -10153,11 +10798,13 @@ export const requestIntegration =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const buildWithBluemeet =
   (formValues, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}buildWithBluemeet`, {
         method: "POST",
@@ -10193,6 +10840,7 @@ export const buildWithBluemeet =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -10206,11 +10854,13 @@ export const buildWithBluemeet =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const startSessionRecording =
   (sessionId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}startSessionRecording/${sessionId}`, {
         method: "POST",
@@ -10246,7 +10896,9 @@ export const startSessionRecording =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
 
       dispatch(
@@ -10264,6 +10916,7 @@ export const startSessionRecording =
 
 export const stopSessionRecording =
   (sessionId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}stopSessionRecording/${sessionId}`, {
         method: "POST",
@@ -10299,6 +10952,7 @@ export const stopSessionRecording =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -10312,10 +10966,12 @@ export const stopSessionRecording =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const fetchEventSpeakers = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}getEventSpeakers/${eventId}`, {
       method: "GET",
@@ -10342,7 +10998,9 @@ export const fetchEventSpeakers = (eventId) => async (dispatch, getState) => {
         speakers: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
 
     dispatch(
@@ -10359,6 +11017,7 @@ export const fetchEventSpeakers = (eventId) => async (dispatch, getState) => {
 };
 
 export const getPeopleInEvent = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}getPeopleInEvent/${eventId}`, {
       method: "GET",
@@ -10384,6 +11043,7 @@ export const getPeopleInEvent = (eventId) => async (dispatch, getState) => {
         peopleInThisEvent: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
     console.log(error);
 
@@ -10397,6 +11057,7 @@ export const getPeopleInEvent = (eventId) => async (dispatch, getState) => {
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 
@@ -10425,6 +11086,7 @@ export const setPersonalChatConfig = (id) => async (dispatch, getState) => {
 
 export const getMyAllPersonalMessages =
   (userId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}getMyAllPersonalChatMsg/${userId}`, {
         method: "GET",
@@ -10450,7 +11112,9 @@ export const getMyAllPersonalMessages =
           chats: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
 
       dispatch(
@@ -10477,6 +11141,7 @@ export const createNewPersonalMessage =
 
 export const fetchInvitationDetails =
   (invitationId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}fetchInvitationDetails/${invitationId}`,
@@ -10505,6 +11170,7 @@ export const fetchInvitationDetails =
           invitationDetails: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -10518,10 +11184,12 @@ export const fetchInvitationDetails =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const getUserRegistrations = () => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}users/getUserRegistrations`, {
       method: "GET",
@@ -10548,6 +11216,7 @@ export const getUserRegistrations = () => async (dispatch, getState) => {
         registrations: result.data.registrations,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
     console.log(error);
 
@@ -10561,11 +11230,13 @@ export const getUserRegistrations = () => async (dispatch, getState) => {
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 
 export const fetchEventForMagicLinkPage =
   (registrationId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}getEventDetailsForMagicLinkPage/${registrationId}`,
@@ -10619,6 +11290,7 @@ export const fetchEventForMagicLinkPage =
           })
         );
       }
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -10632,11 +11304,13 @@ export const fetchEventForMagicLinkPage =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const fetchSpeakerRegistrationInfo =
   (registrationId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}getSpeakerRegistrationInfoForMagicLinkPage/${registrationId}`,
@@ -10728,6 +11402,7 @@ export const fetchSpeakerRegistrationInfo =
           );
         }
       }
+      dispatch(hideLoader());
 
       // Inside result we get data(eventDetails) and if this speaker is registered on Bluemeet platform as a user or not if he / she is on Bluemeet platform than we will get his / her name, emai, userId
     } catch (error) {
@@ -10744,11 +11419,13 @@ export const fetchSpeakerRegistrationInfo =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const fetchExhibitorRegistrationInfo =
   (registrationId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}getExhibitorRegistrationInfoForMagicLinkPage/${registrationId}`,
@@ -10845,6 +11522,7 @@ export const fetchExhibitorRegistrationInfo =
           );
         }
       }
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
 
@@ -10859,10 +11537,12 @@ export const fetchExhibitorRegistrationInfo =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      dispatch(hideLoader());
     }
   };
 
 export const logInMagicLinkUser = (userId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}users/loginMagicLinkUser/${userId}`, {
       method: "GET",
@@ -10896,6 +11576,7 @@ export const logInMagicLinkUser = (userId) => async (dispatch, getState) => {
         user: result.data.user,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
     console.log(error);
 
@@ -10909,10 +11590,12 @@ export const logInMagicLinkUser = (userId) => async (dispatch, getState) => {
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
+    dispatch(hideLoader());
   }
 };
 
 export const fetchBoothTableChats = (tableId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     // Write logic to fetch all table chats for this booth table
 
@@ -10941,7 +11624,9 @@ export const fetchBoothTableChats = (tableId) => async (dispatch, getState) => {
         tableChats: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("error", "Failed to fetch chats, Please try again."));
   }
@@ -11019,6 +11704,8 @@ export const fetchTableChats = (tableId) => async (dispatch, getState) => {
 
 export const editTable =
   (title, tableId, file, priority) => async (dispatch, getState) => {
+    dispatch(showLoader());
+
     try {
       const key = `${tableId}/${UUID()}.jpeg`;
 
@@ -11074,6 +11761,7 @@ export const editTable =
             dispatch(
               showSnackbar("success", "Room details updated successfully!")
             );
+            dispatch(hideLoader());
           }
         );
       } else {
@@ -11107,10 +11795,11 @@ export const editTable =
             table: result.data,
           })
         );
-
+        dispatch(hideLoader());
         dispatch(showSnackbar("success", "Room Details updated successfully!"));
       }
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
 
       dispatch(
@@ -11121,6 +11810,7 @@ export const editTable =
 
 export const editBoothTable =
   (title, tableId, file, priority) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       if (file) {
         const key = `${tableId}/${UUID()}.${file.type}`;
@@ -11210,7 +11900,9 @@ export const editBoothTable =
 
         dispatch(showSnackbar("success", "Room Details updated successfully!"));
       }
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to update room, Please try again.")
@@ -11219,6 +11911,7 @@ export const editBoothTable =
   };
 
 export const getEventTables = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}getEventTables/${eventId}`, {
       method: "GET",
@@ -11244,13 +11937,16 @@ export const getEventTables = (eventId) => async (dispatch, getState) => {
         eventTables: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("error", "Failed to get Rooms, Please try again!"));
   }
 };
 
 export const getEventTable = (tableId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   dispatch(eventTablesActions.startLoading());
   try {
     const res = await fetch(`${BaseURL}getTableDetails/${tableId}`, {
@@ -11277,7 +11973,9 @@ export const getEventTable = (tableId) => async (dispatch, getState) => {
         eventTable: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       eventTablesActions.hasError(
@@ -11292,6 +11990,7 @@ export const getEventTable = (tableId) => async (dispatch, getState) => {
 };
 
 export const getBoothTables = (boothId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}getBoothTables/${boothId}`, {
       method: "GET",
@@ -11317,13 +12016,16 @@ export const getBoothTables = (boothId) => async (dispatch, getState) => {
         boothTables: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("error", "Failed to fetch Rooms, Please try again."));
   }
 };
 
 export const getBoothTable = (tableId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   dispatch(boothTablesActions.startLoading());
   try {
     const res = await fetch(`${BaseURL}getBoothTableDetails/${tableId}`, {
@@ -11350,7 +12052,9 @@ export const getBoothTable = (tableId) => async (dispatch, getState) => {
         boothTable: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to fetch Room Details, Please try again.")
@@ -11800,6 +12504,7 @@ export const switchOffMediaBeforeTransition =
   };
 
 export const deactivateUser = (userId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}users/deactivateMe/${userId}`, {
       method: "PATCH",
@@ -11825,8 +12530,10 @@ export const deactivateUser = (userId) => async (dispatch, getState) => {
       )
     );
 
+    dispatch(hideLoader());
     window.location.href = `/home`;
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
 
     dispatch(
@@ -11902,6 +12609,7 @@ export const setUserVerificationLinkExpired =
   };
 
 export const verifyAndCreateCommunity = (id) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(
       `${BaseURL}users/verifyAndCreateCommunity/${id}`,
@@ -11966,7 +12674,9 @@ export const verifyAndCreateCommunity = (id) => async (dispatch, getState) => {
       // );
       // window.location.href = `/user/${res.userId}/community/getting-started/${res.communityDoc._id}`;
     }
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to verify community. Please try again.")
@@ -11976,6 +12686,7 @@ export const verifyAndCreateCommunity = (id) => async (dispatch, getState) => {
 
 export const resendCommunityVerificationMail =
   (id) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}resendCommunityVerificationMail/${id}`,
@@ -11998,7 +12709,9 @@ export const resendCommunityVerificationMail =
       res = await res.json();
 
       dispatch(showSnackbar("success", "Verification mail sent successfully!"));
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to send email, please try again.")
@@ -12008,6 +12721,7 @@ export const resendCommunityVerificationMail =
 
 export const resendUserVerificationEmail =
   (id) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}resendUserVerificationEmail/${id}`,
@@ -12029,8 +12743,10 @@ export const resendUserVerificationEmail =
 
       res = await res.json();
 
+      dispatch(hideLoader());
       dispatch(showSnackbar("success", "verification mail sent successfully!"));
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to send email, please try again.")
@@ -12040,6 +12756,7 @@ export const resendUserVerificationEmail =
 
 export const changeCommunityAccountRequestEmail =
   (id, email) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}changeCommunityAccountRequestEmail/${id}`,
@@ -12087,7 +12804,9 @@ export const changeCommunityAccountRequestEmail =
           showSnackbar("success", "Community email updated successfully!")
         );
       }
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to update email, please try again.")
@@ -12104,6 +12823,7 @@ export const setReferralCode = (referralCode) => async (dispatch, getState) => {
 };
 
 export const fetchLatestEvent = () => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(
       `${BaseURL}fetchLatestEvent`,
@@ -12135,7 +12855,9 @@ export const fetchLatestEvent = () => async (dispatch, getState) => {
         latestEvent: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
 
     dispatch(
@@ -12148,6 +12870,7 @@ export const fetchLatestEvent = () => async (dispatch, getState) => {
 };
 
 export const createLatestEvent = (formValues) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(
       `${BaseURL}community/events/createLatestEvent`,
@@ -12180,8 +12903,10 @@ export const createLatestEvent = (formValues) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "New event created successfully!"));
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to create event, please try again.")
@@ -12370,6 +13095,7 @@ export const uploadSessionPreview =
 
 export const showInEventLobby =
   (formValues, eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}events/${eventId}/showInEventLobby`, {
         method: "POST",
@@ -12397,8 +13123,10 @@ export const showInEventLobby =
         })
       );
 
+      dispatch(hideLoader());
       dispatch(showSnackbar("success", "This session is now visible in Lobby"));
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar(
@@ -12411,6 +13139,7 @@ export const showInEventLobby =
 
 export const hideFromEventLobby =
   (formValues, eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}events/${eventId}/hideFromEventLobby`,
@@ -12444,7 +13173,9 @@ export const hideFromEventLobby =
       dispatch(
         showSnackbar("success", "This session is now hidden from Lobby")
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to hide from lobby, Please try again.")
@@ -12552,6 +13283,7 @@ export const resetEventBannerUploadPercent =
 
 export const followCommunity =
   (userId, communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       // Here we will get updated user
 
@@ -12592,8 +13324,10 @@ export const followCommunity =
         })
       );
 
+      dispatch(hideLoader());
       dispatch(showSnackbar("success", "Started following this community."));
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to follow community, Please try again.")
@@ -12603,6 +13337,7 @@ export const followCommunity =
 
 export const unfollowCommunity =
   (userId, communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}community/${communityId}/unfollowCommunity`,
@@ -12641,8 +13376,10 @@ export const unfollowCommunity =
         })
       );
 
+      dispatch(hideLoader());
       dispatch(showSnackbar("success", "Unfollowed this community."));
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to unfollow community, Please try again.")
@@ -12652,6 +13389,7 @@ export const unfollowCommunity =
 
 export const fetchCommunityFollowers =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}community/${communityId}/getCommunityFollowers`,
@@ -12677,14 +13415,17 @@ export const fetchCommunityFollowers =
           followers: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
+      dispatch(hideLoader());
       dispatch(showSnackbar("Failed to fetch followers, Please try again"));
     }
   };
 
 export const fetchCommunityProfile =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}community/${communityId}/getCommunityProfile`,
@@ -12710,16 +13451,19 @@ export const fetchCommunityProfile =
           community: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to fetch community, Please try again.")
       );
+      dispatch(hideLoader());
     }
   };
 
 export const fetchCommunityEvents =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}community/${communityId}/getEvents`, {
         method: "GET",
@@ -12742,7 +13486,9 @@ export const fetchCommunityEvents =
           events: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to fetch events, Please try again.")
@@ -12752,6 +13498,7 @@ export const fetchCommunityEvents =
 
 export const fetchCommunityReviews =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}community/${communityId}/getReviews`, {
         method: "GET",
@@ -12774,6 +13521,7 @@ export const fetchCommunityReviews =
           reviews: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
       dispatch(
@@ -12782,6 +13530,7 @@ export const fetchCommunityReviews =
           "Failed to fetch community Reviews, Please try again."
         )
       );
+      dispatch(hideLoader());
     }
   };
 
@@ -12853,6 +13602,7 @@ export const verifyPaypalEmail = (id) => async (dispatch, getState) => {
 
 export const fetchPaypalPayouts =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       // Just go ahead and fetch payouts
       const res = await fetch(`${BaseURL}fetchPaypalPayouts/${communityId}`, {
@@ -12879,7 +13629,9 @@ export const fetchPaypalPayouts =
           payouts: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to fetch payouts, Please try again.")
@@ -12889,6 +13641,7 @@ export const fetchPaypalPayouts =
 
 export const createPayPalPayoutrequest =
   (communityId, email, amount) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       // Just go ahead and create new PayPal Payout request
 
@@ -12931,6 +13684,7 @@ export const createPayPalPayoutrequest =
           "Please keep an eye on your email for confirmation."
         )
       );
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
       dispatch(
@@ -12939,11 +13693,13 @@ export const createPayPalPayoutrequest =
           "Failed to create payout request, Please try again."
         )
       );
+      dispatch(hideLoader());
     }
   };
 
 export const editPaypalPayoutEmail =
   (communityId, email, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       // Create a request to change paypal email
 
@@ -12983,16 +13739,19 @@ export const editPaypalPayoutEmail =
       dispatch(
         showSnackbar("success", "Please check provided email for verification.")
       );
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to update email, Please try again.")
       );
+      dispatch(hideLoader());
     }
   };
 
 export const resendPayPalPayoutEmailVerificationLink =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       // Resend mail for paypal payout
       const res = await fetch(
@@ -13015,8 +13774,10 @@ export const resendPayPalPayoutEmailVerificationLink =
       }
       await res.json();
 
+      dispatch(hideLoader());
       dispatch(showSnackbar("success", "Email sent successfully!"));
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to send Email, Please try again.")
@@ -13025,6 +13786,7 @@ export const resendPayPalPayoutEmailVerificationLink =
   };
 
 export const duplicateEvent = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}duplicateEvent/${eventId}`, {
       method: "GET",
@@ -13051,8 +13813,10 @@ export const duplicateEvent = (eventId) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "Event duplicated successfully!"));
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to duplicate event, Please try again.")
@@ -13062,6 +13826,7 @@ export const duplicateEvent = (eventId) => async (dispatch, getState) => {
 
 export const fetchArchivedEvents =
   (communityId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}getArchivedEvents/${communityId}`, {
         method: "GET",
@@ -13085,7 +13850,9 @@ export const fetchArchivedEvents =
           events: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to fetch archive list, Please try again.")
@@ -13094,6 +13861,7 @@ export const fetchArchivedEvents =
   };
 
 export const fetchShowcaseEvents = () => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}getShowcaseEvents`, {
       method: "GET",
@@ -13116,7 +13884,9 @@ export const fetchShowcaseEvents = () => async (dispatch, getState) => {
         events: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Cannot get Demo events, Please try again.")
@@ -13125,6 +13895,7 @@ export const fetchShowcaseEvents = () => async (dispatch, getState) => {
 };
 
 export const fetchRegistrations = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}fetchRegistrations/${eventId}`, {
       method: "GET",
@@ -13150,13 +13921,16 @@ export const fetchRegistrations = (eventId) => async (dispatch, getState) => {
         registrations: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("error", "Failed to fetch registrations"));
   }
 };
 
 export const addTrack = (formValues, eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}track/createTrack/${eventId}`, {
       method: "POST",
@@ -13187,14 +13961,17 @@ export const addTrack = (formValues, eventId) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "Track Created successfully!"));
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("error", "Failed to add track, Please try again."));
   }
 };
 export const updateTrack =
   (formValues, trackId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}track/updateTrack/${trackId}`, {
         method: "PATCH",
@@ -13225,8 +14002,10 @@ export const updateTrack =
         })
       );
 
+      dispatch(hideLoader());
       dispatch(showSnackbar("success", "Track Updated successfully!"));
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to update track, Please try again.")
@@ -13234,6 +14013,7 @@ export const updateTrack =
     }
   };
 export const deleteTrack = (trackId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}track/deleteTrack/${trackId}`, {
       method: "DELETE",
@@ -13260,8 +14040,10 @@ export const deleteTrack = (trackId) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "Track Deleted successfully!"));
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to delete track, Please try again.")
@@ -13269,6 +14051,7 @@ export const deleteTrack = (trackId) => async (dispatch, getState) => {
   }
 };
 export const fetchTracks = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}track/fetchTracks/${eventId}`, {
       method: "GET",
@@ -13294,7 +14077,9 @@ export const fetchTracks = (eventId) => async (dispatch, getState) => {
         tracks: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to fetch tracks, Please try again.")
@@ -13302,6 +14087,7 @@ export const fetchTracks = (eventId) => async (dispatch, getState) => {
   }
 };
 export const fetchTrack = (trackId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}track/fetchTrack/${trackId}`, {
       method: "GET",
@@ -13327,7 +14113,9 @@ export const fetchTrack = (trackId) => async (dispatch, getState) => {
         track: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("error", "Failed to fetch track, Please try again."));
   }
@@ -13335,6 +14123,7 @@ export const fetchTrack = (trackId) => async (dispatch, getState) => {
 
 export const createEventReview =
   (formValues, eventId, userId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}review/createReview/${eventId}/${userId}`,
@@ -13372,7 +14161,9 @@ export const createEventReview =
 
       toggleRatingWindow(false);
       dispatch(showSnackbar("success", "Review submitted successfully!"));
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to create review, Please try again.")
@@ -13382,6 +14173,7 @@ export const createEventReview =
 
 export const createRecording =
   (formValues, sessionId, url) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}recording/createRecording/${sessionId}/${url}`,
@@ -13415,7 +14207,9 @@ export const createRecording =
           recording: res.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to create recording, Please try again")
@@ -13424,6 +14218,7 @@ export const createRecording =
   };
 
 export const fetchEventReviews = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}review/fetchReviews/${eventId}`, {
       method: "GET",
@@ -13449,7 +14244,9 @@ export const fetchEventReviews = (eventId) => async (dispatch, getState) => {
         reviews: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to fetch reviews, Please try again")
@@ -13458,6 +14255,7 @@ export const fetchEventReviews = (eventId) => async (dispatch, getState) => {
 };
 
 export const fetchRecordings = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}recording/fetchRecordings/${eventId}`, {
       method: "GET",
@@ -13483,7 +14281,9 @@ export const fetchRecordings = (eventId) => async (dispatch, getState) => {
         recordings: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to fetch recordings, Please try again")
@@ -13492,6 +14292,7 @@ export const fetchRecordings = (eventId) => async (dispatch, getState) => {
 };
 
 export const reportEvent = (eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}reportEvent/${eventId}`, {
       method: "POST",
@@ -13518,7 +14319,9 @@ export const reportEvent = (eventId) => async (dispatch, getState) => {
         "This event has been reported and we are reviewing it."
       )
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to report event, Please try again.")
@@ -13528,6 +14331,7 @@ export const reportEvent = (eventId) => async (dispatch, getState) => {
 
 export const registerFreeTicket =
   (formValues) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(`${BaseURL}razorpay/registerFreeTicket`, {
         method: "POST",
@@ -13561,9 +14365,11 @@ export const registerFreeTicket =
         )
       );
 
+      dispatch(hideLoader());
       window.location.href = `/user/home`;
     } catch (error) {
       console.log(error);
+      dispatch(hideLoader());
       dispatch(showSnackbar("error", "failed to register, Please try again."));
     }
   };
@@ -13577,6 +14383,7 @@ export const SetCurrentBoothId = (boothId) => async (dispatch, getState) => {
 };
 
 export const fetchEventBooth = (boothId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     let res = await fetch(`${BaseURL}fetchEventBooth/${boothId}`, {
       method: "GET",
@@ -13602,7 +14409,9 @@ export const fetchEventBooth = (boothId) => async (dispatch, getState) => {
         booth: res.data,
       })
     );
+    dispatch(hideLoader());
   } catch (err) {
+    dispatch(hideLoader());
     dispatch(boothActions.hasError(err.message));
     console.log(err);
 
@@ -13877,6 +14686,7 @@ export const resetBoothVideoProgress = () => async (dispatch, getState) => {
 
 export const getBoothVideos =
   (boothId, eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}booths/getBoothVideos/${boothId}/${eventId}`,
@@ -13897,7 +14707,9 @@ export const getBoothVideos =
           videos: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to fetch videos, Please try again!")
@@ -13906,6 +14718,7 @@ export const getBoothVideos =
   };
 
 export const deleteBoothVideo = (videoId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}booths/deleteBoothVideo/${videoId}`, {
       method: "DELETE",
@@ -13924,8 +14737,10 @@ export const deleteBoothVideo = (videoId) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "Video deleted successfully!"));
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to delete video, Please try again.")
@@ -13936,6 +14751,7 @@ export const deleteBoothVideo = (videoId) => async (dispatch, getState) => {
 export const addBoothProduct =
   (formValues, file, eventId, boothId, handleClose) =>
   async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const key = `${eventId}/${boothId}/${UUID()}.${file.type}`;
 
@@ -13975,10 +14791,12 @@ export const addBoothProduct =
 
             dispatch(showSnackbar("success", "Product added successfully!"));
             handleClose();
+            dispatch(hideLoader());
           } catch (error) {
             console.log(error);
             dispatch(showSnackbar("Failed to add product, Please try again."));
             handleClose();
+            dispatch(hideLoader());
           }
         }
       );
@@ -13992,6 +14810,7 @@ export const addBoothProduct =
 export const editProduct =
   (formValues, file, boothId, eventId, productId, handleClose) =>
   async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       if (file) {
         const key = `${eventId}/${boothId}/${UUID()}.${file.type}`;
@@ -14034,7 +14853,9 @@ export const editProduct =
                 showSnackbar("success", "Product updated successfully!")
               );
               handleClose();
+              dispatch(hideLoader());
             } catch (error) {
+              dispatch(hideLoader());
               console.log(error);
               dispatch(
                 showSnackbar("Failed to update product, Please try again.")
@@ -14043,6 +14864,7 @@ export const editProduct =
             }
           }
         );
+        dispatch(hideLoader());
       } else {
         try {
           const res = await fetch(`${BaseURL}booths/editProduct/${productId}`, {
@@ -14066,15 +14888,19 @@ export const editProduct =
             })
           );
 
+          dispatch(hideLoader());
           dispatch(showSnackbar("success", "Product updated successfully!"));
           handleClose();
         } catch (error) {
+          dispatch(hideLoader());
           console.log(error);
           dispatch(showSnackbar("Failed to update product, Please try again."));
           handleClose();
         }
+        dispatch(hideLoader());
       }
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(showSnackbar("Failed to update product, Please try again."));
       handleClose();
@@ -14082,6 +14908,7 @@ export const editProduct =
   };
 
 export const deleteProduct = (productId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}booths/deleteProduct/${productId}`, {
       method: "DELETE",
@@ -14101,13 +14928,16 @@ export const deleteProduct = (productId) => async (dispatch, getState) => {
     );
 
     dispatch(showSnackbar("Product deleted successfully!"));
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("Failed to delete product, Please try again."));
   }
 };
 
 export const fetchBoothProduct = (productId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}booths/getProductDetails/${productId}`, {
       method: "GET",
@@ -14125,7 +14955,9 @@ export const fetchBoothProduct = (productId) => async (dispatch, getState) => {
         product: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("Failed to fetch product, Please try again."));
   }
@@ -14133,6 +14965,7 @@ export const fetchBoothProduct = (productId) => async (dispatch, getState) => {
 
 export const fetchBoothProducts =
   (boothId, eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}booths/getBoothProducts/${boothId}/${eventId}`,
@@ -14153,7 +14986,9 @@ export const fetchBoothProducts =
           products: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to fetch products, Please try again")
@@ -14164,6 +14999,7 @@ export const fetchBoothProducts =
 export const addFile =
   (formValues, file, boothId, eventId, handleClose) =>
   async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const key = `${eventId}/${boothId}/${UUID()}.${file.type}`;
 
@@ -14206,7 +15042,9 @@ export const addFile =
             dispatch(showSnackbar("success", "File added successfully!"));
 
             handleClose();
+            dispatch(hideLoader());
           } catch (error) {
+            dispatch(hideLoader());
             console.log(error);
             dispatch(showSnackbar("Failed to add product, Please try again."));
             handleClose();
@@ -14214,12 +15052,14 @@ export const addFile =
         }
       );
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(showSnackbar("Failed to add product, Please try again."));
     }
   };
 
 export const deleteFile = (fileId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}booths/deleteFile/${fileId}`, {
       method: "DELETE",
@@ -14238,8 +15078,10 @@ export const deleteFile = (fileId) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "File deleted successfully!"));
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("error", "Failed to delete File, Please try again."));
   }
@@ -14247,6 +15089,7 @@ export const deleteFile = (fileId) => async (dispatch, getState) => {
 
 export const fetchBoothFiles =
   (boothId, eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}booths/getFiles/${boothId}/${eventId}`,
@@ -14267,7 +15110,9 @@ export const fetchBoothFiles =
           files: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to fetch files, Please try again.")
@@ -14277,6 +15122,7 @@ export const fetchBoothFiles =
 
 export const addLink =
   (formValues, boothId, eventId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}booths/addNewLink/${boothId}/${eventId}`,
@@ -14304,8 +15150,10 @@ export const addLink =
         })
       );
 
+      dispatch(hideLoader());
       handleClose();
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(showSnackbar("Failed to add Link, Please try again."));
       handleClose();
@@ -14314,6 +15162,7 @@ export const addLink =
 
 export const editLink =
   (formValues, linkId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}booths/editLink/${linkId}`, {
         method: "PATCH",
@@ -14337,7 +15186,9 @@ export const editLink =
       );
 
       handleClose();
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(showSnackbar("Failed to edit Link, Please try again."));
       handleClose();
@@ -14345,6 +15196,7 @@ export const editLink =
   };
 
 export const deleteLink = (linkId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}booths/deleteLink/${linkId}`, {
       method: "DELETE",
@@ -14364,13 +15216,16 @@ export const deleteLink = (linkId) => async (dispatch, getState) => {
     );
 
     dispatch(showSnackbar("success", "Link deleted successfully!"));
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("Failed to delete Link, Please try again."));
   }
 };
 
 export const fetchLink = (linkId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}booths/getLinkDetails/${linkId}`, {
       method: "GET",
@@ -14388,13 +15243,16 @@ export const fetchLink = (linkId) => async (dispatch, getState) => {
         link: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("error", "Faild to fetch link, Please try again."));
   }
 };
 
 export const fetchLinks = (boothId, eventId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}booths/getLinks/${boothId}/${eventId}`, {
       method: "GET",
@@ -14412,7 +15270,9 @@ export const fetchLinks = (boothId, eventId) => async (dispatch, getState) => {
         links: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("error", "Faild to fetch links, Please try again."));
   }
@@ -14420,6 +15280,7 @@ export const fetchLinks = (boothId, eventId) => async (dispatch, getState) => {
 
 export const addPromoCode =
   (formValues, boothId, eventId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}booths/createPromoCode/${boothId}/${eventId}`,
@@ -14449,7 +15310,9 @@ export const addPromoCode =
 
       dispatch(showSnackbar("success", "Promo code added successfully!"));
       handleClose();
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to add Promo Code, Please try again.")
@@ -14458,6 +15321,7 @@ export const addPromoCode =
   };
 export const editPromoCode =
   (formValues, promoCodeId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}booths/editPromoCode/${promoCodeId}`, {
         method: "PATCH",
@@ -14482,7 +15346,9 @@ export const editPromoCode =
 
       dispatch(showSnackbar("success", "Promo code updated successfully!"));
       handleClose();
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to edit Promo Code, Please try again.")
@@ -14491,6 +15357,7 @@ export const editPromoCode =
     }
   };
 export const deletePromoCode = (promoCodeId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}booths/deletePromoCode/${promoCodeId}`, {
       method: "DELETE",
@@ -14508,9 +15375,11 @@ export const deletePromoCode = (promoCodeId) => async (dispatch, getState) => {
         offerId: promoCodeId,
       })
     );
+    dispatch(hideLoader());
 
     dispatch(showSnackbar("success", "Promo code deleted successfully!"));
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to delete Promo Code, Please try again.")
@@ -14519,6 +15388,7 @@ export const deletePromoCode = (promoCodeId) => async (dispatch, getState) => {
 };
 
 export const fetchPromoCode = (promoCodeId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(
       `${BaseURL}booths/getPromoCodeDetails/${promoCodeId}`,
@@ -14539,8 +15409,10 @@ export const fetchPromoCode = (promoCodeId) => async (dispatch, getState) => {
         offer: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
     console.log(error);
+    dispatch(hideLoader());
     dispatch(
       showSnackbar("error", "Failed to fetch Promo code, Please try again.")
     );
@@ -14549,6 +15421,7 @@ export const fetchPromoCode = (promoCodeId) => async (dispatch, getState) => {
 
 export const fetchPromoCodes =
   (boothId, eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}booths/getPromoCodes/${boothId}/${eventId}`,
@@ -14569,7 +15442,9 @@ export const fetchPromoCodes =
           offers: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to fetch promo codes, Please try again.")
@@ -14592,6 +15467,7 @@ export const sendBusinessCardsViaMail = () => async (dispatch, getState) => {
 
 export const shareBusinessCard =
   (userId, eventId, boothId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}booths/shareBusinessCard/${userId}/${eventId}/${boothId}/`,
@@ -14607,8 +15483,11 @@ export const shareBusinessCard =
 
       await res.json();
 
+      dispatch(hideLoader());
+
       dispatch(showSnackbar("success", "Business card shared successfully!"));
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar(
@@ -14621,6 +15500,7 @@ export const shareBusinessCard =
 
 export const fetchBusinessCards =
   (boothId, eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}booths/getBusinessCards/${boothId}/${eventId}`,
@@ -14641,7 +15521,9 @@ export const fetchBusinessCards =
           cards: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar(
@@ -14654,6 +15536,7 @@ export const fetchBusinessCards =
 
 export const addForm =
   (formValues, boothId, eventId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}booths/createForm/${boothId}/${eventId}`,
@@ -14683,14 +15566,17 @@ export const addForm =
 
       dispatch(showSnackbar("success", "Form added successfully!"));
       handleClose();
+      dispatch(hideLoader());
     } catch (error) {
       console.log(error);
+      dispatch(hideLoader());
       dispatch(showSnackbar("Failed to add form, Please try again."));
     }
   };
 
 export const editForm =
   (formValues, formDocId, handleClose) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}booths/editForm/${formDocId}`, {
         method: "PATCH",
@@ -14713,15 +15599,18 @@ export const editForm =
         })
       );
 
+      dispatch(hideLoader());
       dispatch(showSnackbar("success", "Form updated successfully!"));
       handleClose();
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(showSnackbar("Failed to edit form, Please try again."));
     }
   };
 
 export const deleteForm = (formDocId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}booths/deleteForm/${formDocId}`, {
       method: "DELETE",
@@ -14740,14 +15629,17 @@ export const deleteForm = (formDocId) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "Form deleted successfully!"));
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("Failed to delete form, Please try again."));
   }
 };
 
 export const fetchBoothForm = (formDocId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}booths/getFormDetails/${formDocId}`, {
       method: "GET",
@@ -14765,7 +15657,9 @@ export const fetchBoothForm = (formDocId) => async (dispatch, getState) => {
         form: result.data,
       })
     );
+    dispatch(hideLoader());
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("error", "Failed to fetch form, Please try again"));
   }
@@ -14773,6 +15667,7 @@ export const fetchBoothForm = (formDocId) => async (dispatch, getState) => {
 
 export const fetchBoothForms =
   (boothId, eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(
         `${BaseURL}booths/getForms/${boothId}/${eventId}`,
@@ -14793,7 +15688,9 @@ export const fetchBoothForms =
           forms: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to fetch forms, Please try again")
@@ -14852,6 +15749,7 @@ export const toggleRatingWindow = (openState) => async (dispatch, getState) => {
 };
 
 export const showEventReview = (reviewId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}showReview/${reviewId}`, {
       method: "POST",
@@ -14870,8 +15768,10 @@ export const showEventReview = (reviewId) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
     dispatch(showSnackbar("success", "This review is now publicly visible"));
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(
       showSnackbar(
@@ -14883,6 +15783,7 @@ export const showEventReview = (reviewId) => async (dispatch, getState) => {
 };
 
 export const hideEventReview = (reviewId) => async (dispatch, getState) => {
+  dispatch(showLoader());
   try {
     const res = await fetch(`${BaseURL}hideReview/${reviewId}`, {
       method: "POST",
@@ -14901,8 +15802,11 @@ export const hideEventReview = (reviewId) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(hideLoader());
+
     dispatch(showSnackbar("success", "This review is now hidden"));
   } catch (error) {
+    dispatch(hideLoader());
     console.log(error);
     dispatch(showSnackbar("error", "Failed to hide review, Please try again."));
   }
@@ -14910,6 +15814,7 @@ export const hideEventReview = (reviewId) => async (dispatch, getState) => {
 
 export const fetchPeopleOnBoothTable =
   (tableId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}getPeopleOnBoothTable/${tableId}`, {
         method: "GET",
@@ -14927,7 +15832,9 @@ export const fetchPeopleOnBoothTable =
           people: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to fetch people, Please try again")
@@ -14937,6 +15844,7 @@ export const fetchPeopleOnBoothTable =
 
 export const fetchPeopleOnLoungeTable =
   (tableId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       const res = await fetch(`${BaseURL}getPeopleOnLoungeTable/${tableId}`, {
         method: "GET",
@@ -14954,7 +15862,9 @@ export const fetchPeopleOnLoungeTable =
           people: result.data,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(
         showSnackbar("error", "Falied to fetch people, Please try again")
@@ -14964,6 +15874,7 @@ export const fetchPeopleOnLoungeTable =
 
 export const fetchSessionSpeakersTagsTracks =
   (eventId) => async (dispatch, getState) => {
+    dispatch(showLoader());
     try {
       let res = await fetch(
         `${BaseURL}getSessionSpeakersTagsTracks/${eventId}`,
@@ -14996,7 +15907,9 @@ export const fetchSessionSpeakersTagsTracks =
           speakers: res.speakers,
         })
       );
+      dispatch(hideLoader());
     } catch (error) {
+      dispatch(hideLoader());
       console.log(error);
       dispatch(showSnackbar("error", "Failed to fetch filters"));
     }

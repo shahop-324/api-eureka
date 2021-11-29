@@ -1291,7 +1291,9 @@ const EventLandingPage = (props) => {
                     className="event-info-card-1-primary px-4 py-2"
                     style={{
                       zIndex: "10000",
-                      backgroundColor: α(event.landingPageColor, 0.2),
+                      backgroundColor: event.landingPageColor
+                        ? α(event.landingPageColor, 0.2)
+                        : "#538BF7",
                     }}
                   >
                     <MonthOfEvent className="mb-3">{startMonth}</MonthOfEvent>

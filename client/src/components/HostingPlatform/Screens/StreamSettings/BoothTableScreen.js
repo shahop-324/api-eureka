@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Select from "react-select";
 import AgoraRTC from "agora-rtc-sdk-ng";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { showNotification } from "../../../../actions";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -69,13 +69,13 @@ const ButtonFilledDark = styled.div`
   font-size: 0.8rem;
   color: #ffffff;
   font-family: "Ubuntu";
-  background-color: #152d35;
+  background-color: ${(props) => props && props.color ? props.color: "#152d35" };;
 
-  border: 1px solid #152d35;
+  border: 1px solid ${(props) => props && props.color ? props.color: "#152d35" };;
   border-radius: 5px;
 
   &:hover {
-    color: #152d35;
+    color: ${(props) => props && props.color ? props.color: "#152d35" };;
     background-color: transparent;
     cursor: pointer;
   }
@@ -110,6 +110,8 @@ const BoothTableStreamSettings = ({ open, handleClose, rtc }) => {
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const {eventDetails} = useSelector((state) => state.event);
 
   const [audioDevices, setAudioDevices] = useState([]);
 
@@ -230,6 +232,7 @@ const BoothTableStreamSettings = ({ open, handleClose, rtc }) => {
           </div>
           <div className="d-flex flex-row align-items-center justify-content-end">
             <ButtonFilledDark
+            color={eventDetails.color}
               onClick={() => {
                 handleApplyStreamSettings();
               }}

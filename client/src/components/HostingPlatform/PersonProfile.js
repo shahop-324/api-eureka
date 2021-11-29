@@ -97,14 +97,16 @@ const ButtonOutlinedDark = styled.div`
   color: #ffffff;
   font-family: "Ubuntu";
 
-  color: ${(props) => α(props.color, 1.5)};
+  color: ${(props) => (props && props.color ? α(props.color, 1.5) : "#152d35")};
   background-color: transparent;
 
-  border: 1px solid ${(props) => α(props.color, 1.5)};
+  border: 1px solid
+    ${(props) => (props && props.color ? α(props.color, 1.5) : "#152d35")};
   border-radius: 5px;
 
   &:hover {
-    background-color: ${(props) => α(props.color, 1.5)};
+    background-color: ${(props) =>
+      props && props.color ? α(props.color, 1.5) : "#152d35"};
 
     color: #ffffff;
 
@@ -323,7 +325,7 @@ const PersonProfile = ({ hideBtns, open, handleClose, person }) => {
             <div className="d-flex flex-row align-items-center justify-content-between mt-4">
               {isMe ? (
                 <ButtonOutlinedDark
-                color={eventDetails.color}
+                  color={eventDetails.color}
                   onClick={() => {
                     setOpenUpdateProfile(true);
                     handleClose();

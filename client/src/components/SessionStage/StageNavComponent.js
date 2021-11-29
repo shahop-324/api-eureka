@@ -17,13 +17,22 @@ import {
 } from "./Elements";
 
 import { useSelector } from "react-redux";
+import α from "color-alpha";
 
 const BtnOutlined = styled.div`
   padding: 5px 8px;
-  background-color: transparent;
-  border: 1px solid #345b63;
 
-  color: #dcc7be;
+  border: 1px solid
+    ${(props) =>
+      props && props.color
+        ? `1px solid ${α(props.color, 0.5)}`
+        : "1px solid #1f545e"};
+
+  background-color: ${(props) =>
+    props && props.color ? α(props.color, 0.5) : "#1f545e"};
+
+  color: #ffffff;
+
   font-family: "Ubuntu";
   font-weight: 500;
   font-size: 0.8rem;
@@ -36,7 +45,7 @@ const BtnOutlined = styled.div`
 
   &:hover {
     cursor: pointer;
-    background-color: #1f545e;
+    background-color: transparent;
     color: #ffffff;
   }
 `;
@@ -150,6 +159,7 @@ const StageNavComponent = ({ runningStatus, canPublishStream }) => {
                 case "In Progress":
                   return (
                     <BtnOutlined
+                      color={eventDetails.color}
                       onClick={() => {
                         setOpenConfirmEnd(true);
                       }}
@@ -157,7 +167,7 @@ const StageNavComponent = ({ runningStatus, canPublishStream }) => {
                     >
                       <CircleRoundedIcon
                         className="me-2"
-                        style={{ fontSize: "20px" }}
+                        style={{ fontSize: "20px", color: "red" }}
                       />
                       End Session
                     </BtnOutlined>

@@ -26,12 +26,12 @@ const SideNavLean = ({
   return (
     <>
       <div
-        className="lean-side-nav lean-nav-wrapper px-3 pb-4"
+        className="lean-side-nav px-3 pb-4"
         style={{
           backgroundColor: "#ffffff",
-          height: "93vh !important",
+          height: "95vh !important",
           minWidth: "90px",
-
+          overflow: "auto",
           opacity: "1",
         }}
       >
@@ -245,7 +245,7 @@ const SideNavLean = ({
             </div>
           </div> */}
           <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-5 pb-5"
             onClick={() => {
               handleBillingClick();
             }}

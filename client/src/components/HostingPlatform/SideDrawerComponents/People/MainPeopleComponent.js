@@ -291,7 +291,10 @@ const MainPeopleComponent = (props) => {
 
         {/* here comes people component */}
 
-        <div className="people-container pt-2 px-2">
+        <div
+          className="people-container pt-2 px-2"
+          style={{ height: "auto", minHeight: "75vh" }}
+        >
           <div className="search-box-and-view-switch-container d-flex flex-row justify-content-between mb-3">
             <div className="ui icon input me-3" style={{ width: "100%" }}>
               <input

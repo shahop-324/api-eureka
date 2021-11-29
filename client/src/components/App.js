@@ -838,7 +838,20 @@ class App extends React.Component {
 
         <RequestDemo />
 
-        <OverlayLoader />
+        {this.props.showLoader && (
+          <div
+            style={{
+              position: "absolute",
+              top: "0",
+              left: "0",
+              zIndex: "100000",
+            }}
+          >
+            <OverlayLoader />
+          </div>
+        )}
+
+        {this.props.showLoader && <OverlayLoader />}
 
         {this.props && this.props.message && this.props.open ? (
           <Snackbar
@@ -877,6 +890,7 @@ const mapStateToProps = (state, props) => ({
   signinForBuyingPlanIntent: state.auth.signinForBuyingPlanIntent,
   signinForEventRegistrationEventId:
     state.auth.signinForEventRegistrationEventId,
+  showLoader: state.navigation.showLoader,
 });
 
 export default connect(mapStateToProps, {

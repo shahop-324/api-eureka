@@ -181,7 +181,7 @@ const ModerationPeopleList = () => {
 
   return (
     <>
-      <div className="people-container pt-2 px-2" style={{ height: "75vh" }}>
+      <div className="people-container pt-2 px-2" style={{ height: "auto", minHeight: "75vh" }}>
         <div className="ui icon input mb-3" style={{ width: "100%" }}>
           <input
             type="text"

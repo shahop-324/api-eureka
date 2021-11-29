@@ -97,6 +97,8 @@ const DeleteMsg = ({
 
   const { networkingRoom } = useSelector((state) => state.networking);
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   const deleteMsg = (msgId) => {
     socket.emit(
       "deleteNetworkingMessage",
@@ -165,7 +167,13 @@ const DeleteMsg = ({
                 deleteMsg(msgId);
               }}
               className="btn btn-primary btn-outline-text"
-              style={{ width: "100%" }}
+              style={{
+                backgroundColor: eventDetails ? eventDetails.color : "#152d35",
+                border: eventDetails
+                  ? `1px solid ${eventDetails.color}`
+                  : `1px solid #152d35`,
+                width: "100%",
+              }}
             >
               Delete
             </button>

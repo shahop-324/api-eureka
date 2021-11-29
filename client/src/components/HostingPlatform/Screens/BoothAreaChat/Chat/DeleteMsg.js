@@ -93,6 +93,8 @@ const DeleteMsg = ({
 
   const { currentBoothId } = useSelector((state) => state.booth);
 
+  const {eventDetails} = useSelector((state) => state.event);
+
   const deleteMsg = (msgId) => {
     socket.emit(
       "deleteBoothMessage", // * DONE Change this to delete Booth Mesage
@@ -155,11 +157,18 @@ const DeleteMsg = ({
             style={{ border: "none" }}
           >
             <button
+            style={{
+              backgroundColor: eventDetails ? eventDetails.color : "#152d35",
+              border: eventDetails
+                ? `1px solid ${eventDetails.color}`
+                : `1px solid #152d35`,
+              width: "100%",
+            }}
               onClick={() => {
                 deleteMsg(msgId);
               }}
               className="btn btn-primary btn-outline-text"
-              style={{ width: "100%" }}
+             
             >
               Delete
             </button>

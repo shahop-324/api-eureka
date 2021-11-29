@@ -213,7 +213,7 @@ exports.generateTokenForVideoCall = catchAsync(async (req, res, next) => {
   const channel = req.body.tableId;
   const userId = req.user._id;
 
-  const appID = "4f274729f9ab45139e509eb6efba14cc";
+  const appID = "afe1eaa28f57452a865fa81190eed1c2";
   const appCertificate = "f6e4b7f46711411c85bf1e303801f89a";
   const channelName = channel;
   const uid = userId;
@@ -249,8 +249,8 @@ exports.generateRTMToken = catchAsync(async (req, res, next) => {
 
   const userId = req.user._id;
 
-  const appID = "6877e158655f4810968b19e65d0bbb23";
-  const appCertificate = "8a33b9e912794ab4a78ddd5aafbc590a";
+  const appID = "afe1eaa28f57452a865fa81190eed1c2";
+  const appCertificate = "b4b72a553f324888b790e16ad6da0f87";
 
   const account = userId.toString();
 
@@ -278,8 +278,8 @@ exports.generateRTMTokenForSpeaker = catchAsync(async (req, res, next) => {
 
   const speakerId = req.body.speakerId;
 
-  const appID = "6877e158655f4810968b19e65d0bbb23";
-  const appCertificate = "8a33b9e912794ab4a78ddd5aafbc590a";
+  const appID = "afe1eaa28f57452a865fa81190eed1c2";
+  const appCertificate = "b4b72a553f324888b790e16ad6da0f87";
 
   const account = speakerId.toString();
 
@@ -307,8 +307,8 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const isPublisher = req.body.role === "host" ? true : false;
 
-  const appID = "915628d494484dac856cba48faa55ccb";
-  const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
+  const appID = "afe1eaa28f57452a865fa81190eed1c2";
+  const appCertificate = "b4b72a553f324888b790e16ad6da0f87";
   const channelName = channel;
   const uid = userId;
   const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
@@ -351,8 +351,8 @@ exports.getLiveStageToken = catchAsync(async (req, res, next) => {
     const channel = `${req.body.sessionId}-live`;
     const userId = req.user._id;
 
-    const appID = "915628d494484dac856cba48faa55ccb";
-    const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
+    const appID = "afe1eaa28f57452a865fa81190eed1c2";
+    const appCertificate = "b4b72a553f324888b790e16ad6da0f87";
     const channelName = channel;
     const uid = userId;
     const role = RtcRole.PUBLISHER;
@@ -399,8 +399,8 @@ exports.getBackstageToken = catchAsync(async (req, res, next) => {
     const channel = `${req.body.sessionId}-back`;
     const userId = req.user._id;
 
-    const appID = "915628d494484dac856cba48faa55ccb";
-    const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
+    const appID = "afe1eaa28f57452a865fa81190eed1c2";
+    const appCertificate = "b4b72a553f324888b790e16ad6da0f87";
     const channelName = channel;
     const uid = userId;
     const role = RtcRole.PUBLISHER;
@@ -448,8 +448,8 @@ exports.generateLiveStreamingTokenForJoiningTable = catchAsync(
     const userId = req.body.userId;
     const isPublisher = true;
 
-    const appID = "915628d494484dac856cba48faa55ccb";
-    const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
+    const appID = "afe1eaa28f57452a865fa81190eed1c2";
+    const appCertificate = "b4b72a553f324888b790e16ad6da0f87";
     const channelName = tableId;
     const uid = userId;
     const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
@@ -484,8 +484,8 @@ exports.getTokenForBoothTable = catchAsync(async (req, res, next) => {
   const userId = req.body.userId;
   const isPublisher = true;
 
-  const appID = "915628d494484dac856cba48faa55ccb";
-  const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
+  const appID = "afe1eaa28f57452a865fa81190eed1c2";
+  const appCertificate = "b4b72a553f324888b790e16ad6da0f87";
   const channelName = tableId;
   const uid = userId;
   const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
@@ -522,8 +522,8 @@ exports.getLiveStreamingTokenForNetworking = catchAsync(
 
       console.log(roomId, userId, "Room Id", "User Id");
 
-      const appID = "915628d494484dac856cba48faa55ccb";
-      const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
+      const appID = "afe1eaa28f57452a865fa81190eed1c2";
+      const appCertificate = "b4b72a553f324888b790e16ad6da0f87";
 
       const channelName = roomId;
       const uid = userId;
@@ -565,8 +565,8 @@ exports.generateTokenForLiveStreamingForNonUser = catchAsync(
     const userId = req.body.userId;
     const isPublisher = req.body.role === "host" ? true : false;
 
-    const appID = "915628d494484dac856cba48faa55ccb";
-    const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
+    const appID = "afe1eaa28f57452a865fa81190eed1c2";
+    const appCertificate = "b4b72a553f324888b790e16ad6da0f87";
     const channelName = channel;
     const uid = userId;
     const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
@@ -602,8 +602,8 @@ exports.generateTokenForLiveStreamingForScreenShare = catchAsync(
     const channel = req.body.channel;
     const myUID = req.body.uid;
 
-    const appID = "915628d494484dac856cba48faa55ccb";
-    const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
+    const appID = "afe1eaa28f57452a865fa81190eed1c2";
+    const appCertificate = "b4b72a553f324888b790e16ad6da0f87";
     const channelName = channel;
     const uid = myUID;
     const role = RtcRole.PUBLISHER;
@@ -639,8 +639,8 @@ exports.generateTokenForBoothScreenShare = catchAsync(
     const channel = req.body.channel;
     const myUID = req.body.uid;
 
-    const appID = "915628d494484dac856cba48faa55ccb";
-    const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
+    const appID = "afe1eaa28f57452a865fa81190eed1c2";
+    const appCertificate = "b4b72a553f324888b790e16ad6da0f87";
     const channelName = channel;
     const uid = myUID;
     const role = RtcRole.PUBLISHER;
@@ -1089,8 +1089,8 @@ exports.getCommunityTransactions = catchAsync(async (req, res, next) => {
 exports.acquireRecordingResource = catchAsync(async (req, res, next) => {
   const channelName = req.params.channelName;
   const isPublisher = false;
-  const appID = "915628d494484dac856cba48faa55ccb";
-  const appCertificate = "80ef99da3c6642efb17adcbb29a663a9";
+  const appID = "afe1eaa28f57452a865fa81190eed1c2";
+  const appCertificate = "b4b72a553f324888b790e16ad6da0f87";
   const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
 
   const expirationTimeInSeconds = 3600;
@@ -1790,7 +1790,9 @@ exports.resendCommunityVerificationMail = catchAsync(async (req, res, next) => {
     from: "security@bluemeet.in", // Change to your verified sender
     subject: `Verify your community mail.`,
     text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`https://www.bluemeet.in/verifying-community/${communityAccountRequest._id}`}`,
-    html: VerifyCommunityEmail(`https://www.bluemeet.in/verifying-community/${communityAccountRequest._id}`),
+    html: VerifyCommunityEmail(
+      `https://www.bluemeet.in/verifying-community/${communityAccountRequest._id}`
+    ),
   };
 
   sgMail
@@ -1847,7 +1849,9 @@ exports.createUserAccountRequest = catchAsync(async (req, res, next) => {
       from: "security@bluemeet.in", // Change to your verified sender
       subject: `Verify your user account email.`,
       text: `Congratulations on joining Bluemeet platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://www.bluemeet.in/verifying-account/${newAccountDoc._id}`}`,
-      html: VerifyUserEmail(`http://www.bluemeet.in/verifying-account/${newAccountDoc._id}`),
+      html: VerifyUserEmail(
+        `http://www.bluemeet.in/verifying-account/${newAccountDoc._id}`
+      ),
     };
 
     sgMail
@@ -1882,7 +1886,9 @@ exports.resendUserVerificationEmail = catchAsync(async (req, res, next) => {
     from: "security@bluemeet.in", // Change to your verified sender
     subject: `Verify your account email.`,
     text: `Congratulations on joining Bluemeet platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://www.bluemeet.in/verifying-account/${userAccountRequest._id}`}`,
-    html: VerifyUserEmail(`http://www.bluemeet.in/verifying-account/${userAccountRequest._id}`),
+    html: VerifyUserEmail(
+      `http://www.bluemeet.in/verifying-account/${userAccountRequest._id}`
+    ),
   };
 
   sgMail
@@ -1936,7 +1942,9 @@ exports.changeCommunityAccountRequestEmail = catchAsync(
         from: "security@bluemeet.in", // Change to your verified sender
         subject: `Verify your community email.`,
         text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`http://www.bluemeet.in/verifying-community/${updatedCommunityAccountRequest._id}`}`,
-        html: VerifyCommunityEmail(`http://www.bluemeet.in/verifying-community/${updatedCommunityAccountRequest._id}`),
+        html: VerifyCommunityEmail(
+          `http://www.bluemeet.in/verifying-community/${updatedCommunityAccountRequest._id}`
+        ),
       };
 
       sgMail
@@ -2201,7 +2209,10 @@ exports.editPayPalPayoutEmail = catchAsync(async (req, res, next) => {
     text: `Hi, please click on the button below to verify this email for reciving Paypal Payouts for your Bluemeet Community ${
       updatedCommunity.name
     }. ${`https://www.bluemeet.in/verify-paypal-email/${paypalEmailUpdateRequest._id}`}`,
-    html: VerifyPayPalEmail(`https://www.bluemeet.in/verify-paypal-email/${paypalEmailUpdateRequest._id}`, updatedCommunity.name),
+    html: VerifyPayPalEmail(
+      `https://www.bluemeet.in/verify-paypal-email/${paypalEmailUpdateRequest._id}`,
+      updatedCommunity.name
+    ),
   };
 
   sgMail
@@ -2224,7 +2235,11 @@ exports.editPayPalPayoutEmail = catchAsync(async (req, res, next) => {
     from: "security@bluemeet.in", // Change to your verified sender
     subject: "Alert!, Bluemeet Paypal Payout email changed.",
     text: `Hi, This is to inform you that your Bluemeet community ${updatedCommunity.name} Paypal Payout email has been updated to ${email}. Please verify the same through mail sent on provided email or if not done by you, then report immediately at support@bluemeet.in`,
-    html: AlertPayoutEmailChanged(userDoc.firstName, updatedCommunity.name, email),
+    html: AlertPayoutEmailChanged(
+      userDoc.firstName,
+      updatedCommunity.name,
+      email
+    ),
   };
 
   sgMail

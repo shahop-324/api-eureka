@@ -127,6 +127,8 @@ const ReportMsg = ({
 
   const { userDetails } = useSelector((state) => state.user);
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   const userId = userDetails._id;
 
   return (
@@ -212,7 +214,13 @@ const ReportMsg = ({
                 handleClose();
               }}
               className="btn btn-primary btn-outline-text"
-              style={{ width: "100%" }}
+              style={{
+                backgroundColor: eventDetails ? eventDetails.color : "#152d35",
+                border: eventDetails
+                  ? `1px solid ${eventDetails.color}`
+                  : `1px solid #152d35`,
+                width: "100%",
+              }}
             >
               Report
             </button>

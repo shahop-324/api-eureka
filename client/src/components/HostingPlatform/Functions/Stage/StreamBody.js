@@ -76,6 +76,15 @@ const Text = styled.div`
   text-align: center;
 `;
 
+const BackdropCover = styled.div`
+  background-image: url(${(props) =>
+    `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${props.vibe}`});
+  background-position: center;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+`;
+
 const StreamBody = ({
   screenTracks,
   handleOpenSideDrawer,
@@ -229,7 +238,7 @@ const StreamBody = ({
 
   return (
     <>
-      <div>
+      <BackdropCover vibe={sessionDetails.vibe} className="">
         <a
           onClick={handleOpenSideDrawer}
           className=""
@@ -436,7 +445,7 @@ const StreamBody = ({
           // if can publish and session live than livestage
           // if can publish and session has ended then show ended screen
         }
-      </div>
+      </BackdropCover>
     </>
   );
 };

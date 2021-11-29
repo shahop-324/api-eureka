@@ -1,13 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { Avatar, Dialog, IconButton, makeStyles } from "@material-ui/core";
+import { Dialog } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
   getRTCTokenForNetworkingScreenShare,
   setNetworkingRoom,
-  setOpenAudioVideoSettings,
   fetchEventRegistrations,
   showSnackbar,
 } from "./../../../actions";
@@ -18,7 +17,6 @@ import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded";
 import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
-import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import StreamBody from "./../Screens/BoothTable/StreamBody";
 import MainChatComponent from "./Sub/NetworkingChat/MainChatComponent";
@@ -33,6 +31,23 @@ import CancelPresentationOutlinedIcon from "@mui/icons-material/CancelPresentati
 import NetworkingStreamSettings from "./../Screens/StreamSettings/NetworkingScreen";
 
 import α from "color-alpha";
+
+const StyledIconButton = styled.div`
+  display: inline-block;
+  background-color: #e9e9e9e7;
+  padding: 8px 10px;
+  border-radius: 18px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const OpaqueLayer = styled.div`
+  height: 100%;
+  width: 100%;
+  background-color: #ffffff1e;
+`;
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -808,103 +823,102 @@ const NetworkingScreen = ({ open, handleClose }) => {
         }}
       >
         <NetworkingTableBody color={eventDetails.color}>
-          <UpperSection className="mx-4 py-3">
-            <VideoGrid className="">
-              {/* // Here we need to place stream body */}
-              {/* // ! */}
-              <StreamBody
-                screenTracks={screenTracks}
-                galleryViewInput={galleryViewInput}
-              ></StreamBody>
-            </VideoGrid>
-            <div className="d-flex flex-column justify-content-end mb-4">
+          <OpaqueLayer className="px-4">
+            <UpperSection className="mx-4 py-3">
+              <VideoGrid className="">
+                {/* // Here we need to place stream body */}
+                {/* // ! */}
+                <StreamBody
+                  screenTracks={screenTracks}
+                  galleryViewInput={galleryViewInput}
+                ></StreamBody>
+              </VideoGrid>
+              <div className="d-flex flex-column justify-content-end mb-4">
+                <MainChatComponent />
+              </div>
+            </UpperSection>
 
-            <MainChatComponent />
-            </div>
-          </UpperSection>
-
-          <LowerSection className="mx-4 py-3 mt-2">
-            <button
-              id="leave-networking"
-              onClick={() => {
-                leaveNetworkingRoom();
-              }}
-              className="btn btn-outline-text btn-danger px-4"
-              style={{ width: "max-content" }}
-            >
-              Leave
-            </button>
-            <div className="d-flex flex-row align-items-center justify-content-center">
-              <IconButton
+            <LowerSection className="mx-4 py-3 mt-2">
+              <button
+                id="leave-networking"
                 onClick={() => {
-                  localUserState.camera
-                    ? turnOffVideo()
-                    : userHasUnmutedVideo.current
-                    ? turnOnVideo()
-                    : unMuteMyVideo();
+                  leaveNetworkingRoom();
                 }}
-                className="me-4"
+                className="btn btn-outline-text btn-danger px-4"
+                style={{ width: "max-content" }}
               >
-                {localUserState.camera ? (
-                  <VideocamRoundedIcon style={{ fontSize: "20px" }} />
-                ) : (
-                  <VideocamOffOutlinedIcon
-                    style={{ fontSize: "20px", color: "#BE1D1D" }}
-                  />
-                )}
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  localUserState.mic
-                    ? turnOffAudio()
-                    : userHasUnmutedAudio.current
-                    ? turnOnAudio()
-                    : unMuteMyAudio();
-                }}
-                className="me-4"
-              >
-                {localUserState.mic ? (
-                  <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
-                ) : (
-                  <MicOffOutlinedIcon
-                    style={{ fontSize: "20px", color: "#BE1D1D" }}
-                  />
-                )}
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  localUserState.screen
-                    ? stopPresenting()
-                    : dispatch(
-                        getRTCTokenForNetworkingScreenShare(
-                          networkingRoom,
-                          userId,
-                          startPresenting
-                        ) // We will use this fxn to request a token and start screen sharing
-                      );
-                }}
-                className="me-4"
-              >
-                {localUserState.screen ? (
-                  <CancelPresentationOutlinedIcon
-                    style={{ fontSize: "20px", color: "#1D5BBE" }}
-                  />
-                ) : (
-                  <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
-                )}
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  setOpenSettings(true);
-                }}
-              >
-                <SettingsOutlinedIcon
-                  style={{ color: "#ffffff", size: "24" }}
-                />
-              </IconButton>
-            </div>
-            <div className="d-flex flex-row align-items-center justify-content-end"></div>
-          </LowerSection>
+                Leave
+              </button>
+              <div className="d-flex flex-row align-items-center justify-content-center">
+                <StyledIconButton
+                  onClick={() => {
+                    localUserState.camera
+                      ? turnOffVideo()
+                      : userHasUnmutedVideo.current
+                      ? turnOnVideo()
+                      : unMuteMyVideo();
+                  }}
+                  className="me-4"
+                >
+                  {localUserState.camera ? (
+                    <VideocamRoundedIcon style={{ fontSize: "18px" }} />
+                  ) : (
+                    <VideocamOffOutlinedIcon
+                      style={{ fontSize: "18px", color: "#BE1D1D" }}
+                    />
+                  )}
+                </StyledIconButton>
+                <StyledIconButton
+                  onClick={() => {
+                    localUserState.mic
+                      ? turnOffAudio()
+                      : userHasUnmutedAudio.current
+                      ? turnOnAudio()
+                      : unMuteMyAudio();
+                  }}
+                  className="me-4"
+                >
+                  {localUserState.mic ? (
+                    <MicNoneRoundedIcon style={{ fontSize: "18px" }} />
+                  ) : (
+                    <MicOffOutlinedIcon
+                      style={{ fontSize: "18px", color: "#BE1D1D" }}
+                    />
+                  )}
+                </StyledIconButton>
+                <StyledIconButton
+                  onClick={() => {
+                    localUserState.screen
+                      ? stopPresenting()
+                      : dispatch(
+                          getRTCTokenForNetworkingScreenShare(
+                            networkingRoom,
+                            userId,
+                            startPresenting
+                          ) // We will use this fxn to request a token and start screen sharing
+                        );
+                  }}
+                  className="me-4"
+                >
+                  {localUserState.screen ? (
+                    <CancelPresentationOutlinedIcon
+                      style={{ fontSize: "18px", color: "#1D5BBE" }}
+                    />
+                  ) : (
+                    <ScreenShareRoundedIcon style={{ fontSize: "18px" }} />
+                  )}
+                </StyledIconButton>
+                <StyledIconButton
+                  onClick={() => {
+                    setOpenSettings(true);
+                  }}
+                >
+                  <SettingsOutlinedIcon style={{ size: "18px" }} />
+                </StyledIconButton>
+              </div>
+              <div className="d-flex flex-row align-items-center justify-content-end"></div>
+            </LowerSection>
+          </OpaqueLayer>
         </NetworkingTableBody>
       </Dialog>
 

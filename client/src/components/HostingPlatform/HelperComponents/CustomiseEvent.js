@@ -7,34 +7,28 @@ import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import { IconButton, Divider } from "@material-ui/core";
 
 import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { withStyles } from "@material-ui/core/styles";
 import CreateTheme from "./CreateTheme";
-import { updateEventCustomisation } from "../../../actions";
+import { updateEventCustomisation, showSnackbar } from "../../../actions";
 import FormGroup from "@material-ui/core/FormGroup";
 import Switch from "@material-ui/core/Switch";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
-const RoyalBlueRadio = withStyles({
-  root: {
-    color: "#538BF7",
-    "&$checked": {
-      color: "#3274F6",
-    },
-  },
-  checked: {},
-})((props) => <Radio color="default" {...props} />);
+import { TwitterPicker } from "react-color";
+import α from "color-alpha";
 
-const RoyalBlueSwitch = withStyles({
+const RoyalSwitch = withStyles({
   switchBase: {
-    color: "#538BF7",
+    color: (props) => (props && props.color ? α(props.color, 0.85) : "#538BF7"),
     "&$checked": {
-      color: "#3474F3",
+      color: (props) =>
+        props && props.color ? α(props.color, 1.2) : "#3474f3",
     },
     "&$checked + $track": {
-      backgroundColor: "#145DF0",
+      backgroundColor: (props) =>
+        props && props.color ? α(props.color, 0.56) : "#145DF0",
     },
   },
   checked: {},
@@ -98,6 +92,12 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
     dispatch(updateEventCustomisation(newFormValues, eventId));
   };
 
+  const [color, setColor] = useState(eventDetails.color);
+
+  const handleChangeComplete = (color) => {
+    setColor(color.hex);
+  };
+
   return (
     <>
       <React.Fragment key="right">
@@ -125,13 +125,7 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                 Customise Event
               </div>
 
-              <IconButton
-                onClick={() => {
-                  handleCloseDrawer();
-                }}
-              >
-                <CancelRoundedIcon />
-              </IconButton>
+              <IconButton></IconButton>
             </div>
 
             <div className="my-3">
@@ -147,41 +141,31 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   Here you can set theme for your event.
                 </div>
               </div>
-              <div
-                className="theme-selector  mb-3 d-flex flex-row align-items-center"
-                style={{ width: "360px" }}
-              >
-                <RadioGroup
-                  aria-label="theme"
-                  name="theme"
-                  value={theme}
-                  onChange={handleChange}
-                  style={{ width: "100%" }}
-                >
-                  <div className="theme-option px-3 py-3 mb-3">
-                    <FormControlLabel
-                      value="dark"
-                      control={<RoyalBlueRadio />}
-                      label="Dark theme"
-                    />
-                  </div>
-                  <div className="theme-option px-3 py-3 mb-3">
-                    <FormControlLabel
-                      value="light"
-                      control={<RoyalBlueRadio />}
-                      label="Light theme"
-                    />
-                  </div>
-                </RadioGroup>
+
+              <div className="mb-4">
+                <label className="form-label form-label-customized">
+                  Color
+                </label>
+                <div
+                  className="theme-color-preview mb-3"
+                  style={{ backgroundColor: color }}
+                ></div>
+                <TwitterPicker
+                  color={color}
+                  onChangeComplete={handleChangeComplete}
+                />
               </div>
+
               <button
                 onClick={() => {
-                  handleOpenTheme();
+                  if (!color)
+                    dispatch(showSnackbar("warning", "Invalid theme color."));
+                  dispatch(updateEventCustomisation({ color: color }, eventId));
                 }}
                 className="btn btn-outline-primary btn-outline-text"
                 style={{ width: "100%" }}
               >
-                Customise theme
+                Create theme
               </button>
 
               <div className="my-4">
@@ -205,7 +189,10 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                     <FormGroup row>
                       <FormControlLabel
                         control={
-                          <RoyalBlueSwitch
+                          <RoyalSwitch
+                            color={
+                              eventDetails ? eventDetails.color : "#538BF7"
+                            }
                             checked={liveChat}
                             onChange={(e) => {
                               setLiveChat(e.target.checked);
@@ -235,7 +222,10 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                     <FormGroup row>
                       <FormControlLabel
                         control={
-                          <RoyalBlueSwitch
+                          <RoyalSwitch
+                            color={
+                              eventDetails ? eventDetails.color : "#538BF7"
+                            }
                             checked={peopleInEvent}
                             onChange={(e) => {
                               setPeopleInEvent(e.target.checked);
@@ -256,8 +246,7 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                 <div className="my-3">
                   <Divider />
                 </div>
-               
-             
+
                 <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
                   <div className="hosting-platform-widget-name">
                     Private chat
@@ -267,7 +256,10 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                     <FormGroup row>
                       <FormControlLabel
                         control={
-                          <RoyalBlueSwitch
+                          <RoyalSwitch
+                            color={
+                              eventDetails ? eventDetails.color : "#538BF7"
+                            }
                             checked={privateChat}
                             onChange={(e) => {
                               setPrivateChat(e.target.checked);
@@ -288,8 +280,7 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                 <div className="my-3">
                   <Divider />
                 </div>
-                
-               
+
                 <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
                   <div className="hosting-platform-widget-name">
                     Bluemeet Feedback Rating
@@ -299,7 +290,10 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                     <FormGroup row>
                       <FormControlLabel
                         control={
-                          <RoyalBlueSwitch
+                          <RoyalSwitch
+                            color={
+                              eventDetails ? eventDetails.color : "#538BF7"
+                            }
                             checked={review}
                             onChange={(e) => {
                               setReview(e.target.checked);
@@ -329,7 +323,10 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                     <FormGroup row>
                       <FormControlLabel
                         control={
-                          <RoyalBlueSwitch
+                          <RoyalSwitch
+                            color={
+                              eventDetails ? eventDetails.color : "#538BF7"
+                            }
                             checked={networkingEnabled}
                             onChange={(e) => {
                               setNetworkingEnabled(e.target.checked);
@@ -360,7 +357,10 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                     <FormGroup row>
                       <FormControlLabel
                         control={
-                          <RoyalBlueSwitch
+                          <RoyalSwitch
+                            color={
+                              eventDetails ? eventDetails.color : "#538BF7"
+                            }
                             checked={loungeEnabled}
                             onChange={(e) => {
                               setLoungeEnabled(e.target.checked);
@@ -388,7 +388,10 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                     <FormGroup row>
                       <FormControlLabel
                         control={
-                          <RoyalBlueSwitch
+                          <RoyalSwitch
+                            color={
+                              eventDetails ? eventDetails.color : "#538BF7"
+                            }
                             checked={boothEnabled}
                             onChange={(e) => {
                               setBoothEnabled(e.target.checked);
