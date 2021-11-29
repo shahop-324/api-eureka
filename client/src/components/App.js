@@ -87,6 +87,7 @@ import RequestDemo from "./StaticScreens/FormComponents/RequestDemo";
 import MainBlogPage from "./Blog/MainBlogPage";
 import IndividualBlog from "./Blog/IndividualBlog";
 import VerifyingPaypalEmail from "./Dashboard/Billing/VerifyingPaypalEmail";
+import OverlayLoader from "./OverlayLoader";
 
 const client = Amplitude.init("7ce61ef36a075fab0d8a6e6db4f59349");
 
@@ -163,7 +164,11 @@ class App extends React.Component {
         <Router history={history}>
           <div>
             <Switch>
-              <Route path="/verify-paypal-email/:id" exact component={VerifyingPaypalEmail} />
+              <Route
+                path="/verify-paypal-email/:id"
+                exact
+                component={VerifyingPaypalEmail}
+              />
               <Route path="/does-not-exist" exact component={OopsDNE} />
               <Route path="/blog" exact component={MainBlogPage} />
               <Route path="/blog/:blogId" exact component={IndividualBlog} />
@@ -335,9 +340,13 @@ class App extends React.Component {
               {isSignedIn && (
                 <Route path="/user/profile" exact component={UserAccountHome} />
               )}
-              
+
               {isSignedIn && (
-                <Route path="/user/following" exact component={UserAccountHome} />
+                <Route
+                  path="/user/following"
+                  exact
+                  component={UserAccountHome}
+                />
               )}
 
               {isSignedIn && (
@@ -828,6 +837,8 @@ class App extends React.Component {
         />
 
         <RequestDemo />
+
+        <OverlayLoader />
 
         {this.props && this.props.message && this.props.open ? (
           <Snackbar

@@ -21,18 +21,15 @@ import AvatarMenu from "./../AvatarMenu";
 import HelpSideDrawer from "../HelpSideDrawer";
 import WhatsNew from "../WhatsNew";
 import ConfirmCommunityMail from "./Helper/ConfirmCommunityMail";
-import UserAccountBriefcase from "./UserAccountBriefcase";
-import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
 import NotificationSideDrawer from "./Helper/NotificationSideDrawer";
 import Wishlist from "./Helper/Wishlist";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import Following from "./Following";
-import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
-import ArrowDropUpRoundedIcon from "@mui/icons-material/ArrowDropUpRounded";
 import ForumRoundedIcon from "@mui/icons-material/ForumRounded";
 import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
 import VideoLibraryRoundedIcon from "@mui/icons-material/VideoLibraryRounded";
 import CampaignRoundedIcon from "@mui/icons-material/CampaignRounded";
+import OverlayLoader from "./../OverlayLoader";
 
 import { styled as MUIStyled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
@@ -50,13 +47,6 @@ const MenuText = styled.span`
   font-weight: 500;
   font-size: 0.87rem;
   color: #212121;
-`;
-
-const MenuButton = styled.div`
-  &:hover {
-    cursor: pointer;
-    background-color: #dddddd;
-  }
 `;
 
 const StyledMenu = MUIStyled((props) => (
@@ -396,6 +386,7 @@ const UserAccountHome = () => {
         handleClose={handleCloseNotifications}
       />
       <Wishlist open={openWishlist} handleClose={handleCloseWishlist} />
+      <OverlayLoader />
     </>
   );
 };
