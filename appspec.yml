@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/api-eureka
+    destination: /home/ubuntu/bluemeet
 permissions:
   - object: /home/ubuntu
     owner: ubuntu

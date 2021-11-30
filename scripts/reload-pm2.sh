@@ -1,2 +1,2 @@
-cd ~/api-eureka
+cd ~/client
 pm2 startOrReload ecosystem.config.js 
