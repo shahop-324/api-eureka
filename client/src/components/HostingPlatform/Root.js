@@ -443,6 +443,42 @@ const Root = () => {
         })
       );
     });
+
+
+    return () => {
+      socket.off("alertDeletedConfirmed");
+      socket.off("acceptedSuccessfully");
+      socket.off("deletedSuccessfully");
+      socket.off("suspendedSuccessfully");
+      socket.off("youAreWarned");
+      socket.off("warnedSuccessfully");
+      socket.off("youHaveBeenSuspended");
+      socket.off("reportedSuccessfully");
+      socket.off("msgReported");
+      socket.off("deleteAlert");
+      socket.off("previousSessionMessages");
+      socket.off("previousSessionMessages");
+      socket.off("updatedEvent");
+      socket.off("newMatch");
+      socket.off("networkingRoomMsgs");
+      socket.off("networkingChat");
+      socket.off("newNetworkingMsg");
+      socket.off("myMeetings");
+      socket.off("connectionRequestSubmitted");
+      socket.off("newConnectionRequest");
+      socket.off("meetingScheduled");
+      socket.off("newMeetingInvite");
+      socket.off("newEventMsg");
+      socket.off("newEventAlert");
+      socket.off("newEventPoll");
+      socket.off("updatedEventPoll");
+      socket.off("previousEventMessages");
+      socket.off("roomChairData");
+      socket.off("roomSessionData");
+      socket.off("newPersonalMessage");
+      socket.off("roomData");
+    }
+
   }, [dispatch]);
 
   if (eventError) {

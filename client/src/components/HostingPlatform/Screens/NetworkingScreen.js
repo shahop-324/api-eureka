@@ -733,6 +733,11 @@ const NetworkingScreen = ({ open, handleClose }) => {
         }, 2000);
       });
     }
+
+    return () => {
+      socket.off("resetAudioAndVideoControls");
+      socket.off("unMuteYourVideo");
+    };
   }, [networkingRoom]);
 
   const clearPreviousStreams = () => {

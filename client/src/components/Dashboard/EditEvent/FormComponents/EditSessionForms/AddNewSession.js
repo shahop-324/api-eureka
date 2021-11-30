@@ -316,23 +316,23 @@ const AddNewSession = ({
 
       if (new Date(ModifiedFormValues.startTime) < eventStartDateTime) {
         // Session start Date & time must be withing event timeline
-        dispatch(
-          showSnackbar(
-            "warning",
-            "Session start Date time must be within event timeline"
-          )
-        );
-        return;
+        // dispatch(
+        //   showSnackbar(
+        //     "warning",
+        //     "Session start Date time must be within event timeline"
+        //   )
+        // );
+        // return;
       }
       if (new Date(ModifiedFormValues.endTime) > eventEndDateTime) {
         // Session end Date & time must be withing event timeline
-        dispatch(
-          showSnackbar(
-            "warning",
-            "Session end Date & time must be within event timeline"
-          )
-        );
-        return;
+        // dispatch(
+        //   showSnackbar(
+        //     "warning",
+        //     "Session end Date & time must be within event timeline"
+        //   )
+        // );
+        // return;
       }
 
       if (
@@ -340,13 +340,13 @@ const AddNewSession = ({
         new Date(ModifiedFormValues.endTime)
       ) {
         // Session start Date & Time must be less than session end Date & Time
-        dispatch(
-          showSnackbar(
-            "warning",
-            "Session start Date & Time must be less than session end Date & Time"
-          )
-        );
-        return;
+        // dispatch(
+        //   showSnackbar(
+        //     "warning",
+        //     "Session start Date & Time must be less than session end Date & Time"
+        //   )
+        // );
+        // return;
       }
 
       if (

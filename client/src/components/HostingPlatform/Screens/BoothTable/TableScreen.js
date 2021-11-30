@@ -737,6 +737,11 @@ const TableScreen = ({
         unMuteMyVideo();
       }, 2000);
     });
+
+    return () => {
+      socket.off("resetAudioAndVideoControls");
+      socket.off("unMuteYourVideo");
+    };
   }, []);
 
   const clearPreviousStreams = () => {
@@ -998,9 +1003,7 @@ const TableScreen = ({
                       aria-label="settings"
                       className="mx-3"
                     >
-                      <SettingsOutlinedIcon
-                        style={{ fontSize: "18" }}
-                      />
+                      <SettingsOutlinedIcon style={{ fontSize: "18" }} />
                     </StyledIconButton>
                   </div>
 

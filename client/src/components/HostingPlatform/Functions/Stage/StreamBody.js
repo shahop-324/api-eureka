@@ -77,8 +77,7 @@ const Text = styled.div`
 `;
 
 const BackdropCover = styled.div`
-  background-image: url(${(props) =>
-    `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${props.vibe}`});
+  background-image: url(${(props) => `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${props.vibe}`});
   background-position: center;
   background-size: cover;
   height: 100%;
@@ -374,10 +373,13 @@ const StreamBody = ({
                         {/* Here we will have screen tracks and main video tracks in stacked format */}
                         <video
                           src={sessionDetails.video}
-                          autoPlay
+                          autoPlay={false}
                           loop
                           controls
                           style={{
+                            backgroundColor: "#212121",
+                            borderRadius: "15px",
+                            zIndex: "100",
                             height: "100%",
                             width: "100%",
                             objectFit: "contain",

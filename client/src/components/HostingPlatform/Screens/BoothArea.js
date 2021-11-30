@@ -173,6 +173,11 @@ const BoothArea = () => {
     socket.on("boothChairData", ({ roomChairs }) => {
       dispatch(fetchBoothChairs(roomChairs));
     });
+
+    return () => {
+      socket.off("newBoothMsg");
+      socket.off("boothChairData");
+    };
   }, []);
 
   const { userDetails } = useSelector((state) => state.user);

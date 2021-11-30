@@ -1970,20 +1970,24 @@ exports.changeCommunityAccountRequestEmail = catchAsync(
 );
 
 exports.getLatestEvent = catchAsync(async (req, res, next) => {
-  const communityId = req.community._id;
+  try {
+    const communityId = req.community._id;
 
-  // Find all events of this community sorted by date Of Creation in descending order
+    // Find all events of this community sorted by date Of Creation in descending order
 
-  let events = await Event.find({
-    createdBy: mongoose.Types.ObjectId(communityId),
-  }).sort({ createdAt: "desc" });
+    let events = await Event.find({
+      createdBy: mongoose.Types.ObjectId(communityId),
+    }).sort({ createdAt: "desc" });
 
-  const [latestEvent] = events;
+    const [latestEvent] = events;
 
-  res.status(200).json({
-    status: "success",
-    data: latestEvent,
-  });
+    res.status(200).json({
+      status: "success",
+      data: latestEvent,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 exports.getArchivedEvents = catchAsync(async (req, res, next) => {

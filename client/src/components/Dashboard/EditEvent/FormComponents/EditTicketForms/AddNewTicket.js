@@ -378,17 +378,17 @@ const AddNewTicket = ({
 
     if (new Date(ModifiedFormValues.salesStartTime) < new Date(Date.now())) {
       // Ticket sale cannot be started in past
-      dispatch(
-        showSnackbar("warning", "Ticket sale cannot be started in past")
-      );
-      return;
+      // dispatch(
+      //   showSnackbar("warning", "Ticket sale cannot be started in past")
+      // );
+      // return;
     }
     if (new Date(ModifiedFormValues.salesEndTime) > eventEndDateTime) {
       // Ticket cannot be saled after event has ended
-      dispatch(
-        showSnackbar("warning", "Ticket cannot be saled after event has ended")
-      );
-      return;
+      // dispatch(
+      //   showSnackbar("warning", "Ticket cannot be saled after event has ended")
+      // );
+      // return;
     }
 
     if (
@@ -396,13 +396,13 @@ const AddNewTicket = ({
       new Date(ModifiedFormValues.salesEndTime)
     ) {
       // Ticket sale start Date Time must be less than Sales end date Time.
-      dispatch(
-        showSnackbar(
-          "warning",
-          "Ticket sale end Date & Time must be greater than sale start Date & Time."
-        )
-      );
-      return;
+      // dispatch(
+      //   showSnackbar(
+      //     "warning",
+      //     "Ticket sale end Date & Time must be greater than sale start Date & Time."
+      //   )
+      // );
+      // return;
     }
 
     if (

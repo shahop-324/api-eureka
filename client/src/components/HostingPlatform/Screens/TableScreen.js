@@ -729,6 +729,11 @@ const TableScreen = ({
         unMuteMyVideo();
       }, 2000);
     });
+
+    return () => {
+      socket.off("resetAudioAndVideoControls");
+      socket.off("unMuteYourVideo");
+    };
   }, []);
 
   const clearPreviousStreams = () => {

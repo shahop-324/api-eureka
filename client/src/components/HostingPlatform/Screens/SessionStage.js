@@ -530,6 +530,74 @@ const SessionStage = () => {
     window.addEventListener("beforeunload", leaveStreaming);
 
     return () => {
+      // Unsubscribe all socket connections properly
+
+      socket.off("leaveStage");
+
+      socket.off("invitedToStage");
+
+      socket.off("thumbsUp");
+
+      socket.off("smile");
+
+      socket.off("clap");
+
+      socket.off("emoji");
+
+      socket.off("startVideo");
+
+      socket.off("stopVideo");
+
+      socket.off("resetAudioAndVideoControls");
+
+      socket.off("unMuteYourVideo");
+
+      socket.off("raisedHand");
+
+      socket.off("recordingStarted");
+
+      socket.off("recordingStopped");
+
+      socket.off("updatedSession");
+
+      socket.off("usersInSession");
+
+      socket.off("newSessionMsg");
+
+      socket.off("newQnA");
+
+      socket.off("upvotedQnA");
+
+      socket.off("downvotedQnA");
+
+      socket.off("answeredQnA");
+
+      socket.off("deletedQnA");
+
+      socket.off("sessionQnAs");
+
+      socket.off("hideQnAFromStage");
+
+      socket.off("newPoll");
+
+      socket.off("updatedPoll");
+
+      socket.off("sessionPolls");
+
+      socket.off("hidePollFromStage");
+
+      socket.off("deletedPoll");
+
+      socket.off("deletedMsg");
+
+      socket.off("sessionEnded");
+
+      socket.off("muteMic");
+
+      socket.off("muteCamera");
+
+      socket.off("stopScreenShare");
+
       socket.emit(
         "removeMeFromSessionStage",
         {
