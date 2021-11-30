@@ -551,6 +551,10 @@ const eventSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    sponsorsEnabled: {
+      type: Boolean,
+      default: true,
+    },
     recording: {
       type: Boolean,
       default: false,

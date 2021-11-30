@@ -25,6 +25,8 @@ const FormHeading = styled.div`
 const StartSessionRecording = ({ open, handleClose, handleStartRecording, setState }) => {
   const dispatch = useDispatch();
 
+  const {eventDetails} = useSelector((state) => state.event);
+
   const params = useParams();
   const sessionId = params.sessionId;
 
@@ -48,7 +50,7 @@ const StartSessionRecording = ({ open, handleClose, handleStartRecording, setSta
           <FormHeading>Start recording session</FormHeading>
         </HeaderFooter>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText style={{fontSize: "0.85rem"}}>
             This will start recording session. Are you sure to proceed?
           </DialogContentText>
         </DialogContent>
@@ -63,6 +65,7 @@ const StartSessionRecording = ({ open, handleClose, handleStartRecording, setSta
             Cancel
           </button>
           <button
+          style={{border: `1px solid ${eventDetails.color}`, backgroundColor: eventDetails.color}}
             className="btn btn-outline-text btn-primary"
             onClick={() => {
               socket.emit("startCloudRecording", { sessionId }, (error) => {

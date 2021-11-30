@@ -10,6 +10,8 @@ import { Avatar, IconButton } from "@material-ui/core";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 
+import { useSelector } from "react-redux";
+
 TimeAgo.addDefaultLocale(en);
 
 // Create formatter (English).
@@ -92,28 +94,25 @@ const DeleteMsg = ({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   const eventId = params.eventId;
   const sessionId = params.sessionId;
 
   const deleteMsg = (msgId) => {
-
-   
-      socket.emit(
-        "deleteSessionMessage", // !change this to deleteSessionMessage
-        {
-          msgId: msgId,
-          eventId: eventId,
-          sessionId: sessionId,
-        },
-        (error) => {
-          if (error) {
-            alert(error);
-          }
+    socket.emit(
+      "deleteSessionMessage", // !change this to deleteSessionMessage
+      {
+        msgId: msgId,
+        eventId: eventId,
+        sessionId: sessionId,
+      },
+      (error) => {
+        if (error) {
+          alert(error);
         }
-      );
-    
-
-    
+      }
+    );
   };
 
   return (
@@ -168,7 +167,13 @@ const DeleteMsg = ({
                 deleteMsg(msgId);
               }}
               className="btn btn-primary btn-outline-text"
-              style={{ width: "100%" }}
+              style={{
+                width: "100%",
+                backgroundColor: eventDetails ? eventDetails.color : "#3470E7",
+                border: eventDetails
+                  ? `1px solid ${eventDetails.color}`
+                  : `1px solid #3470E7`,
+              }}
             >
               Delete
             </button>

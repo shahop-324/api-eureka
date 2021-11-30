@@ -1159,7 +1159,8 @@ exports.updateCustomisationSettings = catchAsync(async (req, res, next) => {
     "boothEnabled",
     "loungeEnabled",
     "networkingEnabled",
-    "review"
+    "review",
+    "sponsorsEnabled"
   );
 
   const eventDoc = await Event.findByIdAndUpdate(

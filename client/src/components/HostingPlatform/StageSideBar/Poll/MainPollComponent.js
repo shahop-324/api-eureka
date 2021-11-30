@@ -23,7 +23,7 @@ const renderSessionPolls = (
   currentUserIsASpeaker
 ) => {
   return sessionPolls.map((poll) => {
-    if (poll.deleted) return;
+    if (poll.deleted) return <></>;
     return (
       <PollComponent
         currentUserIsAHost={currentUserIsAHost}

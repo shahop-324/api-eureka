@@ -113,9 +113,13 @@ const OthersReplyElement = ({
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
               >
-                <div style={{ color: "#212121" }}>
-                  {replierDesignation}, {replierOrganisation}
-                </div>
+                {replierDesignation && replierOrganisation ? (
+                  <div style={{ color: "#212121" }}>
+                    {replierDesignation} {replierOrganisation}
+                  </div>
+                ) : (
+                  <div></div>
+                )}
                 <div style={{ color: "#212121" }}>
                   {timeAgo.format(new Date(replierTimestamp), "round")}
                 </div>

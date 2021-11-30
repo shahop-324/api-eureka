@@ -274,7 +274,7 @@ const ChatComponent = ({ tableId }) => {
     <>
       <div
         className="pt-2 px-2 d-flex flex-column justify-content-between"
-        style={{ maxHeight: "68vh !important", height: "68vh" }}
+        style={{ maxHeight: "74vh !important", height: "74vh" }}
       >
         <div
           style={{
@@ -282,7 +282,7 @@ const ChatComponent = ({ tableId }) => {
             flexDirection: "column-reverse",
             overflow: "scroll",
             height: "auto",
-            maxHeight: "68vh !important",
+            maxHeight: "70vh !important",
           }}
           id="all-chat-msg-container"
         >

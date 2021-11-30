@@ -13,15 +13,18 @@ import { withStyles } from "@material-ui/core/styles";
 import FormGroup from "@material-ui/core/FormGroup";
 import Switch from "@material-ui/core/Switch";
 import { editSession, getVibes } from "./../../../actions";
+import α from "color-alpha";
 
-const RoyalBlueSwitch = withStyles({
+const RoyalSwitch = withStyles({
   switchBase: {
-    color: "#538BF7",
+    color: (props) => (props && props.color ? α(props.color, 0.85) : "#538BF7"),
     "&$checked": {
-      color: "#3474F3",
+      color: (props) =>
+        props && props.color ? α(props.color, 1.2) : "#3474f3",
     },
     "&$checked + $track": {
-      backgroundColor: "#145DF0",
+      backgroundColor: (props) =>
+        props && props.color ? α(props.color, 0.56) : "#145DF0",
     },
   },
   checked: {},
@@ -32,7 +35,8 @@ const CustomHorizontalTabWarpper = styled.div`
   width: 500px;
   height: auto;
   border-radius: 10px;
-  background-color: #345b63;
+  background-color: ${(props) =>
+    props && props.color ? α(props.color, 0.5) : "#345b63"};
 
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -51,7 +55,7 @@ const CustomTabButton = styled.div`
   text-align: center;
   padding: 6px 12px;
   background-color: ${(props) =>
-    props.active && props.active ? "#152d35" : "#345b63"};
+    props.active && props.active ? α(props.color, 1) : α(props.color, 0.5)};
   border-radius: 10px;
   border: 1px solid transparent;
 
@@ -87,7 +91,9 @@ const VibeCard = styled.div`
   text-align: center;
   border-radius: 8px;
   border: ${(props) =>
-    props && props.selected ? "2px solid #152d35" : "2px solid transparent"};
+    props && props.selected
+      ? `2px solid ${props.color}`
+      : "2px solid transparent"};
 
   img {
     border: 2px solid transparent;
@@ -99,13 +105,16 @@ const VibeCard = styled.div`
     margin-bottom: 5px;
 
     &:hover {
-      border: 2px solid #152d35;
+      border: ${(props) =>
+        props && props.color
+          ? `2px solid ${props.color}`
+          : `2px solid #152d35`};
     }
   }
 
   &:hover {
     font-weight: 500;
-    color: #152d35;
+    color: ${(props) => (props && props.color ? props.color : "#152d35")};
     cursor: pointer;
   }
 `;
@@ -118,7 +127,9 @@ const NoVibeCard = styled.div`
   text-align: center;
 
   border: ${(props) =>
-    props && props.selected ? "2px solid #152d35" : "2px solid transparent"};
+    props && props.selected
+      ? `2px solid ${props.color}`
+      : "2px solid transparent"};
 
   height: 100%;
   width: 100%;
@@ -126,9 +137,10 @@ const NoVibeCard = styled.div`
   border-radius: 8px;
 
   &:hover {
-    border: 2px solid #152d35;
+    border: ${(props) =>
+      props && props.color ? `2px solid ${props.color}` : `2px solid #152d35`};
     font-weight: 500;
-    color: #152d35;
+    color: ${(props) => (props && props.color ? props.color : "#152d35")};
     cursor: pointer;
   }
 `;
@@ -139,6 +151,8 @@ const SessionTheme = () => {
   const { sessionDetails } = useSelector((state) => state.session);
 
   const [background, setBackground] = useState(sessionDetails.theme);
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   const handleChangeComplete = (color) => {
     setBackground(color.hex);
@@ -170,6 +184,10 @@ const SessionTheme = () => {
             Reset
           </button>
           <button
+            style={{
+              backgroundColor: eventDetails.color,
+              border: `1px solid ${eventDetails.color}`,
+            }}
             onClick={() => {
               dispatch(editSession({ theme: background }, sessionDetails._id));
             }}
@@ -187,6 +205,8 @@ const SessionWidgets = () => {
   const dispatch = useDispatch();
 
   const { sessionDetails } = useSelector((state) => state.session);
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   const [liveChat, setLiveChat] = useState(
     sessionDetails ? sessionDetails.liveChat : false
@@ -244,7 +264,8 @@ const SessionWidgets = () => {
             <FormGroup row>
               <FormControlLabel
                 control={
-                  <RoyalBlueSwitch
+                  <RoyalSwitch
+                    color={eventDetails.color}
                     checked={liveChat}
                     onChange={(e) => {
                       setLiveChat(e.target.checked);
@@ -270,7 +291,8 @@ const SessionWidgets = () => {
             <FormGroup row>
               <FormControlLabel
                 control={
-                  <RoyalBlueSwitch
+                  <RoyalSwitch
+                    color={eventDetails.color}
                     checked={peopleInSession}
                     onChange={(e) => {
                       setPeopleInSession(e.target.checked);
@@ -297,7 +319,8 @@ const SessionWidgets = () => {
             <FormGroup row>
               <FormControlLabel
                 control={
-                  <RoyalBlueSwitch
+                  <RoyalSwitch
+                    color={eventDetails.color}
                     checked={raiseHand}
                     onChange={(e) => {
                       setRaiseHand(e.target.checked);
@@ -324,7 +347,8 @@ const SessionWidgets = () => {
             <FormGroup row>
               <FormControlLabel
                 control={
-                  <RoyalBlueSwitch
+                  <RoyalSwitch
+                    color={eventDetails.color}
                     checked={qna}
                     onChange={(e) => {
                       setqna(e.target.checked);
@@ -351,7 +375,8 @@ const SessionWidgets = () => {
             <FormGroup row>
               <FormControlLabel
                 control={
-                  <RoyalBlueSwitch
+                  <RoyalSwitch
+                    color={eventDetails.color}
                     checked={polls}
                     onChange={(e) => {
                       setPolls(e.target.checked);
@@ -378,7 +403,8 @@ const SessionWidgets = () => {
             <FormGroup row>
               <FormControlLabel
                 control={
-                  <RoyalBlueSwitch
+                  <RoyalSwitch
+                    color={eventDetails.color}
                     checked={videos}
                     onChange={(e) => {
                       setVideos(e.target.checked);
@@ -403,7 +429,8 @@ const SessionWidgets = () => {
             <FormGroup row>
               <FormControlLabel
                 control={
-                  <RoyalBlueSwitch
+                  <RoyalSwitch
+                    color={eventDetails.color}
                     checked={attendeeCount}
                     onChange={(e) => {
                       setAttendeeCount(e.target.checked);
@@ -432,7 +459,8 @@ const SessionWidgets = () => {
             <FormGroup row>
               <FormControlLabel
                 control={
-                  <RoyalBlueSwitch
+                  <RoyalSwitch
+                    color={eventDetails.color}
                     checked={emojiReactions}
                     onChange={(e) => {
                       setEmojiReactions(e.target.checked);
@@ -461,10 +489,12 @@ const VibeComponent = ({ vibe }) => {
   const dispatch = useDispatch();
 
   const { sessionDetails } = useSelector((state) => state.session);
+  const { eventDetails } = useSelector((state) => state.event);
 
   return (
     <>
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === vibe.key ? true : false}
         onClick={() => {
           dispatch(editSession({ vibe: vibe.key }, sessionDetails._id));
@@ -494,6 +524,8 @@ const SessionVibes = () => {
 
   const { sessionDetails } = useSelector((state) => state.session);
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   useEffect(() => {
     dispatch(getVibes(eventId));
   }, []);
@@ -503,6 +535,7 @@ const SessionVibes = () => {
   return (
     <VibesGrid>
       <NoVibeCard
+        color={eventDetails.color}
         selected={!sessionDetails.vibe ? true : false}
         onClick={() => {
           dispatch(editSession({ vibe: "" }, sessionDetails._id));
@@ -513,6 +546,7 @@ const SessionVibes = () => {
       </NoVibeCard>
       {renderVibesList(vibes)}
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/winter.jpeg" ? true : false}
         onClick={() => {
           dispatch(
@@ -527,6 +561,7 @@ const SessionVibes = () => {
         <div>Winter</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/ice.jpeg" ? true : false}
         onClick={() => {
           dispatch(editSession({ vibe: "Vibes/ice.jpeg" }, sessionDetails._id));
@@ -539,6 +574,7 @@ const SessionVibes = () => {
         <div>Ice</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/sunrise.jpeg" ? true : false}
         onClick={() => {
           dispatch(
@@ -553,6 +589,7 @@ const SessionVibes = () => {
         <div>Sunrise</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/sunset.jpeg" ? true : false}
         onClick={() => {
           dispatch(
@@ -567,6 +604,7 @@ const SessionVibes = () => {
         <div>Sunset</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={
           sessionDetails.vibe === "Vibes/Darkchristmas.jpeg" ? true : false
         }
@@ -586,6 +624,7 @@ const SessionVibes = () => {
         <div>Dark Christmas</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/christmas.jpeg" ? true : false}
         onClick={() => {
           dispatch(
@@ -600,6 +639,7 @@ const SessionVibes = () => {
         <div>Christmas</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/Mountains.jpeg" ? true : false}
         onClick={() => {
           dispatch(
@@ -614,6 +654,7 @@ const SessionVibes = () => {
         <div>Mountains</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/Festival.jpeg" ? true : false}
         onClick={() => {
           dispatch(
@@ -628,6 +669,7 @@ const SessionVibes = () => {
         <div>Festival</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/new_year.jpeg" ? true : false}
         onClick={() => {
           dispatch(
@@ -642,6 +684,7 @@ const SessionVibes = () => {
         <div>New year</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/desert.jpeg" ? true : false}
         onClick={() => {
           dispatch(
@@ -655,7 +698,9 @@ const SessionVibes = () => {
         />
         <div>Desert</div>
       </VibeCard>
+
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/ocean.jpeg" ? true : false}
         onClick={() => {
           dispatch(
@@ -670,6 +715,7 @@ const SessionVibes = () => {
         <div>Ocean</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/winter.jpeg" ? true : false}
         onClick={() => {
           dispatch(
@@ -684,6 +730,7 @@ const SessionVibes = () => {
         <div>Winter</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/rocks.jpeg" ? true : false}
         onClick={() => {
           dispatch(
@@ -698,6 +745,7 @@ const SessionVibes = () => {
         <div>Rocks</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/beach.jpeg" ? true : false}
         onClick={() => {
           dispatch(
@@ -712,6 +760,7 @@ const SessionVibes = () => {
         <div>Beach</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/startup.jpeg" ? true : false}
         onClick={() => {
           dispatch(
@@ -726,6 +775,7 @@ const SessionVibes = () => {
         <div>Startup</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={
           sessionDetails.vibe === "Vibes/Technology_Image.jpg" ? true : false
         }
@@ -745,6 +795,7 @@ const SessionVibes = () => {
         <div>Technology</div>
       </VibeCard>
       <VibeCard
+        color={eventDetails.color}
         selected={sessionDetails.vibe === "Vibes/finance.jpeg" ? true : false}
         onClick={() => {
           dispatch(
@@ -767,14 +818,20 @@ const SessionCustomisation = () => {
 
   const [checked, setChecked] = React.useState(false);
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   const handleChangeToggle = () => {
     setChecked(!checked);
   };
 
   return (
     <>
-      <CustomHorizontalTabWarpper className="px-3 mb-4">
+      <CustomHorizontalTabWarpper
+        color={eventDetails.color}
+        className="px-3 mb-4"
+      >
         <CustomTabButton
+          color={eventDetails.color}
           active={selectedTab === "color" ? true : false}
           onClick={() => {
             setSelectedTab("color");
@@ -783,6 +840,7 @@ const SessionCustomisation = () => {
           Color
         </CustomTabButton>
         <CustomTabButton
+          color={eventDetails.color}
           active={selectedTab === "vibes" ? true : false}
           onClick={() => {
             setSelectedTab("vibes");
@@ -791,6 +849,7 @@ const SessionCustomisation = () => {
           Vibes
         </CustomTabButton>
         <CustomTabButton
+          color={eventDetails.color}
           active={selectedTab === "widget" ? true : false}
           onClick={() => {
             setSelectedTab("widget");

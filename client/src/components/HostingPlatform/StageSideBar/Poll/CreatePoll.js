@@ -10,15 +10,14 @@ import { v4 as uuidv4 } from "uuid";
 
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
 import ArrowDropUpRoundedIcon from "@mui/icons-material/ArrowDropUpRounded";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 import socket from "./../../service/socket";
+import α from "color-alpha";
 
 const CreatePollContainer = styled.div`
   height: auto; // Make it auto
@@ -27,7 +26,8 @@ const CreatePollContainer = styled.div`
 `;
 
 const Header = styled.div`
-  background-color: #46525c;
+  background-color: ${(props) =>
+    props && props.color ? α(props.color, 0.75) : "#46525c"};
 `;
 
 const CreatePollHeading = styled.span`
@@ -41,7 +41,7 @@ const Label = styled.div`
   font-weight: 500;
   font-family: "Ubuntu";
   font-size: 0.85rem;
-  color: #152d3f;
+  color: ${(props) => (props && props.color ? props.color : "#152d3f")};
 `;
 
 const AdvancedOptions = styled.div`
@@ -55,7 +55,7 @@ const RadioLabel = styled.div`
   font-weight: 500;
   font-family: "Ubuntu";
   font-size: 0.8rem;
-  color: #152d3f;
+  color: ${(props) => (props && props.color ? props.color : "#152d3f")};
 `;
 
 const StyledInput = styled.input`
@@ -63,21 +63,32 @@ const StyledInput = styled.input`
 `;
 
 const AddMoreButton = styled.button`
-  border: 1px dashed #152d35 !important;
-  color: #152d35 !important;
+  border: ${(props) =>
+    props && props.color
+      ? `1px dashed ${props.color} !important`
+      : `1px dashed #152D35 !important`};
+  color: ${(props) =>
+    props && props.color ? `${props.color} !important` : `#152d35 !important`};
   width: 100%;
 
   &:hover {
     color: #ffffff !important;
-    background-color: #152d35 !important;
+    background-color: ${(props) =>
+      props && props.color
+        ? `${props.color} !important`
+        : `#152d35 !important`};
   }
 `;
 
 const CreateButton = styled.button`
-  background-color: #152d35 !important;
+  background-color: ${(props) =>
+    props && props.color ? `${props.color} !important` : `#152d35 !important`};
   color: #ffffff !important;
   width: 100%;
-  border: 1px solid #152d35 !important;
+  border: ${(props) =>
+    props && props.color
+      ? `1px solid ${props.color} !important`
+      : `1px solid #152d35 !important`};
 `;
 
 const CreatePoll = ({ open, handleClose }) => {
@@ -87,6 +98,7 @@ const CreatePoll = ({ open, handleClose }) => {
   const sessionId = params.sessionId;
 
   const userId = useSelector((state) => state.eventAccessToken.id);
+  const { eventDetails } = useSelector((state) => state.event);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -100,7 +112,6 @@ const CreatePoll = ({ open, handleClose }) => {
   const [timeLimit, setTimeLimit] = React.useState(null); // By default poll will never expire
   const [whoCanSeeAnswers, setWhoCanSeeAnswers] =
     React.useState("Organiser only"); // By default organiser only
- 
 
   const [options, setOptions] = React.useState([
     { index: uuidv4(), option: "" },
@@ -142,7 +153,6 @@ const CreatePoll = ({ open, handleClose }) => {
 
     console.log(optionsList);
 
-   
     ModifiedFormValues.whoCanSeeAnswers = whoCanSeeAnswers;
     ModifiedFormValues.question = question;
     ModifiedFormValues.options = optionsList;
@@ -179,7 +189,10 @@ const CreatePoll = ({ open, handleClose }) => {
         aria-labelledby="responsive-dialog-title"
       >
         <CreatePollContainer>
-          <Header className="d-flex flex-row align-items-center justify-content-between px-4 py-3">
+          <Header
+            color={eventDetails.color}
+            className="d-flex flex-row align-items-center justify-content-between px-4 py-3"
+          >
             <CreatePollHeading>Create poll</CreatePollHeading>
             <IconButton
               onClick={() => {
@@ -194,7 +207,9 @@ const CreatePoll = ({ open, handleClose }) => {
 
           <div className="px-4 py-3">
             <div className="form-group mb-4">
-              <Label className="mb-2">Question</Label>
+              <Label color={eventDetails.color} className="mb-2">
+                Question
+              </Label>
 
               <StyledInput
                 name="question"
@@ -208,7 +223,9 @@ const CreatePoll = ({ open, handleClose }) => {
             </div>
 
             <div className="form-group mb-3">
-              <Label className="mb-2">Option 1</Label>
+              <Label color={eventDetails.color} className="mb-2">
+                Option 1
+              </Label>
 
               <StyledInput
                 name="option_1"
@@ -221,7 +238,9 @@ const CreatePoll = ({ open, handleClose }) => {
               ></StyledInput>
             </div>
             <div className="form-group mb-3">
-              <Label className="mb-2">Option 2</Label>
+              <Label color={eventDetails.color} className="mb-2">
+                Option 2
+              </Label>
 
               <StyledInput
                 name="option_2"
@@ -237,7 +256,9 @@ const CreatePoll = ({ open, handleClose }) => {
             {options.map((option, index) => {
               return (
                 <div key={option.index} className="form-group mb-3">
-                  <Label className="mb-2">Option {index + 3} </Label>
+                  <Label color={eventDetails.color} className="mb-2">
+                    Option {index + 3}{" "}
+                  </Label>
 
                   <div className="d-flex flex-row align-items-center justify-content-between mb-4">
                     <StyledInput
@@ -264,6 +285,7 @@ const CreatePoll = ({ open, handleClose }) => {
             })}
 
             <AddMoreButton
+              color={eventDetails.color}
               onClick={() => {
                 addNewRow();
               }}
@@ -293,7 +315,9 @@ const CreatePoll = ({ open, handleClose }) => {
             {showAdvancedOptions ? (
               <div>
                 <div className="form-group mb-4">
-                  <Label className="mb-2">Time limit (in min)</Label>
+                  <Label color={eventDetails.color} className="mb-2">
+                    Time limit (in min)
+                  </Label>
 
                   <StyledInput
                     onChange={(e) => {
@@ -318,7 +342,9 @@ const CreatePoll = ({ open, handleClose }) => {
                         name="WhoCanSeeAnswers"
                         value="Organiser only"
                       />
-                      <RadioLabel className="ms-2">Organiser only</RadioLabel>
+                      <RadioLabel color={eventDetails.color} className="ms-2">
+                        Organiser only
+                      </RadioLabel>
                     </div>
                     <div className="d-flex flex-row align-items-center mx-4">
                       <Radio
@@ -328,7 +354,7 @@ const CreatePoll = ({ open, handleClose }) => {
                         name="WhoCanSeeAnswers"
                         value="Organiser and speakers"
                       />
-                      <RadioLabel className="ms-2">
+                      <RadioLabel color={eventDetails.color} className="ms-2">
                         Organiser & speaker
                       </RadioLabel>
                     </div>
@@ -340,18 +366,19 @@ const CreatePoll = ({ open, handleClose }) => {
                         name="WhoCanSeeAnswers"
                         value="Everyone"
                       />
-                      <RadioLabel className="ms-2">Everyone</RadioLabel>
+                      <RadioLabel color={eventDetails.color} className="ms-2">
+                        Everyone
+                      </RadioLabel>
                     </div>
                   </RadioGroup>
                 </FormControl>
-
-                
               </div>
             ) : (
               <></>
             )}
 
             <CreateButton
+              color={eventDetails.color}
               onClick={handleSubmit}
               style={{ width: "100%" }}
               className="btn btn-outline-text btn-primary"

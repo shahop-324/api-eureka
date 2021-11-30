@@ -27,6 +27,8 @@ const PeopleListComponent = ({ person }) => {
     setOpen(false);
   };
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   return (
     <>
       <>
@@ -55,6 +57,7 @@ const PeopleListComponent = ({ person }) => {
             {/* <UserRoleTag>Host</UserRoleTag> */}
           </div>
           <ViewCompleteProfileBtn
+            color={eventDetails.color}
             onClick={() => {
               setOpen(true);
             }}

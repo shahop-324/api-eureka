@@ -58,7 +58,7 @@ const renderMessages = (chats, receiverId, createReplyWidget) => {
         console.log(chat);
         return (
           <ChatMsgElement
-          type="private"
+            type="private"
             createReplyWidget={createReplyWidget}
             name={chat.senderName}
             image={
@@ -184,10 +184,14 @@ const IndividualChat = ({ handleOpen, handleOpenVideoOptions }) => {
                 {profileName}
               </div>
               {/* // TODO Here we need to show designation & organisation */}
-              <span style={{ fontWeight: "400", fontSize: "0.75rem" }}>
-                {" "}
-                {profileDesigantion} {profileOrganisation}
-              </span>
+              {profileDesigantion && profileOrganisation ? (
+                <span style={{ fontWeight: "400", fontSize: "0.75rem" }}>
+                  {" "}
+                  {profileDesigantion} {profileOrganisation}
+                </span>
+              ) : (
+                <span></span>
+              )}
             </div>
           </div>
         </div>

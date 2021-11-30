@@ -18,6 +18,7 @@ const timeAgo = new TimeAgo("en-US");
 const QnABody = styled.div`
   width: 100%;
   height: auto;
+  z-index: 1000;
   padding: 15px;
 
   background: #152d3509;
@@ -76,8 +77,9 @@ const UpvoteWidget = styled.div`
   border-radius: 5px;
 
   background-color: transparent;
-  color: #152d35;
-  border: 1px solid #152d35;
+  color: ${(props) => (props && props.color ? props.color : "#152d35")};
+  border: ${(props) =>
+    props && props.color ? `1px solid ${props.color}` : `1px solid #152d35`};
 
   &:hover {
     cursor: pointer;
@@ -110,6 +112,8 @@ const AnsweredQnA = ({
   const eventId = params.eventId;
 
   const userId = useSelector((state) => state.eventAccessToken.id);
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   const [openDelete, setOpenDelete] = React.useState(false);
 
@@ -153,7 +157,11 @@ const AnsweredQnA = ({
         <div className="d-flex flex-row align-items-center mb-4">
           {upvotedByMe ? (
             <UpvoteWidget
-              style={{ backgroundColor: "#152d35", color: "#ffffff" }}
+              color={eventDetails.color}
+              style={{
+                backgroundColor: eventDetails ? eventDetails.color : "#152d35",
+                color: "#ffffff",
+              }}
               onClick={() => {
                 socket.emit(
                   "downvoteQnA",
@@ -217,7 +225,7 @@ const AnsweredQnA = ({
 
           {currentUserIsAHost ? (
             <div className="d-flex flex-row align-items-center justify-content-end">
-              {runningStatus === "In Progress" ? (
+              {/* {runningStatus === "In Progress" ? (
                 showOnStage ? (
                   <button
                     onClick={() => {
@@ -255,7 +263,7 @@ const AnsweredQnA = ({
                 )
               ) : (
                 <></>
-              )}
+              )} */}
 
               <IconButton
                 onClick={() => {

@@ -129,7 +129,7 @@ const StreamBody = ({ screenTracks, galleryViewInput }) => {
         <>
           <div
             style={{
-              height: "72vh",
+              height: "80vh",
               display: "grid",
               gridTemplateColumns: columns,
               gridTemplateRows: rows,
@@ -155,7 +155,7 @@ const StreamBody = ({ screenTracks, galleryViewInput }) => {
         <>
           <div
             style={{
-              height: "65vh",
+              height: "80vh",
               display: "grid",
               gridTemplateColumns: "4fr 1fr",
               gridGap: "12px",

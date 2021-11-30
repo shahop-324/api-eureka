@@ -9,12 +9,12 @@ import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 import { useTimer } from "react-timer-hook";
 import Chip from "@mui/material/Chip";
-import Checkbox from "@mui/material/Checkbox";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import socket from "./../../service/socket";
 import DeletePoll from "./DeletePoll";
+import α from "color-alpha";
 
 TimeAgo.addDefaultLocale(en);
 
@@ -38,7 +38,7 @@ const PollQues = styled.div`
   font-weight: 500;
   font-size: 0.95rem;
   font-family: "Ubuntu";
-  color: #152d35;
+  color: ${(props) => (props && props.color ? props.color : "#152d35")};
   letter-spacing: 0.1px;
 `;
 
@@ -52,14 +52,15 @@ const PollOption = styled.div`
   font-size: 0.8rem;
   color: #ffffff;
 
-  border: 1px solid #152d35;
+  border: ${(props) =>
+    props && props.color ? `1px solid ${props.color}` : `1px solid #152d35`};
   border-radius: 5px;
   padding: 5px 10px;
   position: relative;
 `;
 
 const IndividualPollCount = styled.div`
-  color: #152d35;
+  color: ${(props) => (props && props.color ? props.color : "#152d35")};
   justify-self: end;
 `;
 
@@ -86,7 +87,8 @@ const PersonName = styled.div`
 `;
 
 const UserRoleTag = styled.div`
-  background-color: #152d35;
+  background-color: ${(props) =>
+    props && props.color ? props.color : "#152d35"};
   height: max-content;
   border-radius: 5px;
 
@@ -102,7 +104,8 @@ const PollFill = styled.div`
   height: 100%;
   width: ${(props) => props.width && props.width};
   position: absolute;
-  background-color: #152d3528;
+  background-color: ${(props) =>
+    props && props.color ? `${α(props.color, 0.5)}` : "#152d3528"};
   border-radius: 5px;
 `;
 
@@ -120,10 +123,13 @@ const BtnOutlined = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: #152d35;
+  background-color: ${(props) =>
+    props && props.color ? props.color : "#152d35"};
 
   &:hover {
-    border: 1px solid #345b63;
+    border: ${(props) =>
+      props && props.color ? `1px solid ${props.color}` : `1px solid #345b63`};
+
     background-color: #ffffff00;
     cursor: pointer;
   }
@@ -131,7 +137,9 @@ const BtnOutlined = styled.div`
 const BtnSubmitted = styled.div`
   padding: 5px 8px;
   background-color: transparent;
-  border: 1px solid #345b63;
+
+  border: ${(props) =>
+    props && props.color ? `1px solid ${props.color}` : `1px solid #345b63`};
 
   color: #ffffff;
   font-family: "Ubuntu";
@@ -166,25 +174,21 @@ function MyTimer({ expiryTimestamp, setExpired }) {
   );
 }
 
-const renderPollOptions = (
-  options,
-  totalVotes,
-  expired,
-  votedByMe,
-  votedOption,
+const PollOptionComponent = ({
+  whoCanSeeAnswers,
   currentUserIsAHost,
   currentUserIsASpeaker,
-  whoCanSeeAnswers
-) => {
-  return options.map((element) => {
-    let percent = 0;
+  percent,
+  totalVotes,
+  element,
+  expired,
+  votedByMe,
+}) => {
+  const { eventDetails } = useSelector((state) => state.event);
 
-    if (!totalVotes * 1 === 0) {
-      percent = ((element.votedBy.length * 1) / totalVotes) * 1 * 100;
-    }
-
-    return (
-      <PollOption className="mb-3">
+  return (
+    <>
+      <PollOption color={eventDetails.color} className="mb-3">
         {(() => {
           switch (whoCanSeeAnswers) {
             case "Organiser only":
@@ -240,7 +244,10 @@ const renderPollOptions = (
             case "Organiser only":
               if (currentUserIsAHost) {
                 return (
-                  <IndividualPollCount className="ms-2">
+                  <IndividualPollCount
+                    color={eventDetails.color}
+                    className="ms-2"
+                  >
                     {element.votedBy.length * 1 === 0 ? (
                       <></>
                     ) : (
@@ -253,7 +260,10 @@ const renderPollOptions = (
 
             case "Everyone":
               return (
-                <IndividualPollCount className="ms-2">
+                <IndividualPollCount
+                  color={eventDetails.color}
+                  className="ms-2"
+                >
                   {element.votedBy.length * 1 === 0 ? (
                     <></>
                   ) : (
@@ -265,7 +275,10 @@ const renderPollOptions = (
             case "Organiser and speakers":
               if (currentUserIsAHost || currentUserIsASpeaker) {
                 return (
-                  <IndividualPollCount className="ms-2">
+                  <IndividualPollCount
+                    color={eventDetails.color}
+                    className="ms-2"
+                  >
                     {element.votedBy.length * 1 === 0 ? (
                       <></>
                     ) : (
@@ -281,6 +294,38 @@ const renderPollOptions = (
           }
         })()}
       </PollOption>
+    </>
+  );
+};
+
+const renderPollOptions = (
+  options,
+  totalVotes,
+  expired,
+  votedByMe,
+  votedOption,
+  currentUserIsAHost,
+  currentUserIsASpeaker,
+  whoCanSeeAnswers
+) => {
+  return options.map((element) => {
+    let percent = 0;
+
+    if (!totalVotes * 1 === 0) {
+      percent = ((element.votedBy.length * 1) / totalVotes) * 1 * 100;
+    }
+
+    return (
+      <PollOptionComponent
+        whoCanSeeAnswers={whoCanSeeAnswers}
+        currentUserIsAHost={currentUserIsAHost}
+        currentUserIsASpeaker={currentUserIsASpeaker}
+        percent={percent}
+        totalVotes={totalVotes}
+        element={element}
+        expired={expired}
+        votedByMe={votedByMe}
+      />
     );
   });
 };
@@ -312,6 +357,7 @@ const PollComponent = ({
   const sessionId = params.sessionId;
   const eventId = params.eventId;
 
+  const { eventDetails } = useSelector((state) => state.event);
   const userId = useSelector((state) => state.eventAccessToken.id);
 
   const [value, setValue] = React.useState(votedByMe ? votedOption : null); // This needs to be initialised with the selected options id and if no option is selected then just show no option as selected
@@ -373,19 +419,25 @@ const PollComponent = ({
             />
             <div>
               <PersonName>{askedByName}</PersonName>
-              <PersonName>
-                {(askedByDesignation, askedByOrganisation)}
-              </PersonName>
+              {askedByDesignation && askedByOrganisation ? (
+                <PersonName>
+                  {(askedByDesignation, askedByOrganisation)}
+                </PersonName>
+              ) : (
+                <div></div>
+              )}
             </div>
           </div>
 
           {/* <UserRoleTag>Host</UserRoleTag> */}
-          <UserRoleTag>
+          <UserRoleTag color={eventDetails.color}>
             {timeAgo.format(new Date(createdAt), "round")}
           </UserRoleTag>
         </div>
 
-        <PollQues className="mb-3">{question}</PollQues>
+        <PollQues color={eventDetails.color} className="mb-3">
+          {question}
+        </PollQues>
 
         <FormControl component="fieldset">
           <RadioGroup

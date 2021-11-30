@@ -20,7 +20,6 @@ const CustomHorizontalTabWarpper = styled.div`
     props && props.color
       ? `${α(props.color, 0.5)} !important`
       : "#233e44 !important"};
-
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 16px;

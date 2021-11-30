@@ -22,7 +22,7 @@ const StyledInput = styled.input`
   height: 100%;
   background-color: #ffffff00;
   outline: none;
-  color: #ffffff;
+  color: #000000;
 `;
 
 const QnAInput = () => {

@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import socket from "./../../HostingPlatform/service/socket";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -24,6 +25,8 @@ const FormHeading = styled.div`
 const ConfirmEnd = ({ id, open, handleClose }) => {
   const dispatch = useDispatch();
   const params = useParams();
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   const sessionId = params.sessionId;
 
@@ -53,6 +56,10 @@ const ConfirmEnd = ({ id, open, handleClose }) => {
             Cancel
           </button>
           <button
+            style={{
+              border: `1px solid ${eventDetails.color}`,
+              backgroundColor: eventDetails.color,
+            }}
             className="btn btn-outline-text btn-primary"
             onClick={() => {
               socket.emit("endSession", { sessionId }, (error) => {

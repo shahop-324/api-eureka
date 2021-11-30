@@ -211,9 +211,13 @@ const PeopleGridComponent = ({ person }) => {
             />
             <div className="ms-3">
               <PersonName className="mb-2">{`${person.firstName} ${person.lastName}`}</PersonName>
-              <PersonName
-                style={{ color: "#6D6D6D" }}
-              >{`${person.designation} ${person.organisation}`}</PersonName>
+              {person.designation && person.organisation ? (
+                <PersonName
+                  style={{ color: "#6D6D6D" }}
+                >{`${person.designation} ${person.organisation}`}</PersonName>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </PopOverBox>
@@ -235,6 +239,8 @@ const PeopleListComponent = ({ person }) => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   return (
     <>
@@ -264,6 +270,7 @@ const PeopleListComponent = ({ person }) => {
             {/* <UserRoleTag>Host</UserRoleTag> */}
           </div>
           <ViewCompleteProfileBtn
+            color={eventDetails.color}
             onClick={() => {
               // open person profile
               setOpen(true);
@@ -287,6 +294,8 @@ const PeopleListComponent = ({ person }) => {
 const VideoListComponent = ({ video, eventId, sessionId, sessionDetails }) => {
   const dispatch = useDispatch();
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   return (
     <>
       <SessionVideoContainer className="mb-3">
@@ -306,7 +315,12 @@ const VideoListComponent = ({ video, eventId, sessionId, sessionDetails }) => {
         {sessionDetails.video ===
         `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${video.key}` ? (
           <BtnOutlined
-            style={{ color: "#D63D3D", border: "1px solid #D63D3D" }}
+            color={eventDetails.color}
+            style={{
+              color: "#D63D3D",
+              border: "1px solid #D63D3D",
+              backgroundColor: "#ffffff",
+            }}
             onClick={() => {
               socket.emit(
                 "stopVideo",
@@ -327,6 +341,7 @@ const VideoListComponent = ({ video, eventId, sessionId, sessionDetails }) => {
           </BtnOutlined>
         ) : (
           <BtnOutlined
+            color={eventDetails.color}
             onClick={() => {
               if (sessionDetails.video) {
                 // Show snackbar to stop previous video
@@ -384,9 +399,16 @@ const renderVideos = (videos, eventId, sessionId, sessionDetails) => {
   });
 };
 
-const renderRaisedHands = (people, eventId, sessionId) => {
-  return people.map((person) => {
-    return (
+const RaisedHandWidget = ({ person }) => {
+  const params = useParams();
+
+  const eventId = params.eventId;
+  const sessionId = params.sessionId;
+
+  const { eventDetails } = useSelector((state) => state.event);
+
+  return (
+    <>
       <PeopleListWidget className="mb-3">
         <div className="d-flex flex-row mb-4 justify-content-between">
           <div className="d-flex flex-row">
@@ -415,6 +437,7 @@ const renderRaisedHands = (people, eventId, sessionId) => {
 
         {person.isOnStage ? (
           <ViewCompleteProfileBtn
+            color={eventDetails.color}
             onClick={() => {
               socket.emit(
                 "removeFromStage",
@@ -435,6 +458,7 @@ const renderRaisedHands = (people, eventId, sessionId) => {
         ) : (
           <div className="d-flex flex-row align-items-center">
             <ViewCompleteProfileBtn
+              color={eventDetails.color}
               style={{ width: "48%" }}
               onClick={() => {
                 socket.emit(
@@ -454,6 +478,7 @@ const renderRaisedHands = (people, eventId, sessionId) => {
             </ViewCompleteProfileBtn>
 
             <ViewCompleteProfileBtn
+              color={eventDetails.color}
               style={{ width: "48%" }}
               onClick={() => {
                 socket.emit(
@@ -474,6 +499,16 @@ const renderRaisedHands = (people, eventId, sessionId) => {
           </div>
         )}
       </PeopleListWidget>
+    </>
+  );
+};
+
+const renderRaisedHands = (people) => {
+  return people.map((person) => {
+    return (
+      <>
+        <RaisedHandWidget person={person} />
+      </>
     );
   });
 };
@@ -596,7 +631,7 @@ const StageSideDrawerComponent = ({ runningStatus }) => {
 
   return (
     <>
-      <SessionSideDrawer> 
+      <SessionSideDrawer>
         <SessionSideIconBtnNav
           style={{
             gridTemplateColumns: gridColumns,
@@ -793,7 +828,7 @@ const StageSideDrawerComponent = ({ runningStatus }) => {
             case "raisedHands":
               return (
                 <div style={{ height: "73vh", overflow: "auto" }}>
-                  {renderRaisedHands(uniqueRaisedHands, eventId, sessionId)}
+                  {renderRaisedHands(uniqueRaisedHands)}
                 </div>
               );
             case "videos":

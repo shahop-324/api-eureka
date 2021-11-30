@@ -44,7 +44,8 @@ const NoOneInRoom = styled.div`
   height: 67vh;
   width: 100%;
   border-radius: 20px;
-  background-color: #152d35;
+  background-color: ${(props) =>
+    props && props.color ? props.color : "#152d35"};
 
   display: flex;
   flex-direction: column;
@@ -119,6 +120,8 @@ const StreamBody = ({
   console.log(processedScreenTracks);
 
   const { sessionDetails } = useSelector((state) => state.session);
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   // Decide which view we will render (There can be three views gallery, presentation mode and video mode)
 
@@ -289,7 +292,7 @@ const StreamBody = ({
                         </div>
                       ) : (
                         <div style={{ margin: "50px 65px" }}>
-                          <NoOneInRoom>
+                          <NoOneInRoom color={eventDetails.color}>
                             <img
                               src={VideoCall}
                               alt="No one is on stage"
@@ -345,6 +348,7 @@ const StreamBody = ({
                                   userId={el.userId}
                                   camera={el.camera}
                                   mic={el.mic}
+                                  onHover={true}
                                 />
                               );
                             } else {
@@ -402,6 +406,7 @@ const StreamBody = ({
                                   camera={el.camera}
                                   mic={el.mic}
                                   isScreenTrack={el.isScreenTrack}
+                                  onHover={true}
                                 />
                               </>
                             );

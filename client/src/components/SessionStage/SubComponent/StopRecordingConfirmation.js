@@ -25,6 +25,8 @@ const FormHeading = styled.div`
 const StopSessionRecording = ({ open, handleClose, handleStopRecording, setState }) => {
   const dispatch = useDispatch();
 
+  const {eventDetails} = useSelector((state) => state.event);
+
   const params = useParams();
   const sessionId = params.sessionId;
 
@@ -48,7 +50,7 @@ const StopSessionRecording = ({ open, handleClose, handleStopRecording, setState
           <FormHeading>Stop recording session</FormHeading>
         </HeaderFooter>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText style={{fontSize: "0.85rem"}}>
             This will stop recording session. Are you sure to proceed?
           </DialogContentText>
         </DialogContent>
@@ -63,6 +65,7 @@ const StopSessionRecording = ({ open, handleClose, handleStopRecording, setState
             Cancel
           </button>
           <button
+          style={{border: `1px solid ${eventDetails.color}`, backgroundColor: eventDetails.color}}
             className="btn btn-outline-text btn-primary"
             onClick={() => {
               socket.emit("stopCloudRecording", { sessionId }, (error) => {

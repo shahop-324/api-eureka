@@ -17,6 +17,8 @@ import StopScreenShareRoundedIcon from "@mui/icons-material/StopScreenShareRound
 import MicRoundedIcon from "@mui/icons-material/MicRounded";
 import MicOffRoundedIcon from "@mui/icons-material/MicOffRounded";
 
+import Tooltip from "@mui/material/Tooltip";
+
 const Header = styled.div``;
 const Heading = styled.div`
   font-weight: 500;
@@ -58,61 +60,73 @@ const renderPeople = (people, sessionId) => {
         </div>
         <div className="d-flex flex-row align-items-center justify-content-around px-4">
           {person.camera ? (
-            <IconButton
-              onClick={() => {
-                socket.emit(
-                  "muteVideo",
-                  { userId: person.userId, sessionId: sessionId },
-                  (error) => {
-                    alert(error);
-                  }
-                );
-              }}
-            >
-              <VideocamOffRoundedIcon style={{ color: "red" }} />
-            </IconButton>
+            <Tooltip title="Switch off camera ">
+              <IconButton
+                onClick={() => {
+                  socket.emit(
+                    "muteVideo",
+                    { userId: person.userId, sessionId: sessionId },
+                    (error) => {
+                      alert(error);
+                    }
+                  );
+                }}
+              >
+                <VideocamRoundedIcon style={{ color: "#05850F" }} />
+              </IconButton>
+            </Tooltip>
           ) : (
-            <IconButton>
-              <VideocamRoundedIcon style={{ color: "#212121" }} />
-            </IconButton>
+            <Tooltip title="Camera is off">
+              <IconButton>
+                <VideocamOffRoundedIcon style={{ color: "red" }} />
+              </IconButton>
+            </Tooltip>
           )}
           {person.microphone ? (
-            <IconButton
-              onClick={() => {
-                socket.emit(
-                  "muteMic",
-                  { userId: person.userId, sessionId: sessionId },
-                  (error) => {
-                    alert(error);
-                  }
-                );
-              }}
-            >
-              <MicOffRoundedIcon style={{ color: "red" }} />
-            </IconButton>
+            <Tooltip title="Switch off microphone">
+              <IconButton
+                onClick={() => {
+                  socket.emit(
+                    "muteMic",
+                    { userId: person.userId, sessionId: sessionId },
+                    (error) => {
+                      alert(error);
+                    }
+                  );
+                }}
+              >
+                <MicRoundedIcon style={{ color: "#05850F" }} />
+              </IconButton>
+            </Tooltip>
           ) : (
-            <IconButton>
-              <MicRoundedIcon style={{ color: "#212121" }} />
-            </IconButton>
+            <Tooltip title="Microphone is off">
+              <IconButton>
+                <MicOffRoundedIcon style={{ color: "red" }} />
+              </IconButton>
+            </Tooltip>
           )}
           {person.screen ? (
-            <IconButton
-              onClick={() => {
-                socket.emit(
-                  "muteScreenShare",
-                  { userId: person.userId, sessionId: sessionId },
-                  (error) => {
-                    alert(error);
-                  }
-                );
-              }}
-            >
-              <StopScreenShareRoundedIcon style={{ color: "red" }} />
-            </IconButton>
+            <Tooltip title="Switch off screen share">
+              <IconButton
+                onClick={() => {
+                  socket.emit(
+                    "muteScreenShare",
+                    { userId: person.userId, sessionId: sessionId },
+                    (error) => {
+                      alert(error);
+                    }
+                  );
+                }}
+              >
+                <ScreenShareRoundedIcon style={{ color: "#05850F" }} />
+              </IconButton>
+            </Tooltip>
           ) : (
-            <IconButton>
-              <ScreenShareRoundedIcon style={{ color: "#212121" }} />
-            </IconButton>
+            <Tooltip title="Screen share if off">
+              <IconButton>
+                <StopScreenShareRoundedIcon style={{ color: "red" }} />
+              </IconButton>
+            </Tooltip>
           )}
         </div>
       </PeopleListWidget>
@@ -131,14 +145,10 @@ const ManageStage = ({ open, handleClose }) => {
 
   if (sessionDetails) {
     for (let element of sessionDetails.onStagePeople) {
-      
       for (let item of sessionDetails.people) {
-        console.log(element.user,item._id );
-        console.log(element.user == item._id)
-        if (
-          element.user.toString() == item._id.toString()
-          
-        ) {
+        console.log(element.user, item._id);
+        console.log(element.user == item._id);
+        if (element.user.toString() == item._id.toString()) {
           uniquePeople.push({
             userId: item._id,
             name: `${item.firstName} ${item.lastName}`,

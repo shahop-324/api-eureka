@@ -15,12 +15,12 @@ const Scrollable = styled.div`
   width: 100%;
   overflow: auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
 `;
 
 const renderQnA = (QnAs, currentUserIsAHost, runningStatus) => {
   return QnAs.map((element) => {
-    if (element.deleted) return;
+    if (element.deleted) return <></>;
     if (!element.answeredBy) {
       // This question is unanswered
       return (
@@ -101,15 +101,17 @@ const MainQnAComponent = ({ currentUserIsAHost, runningStatus }) => {
         </Scrollable>
         {/* Render QnA input here */}
         {/* QnA can only be asked when session is live */}
-        {(() => {
-          switch (runningStatus) {
-            case "In Progress":
-              return <QnAInput />;
+        <div className="pb-2">
+          {(() => {
+            switch (runningStatus) {
+              case "In Progress":
+                return <QnAInput />;
 
-            default:
-              break;
-          }
-        })()}
+              default:
+                break;
+            }
+          })()}
+        </div>
       </QnAContainer>
     </>
   );

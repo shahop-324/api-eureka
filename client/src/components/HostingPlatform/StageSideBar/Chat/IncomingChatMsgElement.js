@@ -81,11 +81,16 @@ const IncomingChatMsgElement = ({
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
               >
+                {designation && organisation ? (
+                  <div style={{ color: "#212121" }}>
+                    {designation} {organisation}
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+
                 <div style={{ color: "#212121" }}>
-                  {designation}, {organisation}
-                </div>
-                <div style={{ color: "#212121" }}>
-                  {timeAgo.format(new Date(timestamp) , "round")}
+                  {timeAgo.format(new Date(timestamp), "round")}
                 </div>
               </div>
             </div>
@@ -104,7 +109,15 @@ const IncomingChatMsgElement = ({
             >
               <ReplyRoundedIcon
                 onClick={() => {
-                  createReplyWidget(name, image, msgText, organisation, designation, timestamp, chatMsgId);
+                  createReplyWidget(
+                    name,
+                    image,
+                    msgText,
+                    organisation,
+                    designation,
+                    timestamp,
+                    chatMsgId
+                  );
                 }}
                 className="chat-msg-hover-icon me-2"
                 style={{ display: visibility, fontSize: "18px" }}
@@ -116,14 +129,17 @@ const IncomingChatMsgElement = ({
                 className="chat-msg-hover-icon"
                 style={{ display: visibility, fontSize: "18px" }}
               />
-              {currentUserIsAHost ? <DeleteOutlineRoundedIcon
-                onClick={() => {
-                  setOpenDelete(true);
-                }}
-                className="chat-msg-hover-icon ms-2"
-                style={{ display: visibility, fontSize: "18px" }}
-              /> : <></> }
-              
+              {currentUserIsAHost ? (
+                <DeleteOutlineRoundedIcon
+                  onClick={() => {
+                    setOpenDelete(true);
+                  }}
+                  className="chat-msg-hover-icon ms-2"
+                  style={{ display: visibility, fontSize: "18px" }}
+                />
+              ) : (
+                <></>
+              )}
             </div>
             <div
               className="chat-msg-text ms-3 p-3"
@@ -137,7 +153,7 @@ const IncomingChatMsgElement = ({
 
       {/*  */}
       <ReportMsg
-      timestamp={timestamp}
+        timestamp={timestamp}
         name={name}
         image={image}
         msgText={msgText}
@@ -147,7 +163,6 @@ const IncomingChatMsgElement = ({
       />
 
       <DeleteMsg
-
         name={name}
         image={image}
         msgText={msgText}

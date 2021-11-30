@@ -81,9 +81,13 @@ const ChatMsgElement = ({
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
               >
-                <div style={{ color: "#212121" }}>
-                  {designation}, {organisation}
-                </div>
+                {designation && organisation ? (
+                  <div style={{ color: "#212121" }}>
+                    {designation} {organisation}
+                  </div>
+                ) : (
+                  <div></div>
+                )}
                 <div style={{ color: "#212121" }}>
                   {timeAgo.format(new Date(timestamp) , "round")}
                 </div>

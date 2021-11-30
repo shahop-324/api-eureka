@@ -10,6 +10,7 @@ import "./../../Styles/root.scss";
 import { Avatar, IconButton } from "@material-ui/core";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
+import { useSelector } from "react-redux";
 
 TimeAgo.addDefaultLocale(en);
 
@@ -167,6 +168,8 @@ const DeleteQnA = ({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const { eventDetails } = useSelector((state) => state.event);
+
   const eventId = params.eventId;
   const sessionId = params.sessionId;
 
@@ -238,7 +241,13 @@ const DeleteQnA = ({
                 deleteQnA();
               }}
               className="btn btn-primary btn-outline-text"
-              style={{ width: "100%" }}
+              style={{
+                width: "100%",
+                backgroundColor: eventDetails ? eventDetails.color : "#287CDB",
+                border: eventDetails
+                  ? `1px solid ${eventDetails.color}`
+                  : `1px solid #287CDB`,
+              }}
             >
               Delete
             </button>

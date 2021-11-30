@@ -86,9 +86,10 @@ const PeopleComponent = ({
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
               >
-                <div>
+                {designation && organisation ?   <div>
                   {designation}, {organisation}
-                </div>
+                </div> : <></>  }
+               
               </div>
             </div>
           </div>
@@ -203,7 +204,7 @@ const SideComponent = ({ tableId, peopleInThisRoom }) => {
 
   return (
     <>
-      <div className="table-side-drawer" style={{ minHeight: "68vh" }}>
+      <div className="table-side-drawer" style={{ minHeight: "75vh" }}>
         <Box sx={{ width: "100%" }}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs
@@ -229,8 +230,8 @@ const SideComponent = ({ tableId, peopleInThisRoom }) => {
           <TabPanel value={value} index={0}>
             <div
               style={{
-                maxHeight: "68vh !important",
-                height: "68vh",
+                maxHeight: "75vh !important",
+                height: "75vh",
                 overflow: "auto",
               }}
             >
@@ -240,8 +241,8 @@ const SideComponent = ({ tableId, peopleInThisRoom }) => {
           <TabPanel value={value} index={1}>
             <div
               style={{
-                maxHeight: "68vh !important",
-                height: "68vh",
+                maxHeight: "75vh !important",
+                height: "75vh",
                 overflow: "auto",
               }}
             >

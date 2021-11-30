@@ -69,12 +69,21 @@ const PeopleGridAvatar = ({
                   >
                     {name}
                   </div>
-                  <div className="people-headline">
-                    {designation} at {organisation}
-                  </div>
-                  <div className="people-location">
-                    {city}, {country}
-                  </div>
+                  {designation && organisation ? (
+                    <div className="people-headline">
+                      {designation} at {organisation}
+                    </div>
+                  ) : (
+                    <div></div>
+                  )}
+
+                  {city && country ? (
+                    <div className="people-location">
+                      {city}, {country}
+                    </div>
+                  ) : (
+                    <div></div>
+                  )}
                 </div>
               </div>
             </span>

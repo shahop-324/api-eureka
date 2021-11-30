@@ -178,9 +178,14 @@ const SelfReplyElement = ({
                     }}
                     className="d-flex flex-row align-items-center justify-content-between"
                   >
-                    <div style={{ color: "#E0E0E0" }}>
-                      {originalDesignation}, {originalOrganisation}
-                    </div>
+                    {originalDesignation && originalOrganisation ? (
+                      <div style={{ color: "#E0E0E0" }}>
+                        {originalDesignation}, {originalOrganisation}
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+
                     <div style={{ color: "#212121" }}>
                       {/* {timeAgo.format(new Date(timestamp) , "round")} */}
                     </div>

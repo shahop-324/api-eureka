@@ -224,9 +224,13 @@ const PeopleGridComponent = ({ person }) => {
             />
             <div className="ms-3">
               <PersonName className="mb-2">{`${person.firstName} ${person.lastName}`}</PersonName>
-              <PersonName
-                style={{ color: "#6D6D6D" }}
-              >{`${person.designation} ${person.organisation}`}</PersonName>
+              {person.designation && person.organisation ? (
+                <PersonName
+                  style={{ color: "#6D6D6D" }}
+                >{`${person.designation} ${person.organisation}`}</PersonName>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </PopOverBox>

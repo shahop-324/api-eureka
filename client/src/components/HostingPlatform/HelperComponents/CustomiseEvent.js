@@ -60,6 +60,9 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
   const [networkingEnabled, setNetworkingEnabled] = useState(
     eventDetails.networkingEnabled
   );
+  const [sponsorsEnabled, setSponsorsEnabled] = useState(
+    eventDetails.sponsorsEnabled
+  );
 
   // TODO Create form values out of these properties
 
@@ -403,6 +406,37 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                               );
                             }}
                             name="review"
+                          />
+                        }
+                      />
+                    </FormGroup>
+                  </div>
+                </div>
+                <div className="my-3">
+                  <Divider />
+                </div>
+                <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
+                  <div className="hosting-platform-widget-name">Sponsors / Partners</div>
+
+                  <div>
+                    <FormGroup row>
+                      <FormControlLabel
+                        control={
+                          <RoyalSwitch
+                            color={
+                              eventDetails ? eventDetails.color : "#538BF7"
+                            }
+                            checked={sponsorsEnabled}
+                            onChange={(e) => {
+                              setSponsorsEnabled(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.sponsorsEnabled = e.target.checked;
+                              dispatch(
+                                updateEventCustomisation(newFormValues, eventId)
+                              );
+                            }}
+                            name="sponsors"
                           />
                         }
                       />

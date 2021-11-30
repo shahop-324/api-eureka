@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Select from "react-select";
 import AgoraRTC from "agora-rtc-sdk-ng";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { showNotification } from "./../../../actions";
 
 const styles = {
@@ -59,13 +59,15 @@ const ButtonFilledDark = styled.div`
   font-size: 0.8rem;
   color: #ffffff;
   font-family: "Ubuntu";
-  background-color: #152d35;
+  background-color: ${(props) =>
+    props && props.color ? props.color : "#152d35"};
 
-  border: 1px solid #152d35;
+  border: ${(props) =>
+    props && props.color ? `1px solid ${props.color}` : `1px solid #152d35`};
   border-radius: 5px;
 
   &:hover {
-    color: #152d35;
+    color: ${(props) => (props && props.color ? props.color : "#152d35")};
     background-color: transparent;
     cursor: pointer;
   }
@@ -100,6 +102,8 @@ const StreamSettings = ({ rtc }) => {
   const [audioDevices, setAudioDevices] = useState([]);
 
   const [videoDevices, setVideoDevices] = useState([]);
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   const [cameraId, setCameraId] = useState(
     videoDevices[0] && videoDevices[0].value
@@ -201,6 +205,7 @@ const StreamSettings = ({ rtc }) => {
       </div>
       <div className="d-flex flex-row align-items-center justify-content-end">
         <ButtonFilledDark
+          color={eventDetails.color}
           onClick={() => {
             handleApplyStreamSettings();
           }}

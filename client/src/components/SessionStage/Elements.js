@@ -151,9 +151,10 @@ const BtnFilled = styled.div`
 const BtnOutlined = styled.div`
   padding: 5px 8px;
   background-color: transparent;
-  border: 1px solid #1f3e49;
+  border: ${(props) =>
+    props && props.color ? `1px solid ${props.color}` : `1px solid #1f3e49`};
 
-  color: #1f3e49;
+  color: ${(props) => (props && props.color ? props.color : "#1f3e49")};
   font-family: "Ubuntu";
   font-weight: 500;
   font-size: 0.8rem;
@@ -167,7 +168,8 @@ const BtnOutlined = styled.div`
   &:hover {
     color: #ffffff;
     cursor: pointer;
-    background-color: #1f3e49;
+    background-color: ${(props) =>
+      props && props.color ? props.color : "#1f3e49"};
   }
 `;
 
@@ -391,9 +393,10 @@ const UserRoleTag = styled.div`
 `;
 
 const ViewCompleteProfileBtn = styled.div`
-  border: 1px solid #152d35;
+  border: ${(props) =>
+    props && props.color ? `1px solid ${props.color}` : `1px solid #152d35`};
   background-color: transparent;
-  color: #152d35;
+  color: ${(props) => (props && props.color ? props.color : "#152d35")};
   font-weight: 500;
   font-size: 0.7rem;
   font-family: "Ubuntu";
@@ -404,7 +407,8 @@ const ViewCompleteProfileBtn = styled.div`
   border-radius: 5px;
 
   &:hover {
-    background-color: #152d35;
+    background-color: ${(props) =>
+      props && props.color ? props.color : "#152d35"};
     color: #ffff;
     cursor: pointer;
   }

@@ -34,6 +34,11 @@ import CancelPresentationOutlinedIcon from "@mui/icons-material/CancelPresentati
 import BoothTableStreamSettings from "../StreamSettings/BoothTableScreen";
 
 import α from "color-alpha";
+import Slide from '@mui/material/Slide';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const StyledIconButton = styled.div`
   display: inline-block;
@@ -76,6 +81,8 @@ const TableScreenBody = styled.div`
     props && props.color
       ? `${α(props.color, 1.2)} !important`
       : "#122225 !important"};
+      height: 100vh;
+      overflow: hidden;
 `;
 
 const TableScreen = ({
@@ -848,16 +855,13 @@ const TableScreen = ({
   return (
     <>
       <Dialog
+      fullScreen
+      TransitionComponent={Transition}
         fullWidth={fullWidth}
         maxWidth={maxWidth}
         open={openTableScreen}
         aria-labelledby="customized-dialog-title"
-        style={{
-          maxWidth: "1600px",
-          minWidth: "1333px",
-          height: "100vh",
-          margin: "0 auto 0 auto",
-        }}
+        
       >
         <TableScreenBody
           color={eventDetails.color}
@@ -905,7 +909,7 @@ const TableScreen = ({
               className="table-meet-body-dark-container py-4"
               style={{
                 width: "100%",
-                height: "100%",
+                height: "90vh",
                 display: "grid",
                 gridTemplateColumns: "5fr 1.65fr",
                 gridGap: "18px",
@@ -913,7 +917,7 @@ const TableScreen = ({
             >
               <div
                 className="d-flex flex-column justify-content-between"
-                style={{ width: "100%", height: "100%", maxHeight: "80vh" }}
+                style={{ width: "100%", height: "100%", maxHeight: "87vh" }}
               >
                 {/* // Here we need to place stream body */}
                 {/* // ! */}

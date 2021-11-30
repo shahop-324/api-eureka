@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Avatar from "@mui/material/Avatar";
 import { useSelector } from "react-redux";
@@ -38,9 +38,12 @@ const VideoPlayer = ({
   mic,
   height,
   isScreenTrack,
+  onHover,
 }) => {
   let isMe = false;
   const userDetails = useSelector((state) => state.user.userDetails);
+
+  const [isHovered, setIsHovered] = useState(false);
 
   // console.log(camera, "This is the camera state as we are tracking it right now.");
 
@@ -53,6 +56,12 @@ const VideoPlayer = ({
   return (
     <>
       <Container
+      onMouseEnter={() => {
+        setIsHovered(true);
+      }}
+      onMouseLeave={() => {
+        setIsHovered(false);
+      }}
         isScreenTrack={isScreenTrack}
         style={{
           height: height ? height : "auto",
@@ -93,16 +102,17 @@ const VideoPlayer = ({
           <></>
         )}
 
-        {!isScreenTrack && (
-          <UserIdentity className="d-flex flex-row align-items-center p-3">
-            <span className="">
+        {!isScreenTrack && (!onHover || isHovered) && (
+          <UserIdentity className="d-flex flex-row align-items-center px-3 py-2">
+            <span className="" style={{fontSize: "13px"}}>
               {name} {isMe ? "(You)" : <></>}
             </span>
             {mic ? (
-              <MicRoundedIcon style={{ color: "#45AC15" }} className="ms-3" />
+              <MicRoundedIcon style={{ color: "#45AC15", fontSize: "16px" }} className="ms-3" />
             ) : (
               <MicOffRoundedIcon
-                style={{ color: "#AC1A15" }}
+
+                style={{ color: "#AC1A15", fontSize: "16px" }}
                 className="ms-3"
               />
             )}

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import socket from "./../../service/socket";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -47,12 +47,14 @@ const reportOptions = [
   { value: "Other", label: "Other" },
 ];
 
-const MsgElement = ({ name,
+const MsgElement = ({
+  name,
   image,
   msgText,
   timestamp,
   designation,
-  organisation, }) => {
+  organisation,
+}) => {
   return (
     <>
       <div
@@ -107,13 +109,15 @@ const MsgElement = ({ name,
   );
 };
 
-const ReportMsg = ({name,
+const ReportMsg = ({
+  name,
   image,
   msgText,
   open,
   handleClose,
   timestamp,
-  msgId,}) => {
+  msgId,
+}) => {
   const params = useParams();
   const eventId = params.eventId;
 
@@ -123,6 +127,8 @@ const ReportMsg = ({name,
   const [reason, setReason] = useState(null);
 
   const { userDetails } = useSelector((state) => state.user);
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   const userId = userDetails._id;
 
@@ -156,10 +162,12 @@ const ReportMsg = ({name,
 
           {/* <ChatMsgElement /> */}
           <div className="msg-to-report-container p-3 mb-4">
-            <MsgElement name={name}
+            <MsgElement
+              name={name}
               image={image}
               msgText={msgText}
-              timestamp={timestamp} />
+              timestamp={timestamp}
+            />
           </div>
 
           <div
@@ -190,24 +198,30 @@ const ReportMsg = ({name,
             style={{ border: "none" }}
           >
             <button
-             onClick={() => {
-              socket.emit(
-                "reportMsg",
-                {
-                  msgId,
-                  userId,
-                  eventId,
-                  reason: reason.value,
-                  msgType: "session",
-                },
-                (error) => {
-                  alert(error);
-                }
-              );
-              handleClose();
-            }}
+              onClick={() => {
+                socket.emit(
+                  "reportMsg",
+                  {
+                    msgId,
+                    userId,
+                    eventId,
+                    reason: reason.value,
+                    msgType: "session",
+                  },
+                  (error) => {
+                    alert(error);
+                  }
+                );
+                handleClose();
+              }}
               className="btn btn-primary btn-outline-text"
-              style={{ width: "100%" }}
+              style={{
+                width: "100%",
+                backgroundColor: eventDetails ? eventDetails.color : "#3470E7",
+                border: eventDetails
+                  ? `1px solid ${eventDetails.color}`
+                  : `1px solid #3470E7`,
+              }}
             >
               Report
             </button>
