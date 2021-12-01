@@ -21,5 +21,9 @@ const vibeSchema = new mongoose.Schema(
   }
 );
 
+vibeSchema.index({
+  name: "text",
+});
+
 const Vibe = mongoose.model("Vibe", vibeSchema);
 module.exports = Vibe;

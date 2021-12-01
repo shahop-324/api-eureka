@@ -625,12 +625,23 @@ exports.getReviews = catchAsync(async (req, res, next) => {
 
   const communityId = req.params.communityId;
 
-  const reviews = await Review.find({
-    $and: [
-      { communityId: mongoose.Types.ObjectId(communityId) },
-      { hidden: false },
-    ],
-  }).populate("user", "firstName lastName image");
+  const events = await Event.find({ communityId: communityId });
+
+  let reviews = [];
+
+  for (let element of events) {
+    const eventReviews = await Review.find({
+      $and: [
+        { eventId: mongoose.Types.ObjectId(element._id) },
+        { hidden: false },
+      ],
+    }).populate("user", "firstName lastName image");
+
+    for (let item of eventReviews) 
+    {
+      reviews.push(item);
+    }
+  }
 
   res.status(200).json({
     status: "success",

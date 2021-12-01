@@ -1,4 +1,5 @@
 const catchAsync = require("../utils/catchAsync");
+const apiFeatures = require("./../utils/apiFeatures");
 const Event = require("../models/eventModel");
 const Community = require("../models/communityModel");
 const Registration = require("../models/registrationsModel");
@@ -93,18 +94,26 @@ exports.getOneRegistration = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllRegistrationsForOneEvent = catchAsync(async (req, res, next) => {
-  const registrations = await Registration.find({
-    $and: [
-      { bookedForEventId: mongoose.Types.ObjectId(req.params.eventId) },
-      { type: "Attendee" },
-    ],
-  });
+  try {
+    const query = Registration.find({
+      $and: [
+        { bookedForEventId: mongoose.Types.ObjectId(req.params.eventId) },
+        { type: "Attendee" },
+      ],
+    });
 
-  res.status(200).json({
-    status: "success",
-    length: registrations.length,
-    data: registrations,
-  });
+    const features = new apiFeatures(query, req.query).textFilter().registrationTicketsFilter();
+
+    const registrations = await features.query;
+
+    res.status(200).json({
+      status: "success",
+      length: registrations.length,
+      data: registrations,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 exports.sendInvite = catchAsync(async (req, res, next) => {

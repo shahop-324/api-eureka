@@ -97,7 +97,9 @@ exports.getAllBoothOfEvent = catchAsync(async (req, res, next) => {
       eventId: mongoose.Types.ObjectId(req.params.eventId),
     });
 
-    const features = new apiFeatures(query, req.query).textFilter().tagFilter();
+    const features = new apiFeatures(query, req.query)
+      .textFilter()
+      .boothTagsFilter();
     const booths = await features.query;
 
     res.status(200).json({

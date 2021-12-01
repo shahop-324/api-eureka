@@ -4,6 +4,7 @@ const Event = require("../models/eventModel");
 const mongoose = require("mongoose");
 const catchAsync = require("../utils/catchAsync");
 const Ticket = require("./../models/ticketModel");
+const apiFeatures = require("../utils/apiFeatures");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -67,9 +68,15 @@ exports.getAllCoupons = catchAsync(async (req, res, next) => {
   try {
     const eventId = req.params.eventId;
 
-    let couponDocs = await Coupon.find({
+    const query = Coupon.find({
       eventId: mongoose.Types.ObjectId(eventId),
     }).populate("tickets", "name");
+
+const features = new apiFeatures(query, req.query).couponTicketsFilter();
+
+  
+
+    let couponDocs = await features.query;
 
     // Filter out all deleted coupons
 

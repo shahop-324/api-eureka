@@ -317,5 +317,15 @@ userSchema.methods.createPasswordResetToken = function () {
   return resetToken;
 };
 
+userSchema.index({
+  firstName: "text",
+  lastName: "text",
+  headline: "text",
+  city: "text",
+  country: "text",
+  organisation: "text",
+  designation: "text",
+});
+
 const User = mongoose.model("User", userSchema);
 module.exports = User;

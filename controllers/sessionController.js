@@ -230,7 +230,9 @@ exports.getAllSessions = catchAsync(async (req, res, next) => {
     .populate("host", "firstName lastName email")
     .populate("tracks");
 
-  const features = new apiFeatures(query, req.query).textFilter();
+  const features = new apiFeatures(query, req.query)
+    .textFilter()
+    .sessionTracksFilter();
   const sessions = await features.query;
 
   res.status(200).json({
@@ -249,7 +251,13 @@ exports.getAllSessionsForUser = catchAsync(async (req, res, next) => {
       .populate("speaker")
       .populate("currentlyInSession");
 
-    const features = new apiFeatures(query, req.query).textFilter();
+    console.log(req.query);
+
+    const features = new apiFeatures(query, req.query)
+      .textFilter()
+      .sessionSpeakersFilter()
+      .sessionTracksFilter()
+      .sessionTagsFilter();
     const sessions = await features.query;
 
     res.status(200).json({

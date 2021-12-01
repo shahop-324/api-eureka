@@ -216,11 +216,20 @@ router.get("/getEventSpeakers/:eventId", globalController.getEventSpeakers);
 
 router.get("/getPeopleInEvent/:eventId", globalController.getPeopleInEvent);
 
-router.get("/getPeopleOnBoothTable/:tableId", globalController.getPeopleOnBoothTable);
+router.get(
+  "/getPeopleOnBoothTable/:tableId",
+  globalController.getPeopleOnBoothTable
+);
 
-router.get("/getPeopleOnLoungeTable/:tableId", globalController.getPeopleOnLoungeTable);
+router.get(
+  "/getPeopleOnLoungeTable/:tableId",
+  globalController.getPeopleOnLoungeTable
+);
 
-router.get("/getSessionSpeakersTagsTracks/:eventId", globalController.getSessionSpeakersTagsTracks);
+router.get(
+  "/getSessionSpeakersTagsTracks/:eventId",
+  globalController.getSessionSpeakersTagsTracks
+);
 
 router.get(
   "/getMyAllPersonalChatMsg/:userId",
@@ -324,6 +333,8 @@ router.get(
   globalController.getEventRegistrations
 );
 
+router.get("/getPeopleInThisEvent/:eventId", authController.protect, globalController.getPeopleInThisEvent);
+
 router.post(
   "/resendCommunityVerificationMail/:id",
   globalController.resendCommunityVerificationMail
@@ -345,6 +356,12 @@ router.post(
   "/changeCommunityAccountRequestEmail/:id",
   authController.protect,
   globalController.changeCommunityAccountRequestEmail
+);
+
+router.get(
+  "/getPeopleInThisSession/:sessionId",
+  authController.protect,
+  globalController.getPeopleInThisSession
 );
 
 router.get(
@@ -423,10 +440,22 @@ router.post(
   globalController.acceptInEvent
 );
 
-router.post("/resetEventLabels/:eventId", authController.protectCommunity, globalController.resetEventLabels);
+router.post(
+  "/resetEventLabels/:eventId",
+  authController.protectCommunity,
+  globalController.resetEventLabels
+);
 
-router.post("/hideReview/:reviewId", authController.protectCommunity, globalController.hideReview);
+router.post(
+  "/hideReview/:reviewId",
+  authController.protectCommunity,
+  globalController.hideReview
+);
 
-router.post("/showReview/:reviewId", authController.protectCommunity, globalController.showReview);
+router.post(
+  "/showReview/:reviewId",
+  authController.protectCommunity,
+  globalController.showReview
+);
 
 module.exports = router;

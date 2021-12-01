@@ -5,6 +5,7 @@ class apiFeatures {
     this.query = query;
     this.queryString = queryString;
   }
+
   answerStatusFilter() {
     if (this.queryString.answerStatus) {
       this.query = this.query.find({
@@ -66,6 +67,7 @@ class apiFeatures {
     }
     return this;
   }
+
   tagFilter() {
     if (this.queryString.tag) {
       this.query = this.query
@@ -74,6 +76,7 @@ class apiFeatures {
     }
     return this;
   }
+
   sponsorFilter() {
     if (this.queryString.sponsorStatus) {
       this.query = this.query
@@ -86,6 +89,87 @@ class apiFeatures {
     if (this.queryString.sessionId) {
       this.query = this.query.find({
         sessions: { $in: mongoose.Types.ObjectId(this.queryString.sessionId) },
+      });
+    }
+    return this;
+  }
+
+  recordingSessionsFilter() {
+    if (this.queryString.sessions) {
+      this.query = this.query.find({
+        sessions: { 
+          $in: this.queryString.sessions.split(",") 
+        },
+      });
+    }
+    return this;
+  }
+
+  speakerSessionsFilter() {
+    if (this.queryString.sessions) {
+      this.query = this.query.find({
+        sessions: {
+          $in: this.queryString.sessions.split(","),
+        },
+      });
+    }
+    return this;
+  }
+
+  couponTicketsFilter() {
+    if (this.queryString.tickets) {
+      this.query = this.query.find({
+        tickets: {
+          $in: this.queryString.tickets.split(","),
+        },
+      });
+    }
+    return this;
+  }
+
+  sessionSpeakersFilter() {
+    if (this.queryString.speakers) {
+      this.query = this.query.find({
+        speaker: {
+          $in: this.queryString.speakers.split(","),
+        },
+      });
+    }
+    return this;
+  }
+
+  sessionTracksFilter() {
+    if (this.queryString.tracks) {
+      this.query = this.query.find({
+        tracks: {
+          $in: this.queryString.tracks.split(","),
+        },
+      });
+    }
+    return this;
+  }
+
+  registrationTicketsFilter() {
+    if (this.queryString.tickets)
+      this.query = this.query.find({
+        ticketType: { $in: this.queryString.tickets.split(",") },
+      });
+    return this;
+  }
+
+  boothTagsFilter() {
+    if (this.queryString.tags) {
+      this.query = this.query.find({
+        tags: { $in: this.queryString.tags.split(",") },
+      });
+    }
+    return this;
+  }
+
+  sessionTagsFilter() {
+    if (this.queryString.tags) {
+      this.query = this.query.find({
+        tags: { $in: this.queryString.tags.split(",") },
       });
     }
     return this;
@@ -161,8 +245,6 @@ class apiFeatures {
       const limit = this.queryString.limit * 1 || 10;
       const skip = (page - 1) * limit;
       console.log(skip);
-
-      
 
       this.query = this.query.skip(skip).limit(limit);
     }

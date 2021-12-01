@@ -4,6 +4,7 @@ const Event = require("../models/eventModel");
 const catchAsync = require("../utils/catchAsync");
 const ReviewsRef = require("../models/reviewsIdsCommunityWise");
 const Review = require("./../models/reviewModel");
+const apiFeatures = require("./../utils/apiFeatures")
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
   const communityWhichWantsAllItsReviews = await Community.findById(
@@ -47,9 +48,13 @@ exports.getAllReviewsForOneEvent = catchAsync(async (req, res, next) => {
 exports.fetchReviews = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
 
-  const reviews = await Review.find({
+  const query = Review.find({
     eventId: mongoose.Types.ObjectId(eventId),
   }).populate("user", "firstName lastName image");
+
+  const features = new apiFeatures(query, req.query).textFilter();
+
+  const reviews = await features.query;
 
   res.status(200).json({
     status: "success",

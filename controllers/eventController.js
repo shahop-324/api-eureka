@@ -1477,7 +1477,11 @@ exports.addVibe = catchAsync(async (req, res, next) => {
 exports.getVibes = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
 
-  const Vibes = await Vibe.find({ eventId: eventId });
+  const query = Vibe.find({ eventId: eventId });
+
+  const features = new apiFeatures(query, req.query).textFilter();
+
+  const Vibes = await features.query;
 
   res.status(200).json({
     status: "success",

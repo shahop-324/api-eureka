@@ -247,7 +247,10 @@ sessionSchema.index({ name: "text", description: "text" });
 
 sessionSchema.pre(/^find/, function (next) {
   this.find({ status: { $ne: "Deleted" } })
-    .populate("people")
+    .populate(
+      "people",
+      "firstName lastName image city country organisation designation"
+    )
     .populate("host")
     .populate("speaker");
   next();

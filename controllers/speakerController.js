@@ -320,22 +320,30 @@ exports.DeleteSpeaker = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllSpeakers = catchAsync(async (req, res, next) => {
-  const query = Speaker.find({
-    eventId: mongoose.Types.ObjectId(req.params.eventId),
-    // sessionId: mongoose.Types.ObjectId(req.query.sessionId),
-  }).populate("sessions");
 
-  const features = new apiFeatures(query, req.query)
-    .textFilter()
-    .sessionFilter();
-  const speakers = await features.query;
+  try{
+    const query = Speaker.find({
+      eventId: mongoose.Types.ObjectId(req.params.eventId),
+      // sessionId: mongoose.Types.ObjectId(req.query.sessionId),
+    }).populate("sessions");
+  
+    const features = new apiFeatures(query, req.query)
+      .textFilter()
+      .speakerSessionsFilter();
+    const speakers = await features.query;
+  
+    res.status(200).json({
+      status: "SUCCESS",
+      data: {
+        speakers,
+      },
+    });
+  }
+  catch(error) {
+    console.log(error);
+  }
 
-  res.status(200).json({
-    status: "SUCCESS",
-    data: {
-      speakers,
-    },
-  });
+
 });
 
 exports.sendInvitation = catchAsync(async (req, res, next) => {

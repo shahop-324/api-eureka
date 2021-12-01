@@ -639,6 +639,55 @@ const eventSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+    basicDetailsFilled: {
+      type: Boolean,
+      default: false,
+    },
+
+    ticketsCreated: {
+      type: Boolean,
+      default: false,
+    },
+    registrationThemeCreated: {
+      type: Boolean,
+      default: false,
+    },
+
+    eventVenueVisited: {
+      type: Boolean,
+      default: false,
+    },
+
+    videosAdded: {
+      type: Boolean,
+      default: false,
+    },
+
+    vibesAdded: {
+      type: Boolean,
+      default: false,
+    },
+
+    sessionCreated: {
+      type: Boolean,
+      default: false,
+    },
+
+    speakerAdded: {
+      type: Boolean,
+      default: false,
+    },
+
+    IntegrationVisited: {
+      type: Boolean,
+      default: false,
+    },
+
+    PreviewClicked: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     versionKey: false,

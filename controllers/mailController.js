@@ -1,6 +1,7 @@
 const catchAsync = require("./../utils/catchAsync");
 const Mail = require("./../models/eventMailModel");
 const HTMLParser = require("node-html-parser");
+const apiFeatures = require("./../utils/apiFeatures");
 
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
@@ -166,22 +167,18 @@ exports.getOneMail = catchAsync(async (req, res, next) => {
 exports.getMails = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
 
-  await Mail.find(
-    { $and: [{ eventId: eventId }, { deleted: false }] },
-    (err, doc) => {
-      if (err) {
-        res.status(400).json({
-          status: "Error",
-          message: "Failed to fetch mails. Please try again later.",
-        });
-      } else {
-        res.status(200).json({
-          status: "success",
-          data: doc,
-        });
-      }
-    }
-  );
+  const query = Mail.find({ $and: [{ eventId: eventId }, { deleted: false }] });
+
+  const features = new apiFeatures(query, req.query).textFilter();
+
+const mails = await features.query;
+
+res.status(200).json({
+  status: "success",
+  data: mails,
+});
+
+
 });
 
 // * Send Test Email

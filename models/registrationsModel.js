@@ -218,5 +218,20 @@ const registrationSchema = new mongoose.Schema(
   }
 );
 
+registrationSchema.index({
+  userName: "text",
+  userEmail: "text",
+  email: "text",
+  first_name: "text",
+  last_name: "text",
+  name: "text",
+  headline: "text",
+  city: "text",
+  country: "text",
+  organisation: "text",
+  designation: "text",
+  ticketType: "text",
+});
+
 const Registration = mongoose.model("Registration", registrationSchema);
 module.exports = Registration;

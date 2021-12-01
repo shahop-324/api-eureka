@@ -1353,9 +1353,13 @@ exports.getEventSpeakers = catchAsync(async (req, res, next) => {
 exports.getPeopleInEvent = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
 
-  const registrations = await Registration.find({
+  const query = Registration.find({
     bookedForEventId: mongoose.Types.ObjectId(eventId),
   });
+
+  const features = new apiFeatures(query, req.query).textFilter();
+
+  const registrations = await features.query;
 
   res.status(200).json({
     status: "success",
@@ -1770,9 +1774,13 @@ exports.sendStageReminder = catchAsync(async (req, res, next) => {
 exports.getEventRegistrations = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
 
-  const registrations = await Registration.find({
+  const query = Registration.find({
     bookedForEventId: mongoose.Types.ObjectId(eventId),
   });
+
+  const features = new apiFeatures(query, req.query).textFilter();
+
+  const registrations = await features.query;
 
   res.status(200).json({
     status: "success",
@@ -2876,5 +2884,45 @@ exports.getSessionSpeakersTagsTracks = catchAsync(async (req, res, next) => {
     tags: processedTags,
     tracks: processedTracks,
     speakers: processedSpeakers,
+  });
+});
+
+exports.getPeopleInThisSession = catchAsync(async (req, res, next) => {
+  const { people } = await Session.findById(req.params.sessionId).select(
+    "people"
+  );
+
+  const peopleIds = people.map((el) => el._id);
+
+  const query = User.find({ _id: { $in: peopleIds } });
+
+  const features = new apiFeatures(query, req.query).textFilter();
+
+  const peopleDocs = await features.query;
+
+  console.log(peopleDocs);
+
+  res.status(200).json({
+    status: "success",
+    data: peopleDocs,
+  });
+});
+
+exports.getPeopleInThisEvent = catchAsync(async (req, res, next) => {
+  const { people } = await Event.findById(req.params.eventId);
+
+  const peopleIds = people.map((el) => el._id);
+
+  const query = User.find({ _id: { $in: peopleIds } });
+
+  const features = new apiFeatures(query, req.query).textFilter();
+
+  const peopleDocs = await features.query;
+
+  console.log(peopleDocs);
+
+  res.status(200).json({
+    status: "success",
+    data: peopleDocs,
   });
 });

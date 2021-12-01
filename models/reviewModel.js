@@ -38,5 +38,10 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+reviewSchema.index({
+  reviewComment: "text",
+  rating: "text",
+});
+
 const Review = mongoose.model("Review", reviewSchema);
 module.exports = Review;

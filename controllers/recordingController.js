@@ -3,15 +3,20 @@ const Session = require("./../models/sessionModel");
 const Community = require("../models/communityModel");
 const Event = require("../models/eventModel");
 const Recording = require("./../models/recordingModel");
+const apiFeatures = require("./../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 
 exports.fetchRecordings = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
 
-  const recordings = await Recording.find({
+  const query = Recording.find({
     eventId: mongoose.Types.ObjectId(eventId),
   });
 
+  const features = new apiFeatures(query, req.query).textFilter().recordingSessionsFilter();
+
+  const recordings = await features.query;
+  
   res.status(200).json({
     status: "success",
     data: recordings,

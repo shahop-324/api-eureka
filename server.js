@@ -133,7 +133,11 @@ io.on("connect", (socket) => {
         from: "", // Change to your verified sender
         subject: `You have been suspended from ${eventDoc.eventName}`,
         text: `You have been suspended from ${eventDoc.eventName}. Here is what event organisers have to say about this ${warning}`,
-        html: YouHaveBeenSuspended(eventDoc.eventName, blockedUserDoc.firstName, warning),
+        html: YouHaveBeenSuspended(
+          eventDoc.eventName,
+          blockedUserDoc.firstName,
+          warning
+        ),
       };
 
       // TODO Generate a notification for user
@@ -378,7 +382,11 @@ io.on("connect", (socket) => {
         from: "shreyanshshah242@gmail.com", // Change to your verified sender
         subject: `You have been suspended from ${eventDoc.eventName}`,
         text: `You have been suspended from ${eventDoc.eventName}. Here is what event organisers have to say about this ${warning}`,
-        html: YouHaveBeenSuspended(eventDoc.eventName, msgSenderUserDoc.firstName, warning),
+        html: YouHaveBeenSuspended(
+          eventDoc.eventName,
+          msgSenderUserDoc.firstName,
+          warning
+        ),
       };
 
       // TODO Generate a notification for user
@@ -524,7 +532,11 @@ io.on("connect", (socket) => {
       to: msgSenderUserDoc.email, // Change to your recipient
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: `You have a warning from ${eventDoc.eventName}`,
-      text: YouHaveAWarning(msgSenderUserDoc.firstName, eventDoc.eventName, warning ),
+      text: YouHaveAWarning(
+        msgSenderUserDoc.firstName,
+        eventDoc.eventName,
+        warning
+      ),
       // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
     };
 
@@ -706,7 +718,11 @@ io.on("connect", (socket) => {
       privilegeExpiredTs
     );
 
-    console.log("Channel name", channelName, "afe1eaa28f57452a865fa81190eed1c2");
+    console.log(
+      "Channel name",
+      channelName,
+      "afe1eaa28f57452a865fa81190eed1c2"
+    );
 
     const customerKey = "421e170e57a348b4a03714870d2ecb5b"; // AGORA CUSTOMER KEY
     // Customer secret
@@ -2045,10 +2061,9 @@ io.on("connect", (socket) => {
         }
       }
 
-      if(thisUserOnStage) {
+      if (thisUserOnStage) {
         thisUserOnStage.camera = camera;
       }
-      
 
       // 3.) save Table Doc
 
@@ -2086,7 +2101,9 @@ io.on("connect", (socket) => {
         }
       }
 
-      thisUserOnStage.camera = camera;
+      if (thisUserOnStage) {
+        thisUserOnStage.camera = camera;
+      }
 
       // 3.) save Table Doc
 
