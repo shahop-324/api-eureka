@@ -642,7 +642,7 @@ const eventSchema = new mongoose.Schema(
 
     basicDetailsFilled: {
       type: Boolean,
-      default: false,
+      default: true,
     },
 
     ticketsCreated: {
@@ -679,14 +679,39 @@ const eventSchema = new mongoose.Schema(
       default: false,
     },
 
-    IntegrationVisited: {
+    integrationVisited: {
       type: Boolean,
       default: false,
     },
 
-    PreviewClicked: {
+    previewClicked: {
       type: Boolean,
       default: false,
+    },
+
+    countries: {
+      type: Map,
+      of: String,
+    },
+
+    grossSale: {
+      type: Number,
+      default: 0,
+    },
+
+    merchantFees: {
+      type: Number,
+      default: 0,
+    },
+
+    platformFees: {
+      type: Number,
+      default: 0,
+    },
+
+    netSales: {
+      type: Number,
+      default: 0,
     },
   },
   {

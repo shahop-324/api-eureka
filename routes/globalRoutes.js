@@ -333,7 +333,11 @@ router.get(
   globalController.getEventRegistrations
 );
 
-router.get("/getPeopleInThisEvent/:eventId", authController.protect, globalController.getPeopleInThisEvent);
+router.get(
+  "/getPeopleInThisEvent/:eventId",
+  authController.protect,
+  globalController.getPeopleInThisEvent
+);
 
 router.post(
   "/resendCommunityVerificationMail/:id",
@@ -456,6 +460,12 @@ router.post(
   "/showReview/:reviewId",
   authController.protectCommunity,
   globalController.showReview
+);
+
+router.get(
+  "/fetchCheckListDetails/:eventId",
+  authController.protect,
+  globalController.getChecklistDetails
 );
 
 module.exports = router;

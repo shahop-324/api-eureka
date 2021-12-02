@@ -35,6 +35,8 @@ const EmailCreditsAddon = require("../../Mail/EmailCreditsAddon");
 const CloudStorageAddOn = require("../../Mail/CloudStorageAddOn");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
+const lookup = require("country-code-lookup");
+
 const razorpay = new Razorpay({
   key_id: "rzp_live_bDVAURs4oXxSGi",
   key_secret: "TFitnOVh9eOIFK3qdZsfCLfQ",
@@ -373,6 +375,16 @@ exports.createEventTicketOrder = catchAsync(async (req, res, next) => {
   const userId = req.body.userId;
   const couponId = req.body.couponId;
 
+  const country = req.body.country;
+
+  const lookupObj = lookup.byCountry(country);
+
+  let countryISOAplha2Code = lookupObj.iso2;
+
+  if (countryISOAplha2Code) {
+    countryISOAplha2Code = countryISOAplha2Code.toLowerCase();
+  }
+
   // * DONE check if this user is already registered in this event => if yes then do not allow to register again
 
   const existingRegistration = await Registration.findOne({
@@ -419,6 +431,7 @@ exports.createEventTicketOrder = catchAsync(async (req, res, next) => {
           ticketId: ticketId,
           couponId: couponId,
           transactionType: "event_ticket_purchase",
+          country: countryISOAplha2Code,
         },
       },
       async (error, order) => {
@@ -455,22 +468,20 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
     if (purpose === "Event ticket purchase") {
       try {
+        const country = paymentEntity.notes.country;
         const userId = paymentEntity.notes.userId;
         const eventId = paymentEntity.notes.eventId;
         const communityId = paymentEntity.notes.communityId;
         const ticketId = paymentEntity.notes.ticketId;
         const couponId = paymentEntity.notes.couponId;
-
         const amount = paymentEntity.amount;
         const paymentId = paymentEntity.id;
         const email = paymentEntity.email;
         const paymentStatus = paymentEntity.status;
         const contact = paymentEntity.contact;
         const timestamp = paymentEntity.created_at;
-
         const community = await Community.findById(communityId);
         const hapikey = community.hubspotApiKey;
-
         const salesForceAccount = await SalesForce.findOne({
           communityId: communityId,
         });
@@ -498,7 +509,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
         communityGettingEventTransaction.amountToWithdraw =
           communityGettingEventTransaction.amountToWithdraw +
-          Math.floor(amount * 0.93);
+          Math.floor((amount / 100) * 0.93);
 
         await communityGettingEventTransaction.save({
           new: true,
@@ -508,6 +519,28 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         const userDoingEventTransaction = await User.findById(userId);
 
         const eventGettingEventTransaction = await Event.findById(eventId);
+
+        eventGettingEventTransaction.merchantFees =
+          eventGettingEventTransaction.merchantFees +
+          Math.ceil((amount / 100) * (2 / 100));
+        eventGettingEventTransaction.platformFees =
+          eventGettingEventTransaction.platformFees +
+          Math.ceil((amount / 100) * (7 / 100));
+        eventGettingEventTransaction.grossSale =
+          eventGettingEventTransaction.grossSale +
+          Math.floor((amount / 100) * (91 / 100));
+        eventGettingEventTransaction.netSales =
+          eventGettingEventTransaction.netSales + Math.floor(amount / 100);
+
+        if (country) {
+          let existingCountry = eventGettingEventTransaction.countries.country;
+          if (existingCountry) {
+            eventGettingEventTransaction.countries.country =
+              eventGettingEventTransaction.countries.country + 1;
+          } else {
+            eventGettingEventTransaction.countries.country = 1;
+          }
+        }
 
         eventGettingEventTransaction.totalRegistrations =
           eventGettingEventTransaction.totalRegistrations + 1;
@@ -1256,6 +1289,15 @@ exports.registerFreeTicket = catchAsync(async (req, res, next) => {
   const communityId = req.body.communityId;
   const userId = req.body.userId;
   const couponId = req.body.couponId;
+  const country = req.body.country;
+
+  const lookupObj = lookup.byCountry(country);
+
+  let countryISOAplha2Code = lookupObj.iso2;
+
+  if (countryISOAplha2Code) {
+    countryISOAplha2Code = countryISOAplha2Code.toLowerCase();
+  }
 
   const userDoc = await User.findById(userId);
 
@@ -1296,6 +1338,17 @@ exports.registerFreeTicket = catchAsync(async (req, res, next) => {
 
     eventGettingEventTransaction.totalRegistrations =
       eventGettingEventTransaction.totalRegistrations + 1;
+
+    if (countryISOAplha2Code) {
+      let existingCountry =
+        eventGettingEventTransaction.countries.countryISOAplha2Code;
+      if (existingCountry) {
+        eventGettingEventTransaction.countries.countryISOAplha2Code =
+          eventGettingEventTransaction.countries.countryISOAplha2Code + 1;
+      } else {
+        eventGettingEventTransaction.countries.countryISOAplha2Code = 1;
+      }
+    }
 
     await eventGettingEventTransaction.save({
       new: true,

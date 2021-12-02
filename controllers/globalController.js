@@ -35,6 +35,7 @@ const Ticket = require("./../models/ticketModel");
 const Booth = require("./../models/boothModel");
 const Review = require("./../models/reviewModel");
 const Track = require("./../models/trackModel");
+const Vibe = require("./../models/vibeModel");
 
 const EventChatMessage = require("./../models/eventChatMessageModel");
 const SessionChats = require("./../models/sessionChatMessageModel");
@@ -2925,4 +2926,127 @@ exports.getPeopleInThisEvent = catchAsync(async (req, res, next) => {
     status: "success",
     data: peopleDocs,
   });
+});
+
+exports.getChecklistDetails = catchAsync(async (req, res, next) => {
+  try {
+    const eventId = req.params.eventId;
+
+    let tickets = false;
+
+    let videos = false;
+
+    let vibes = false;
+
+    let sessions = false;
+
+    let speakers = false;
+
+    // Get Basic details
+
+    const eventDetails = await Event.findById(eventId);
+
+    const basicDetails = eventDetails.basicDetailsFilled;
+
+    // Get Tickets status
+
+    const ticketsDoc = await Ticket.find({
+      $and: [{ eventId: mongoose.Types.ObjectId(eventId) }, { deleted: false }],
+    });
+
+    if (typeof ticketsDoc !== "undefined" && ticketsDoc.length > 0) {
+      tickets = true;
+    }
+
+    // Get Registration theme status
+
+    const registrationTheme = eventDetails.registrationThemeCreated;
+
+    // Get Event Venue Status
+
+    const eventVenue = eventDetails.eventVenueVisited;
+
+    // Get Videos status
+
+    const videosDoc = await EventVideo.find({ eventId: eventId });
+
+    if (typeof videosDoc !== "undefined" && videosDoc.length > 0) {
+      videos = true;
+      eventDetails.videosAdded = true;
+    }
+
+    const communityVideosDoc = await CommunityVideo.find({
+      communityId: eventDetails.communityId,
+    });
+
+    for (let element of communityVideosDoc) {
+      if (element.linkedToEvents.includes(eventId)) {
+        videos = true;
+        eventDetails.videosAdded = true;
+      }
+    }
+
+    // Get Stage Vibe status
+
+    const vibesDoc = await Vibe.find({ eventId: eventId });
+
+    if (typeof vibesDoc !== "undefined" && vibesDoc.length > 0) {
+      vibes = true;
+      eventDetails.vibesAdded = true;
+    }
+
+    // Get Session status
+
+    const sessionsDoc = await Session.find({
+      $and: [
+        { eventId: mongoose.Types.ObjectId(eventId) },
+        { status: { $ne: "Deleted" } },
+      ],
+    });
+
+    if (typeof sessionsDoc !== "undefined" && sessionsDoc.length > 0) {
+      sessions = true;
+      eventDetails.sessionCreated = true;
+    }
+
+    // Get Speaker status
+
+    const speakersDoc = await Speaker.find({
+      $and: [
+        { eventId: mongoose.Types.ObjectId(eventId) },
+        { status: { $ne: "Deleted" } },
+      ],
+    });
+
+    if (typeof speakersDoc !== "undefined" && speakersDoc.length > 0) {
+      speakers = true;
+      eventDetails.speakerAdded = true;
+    }
+
+    // Get Integration status
+
+    const integrations = eventDetails.integrationVisited;
+
+    // Get Preview status
+
+    const preview = eventDetails.previewClicked;
+
+    await eventDetails.save({ new: true, validateModifiedOnly: true });
+
+    res.status(200).json({
+      status: "success",
+      basicDetails: basicDetails,
+      tickets: tickets,
+      registrationTheme: registrationTheme,
+      eventVenue: eventVenue,
+      videos: videos,
+      vibes: vibes,
+      sessions: sessions,
+      speakers: speakers,
+      integrations: integrations,
+      preview: preview,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });

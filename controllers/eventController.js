@@ -1073,7 +1073,11 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
       "allowEntryBeforeSessionBegin",
       "networkingEntry",
       "loungeEntry",
-      "boothEntry"
+      "boothEntry",
+      "eventVenueVisited",
+      "integrationVisited",
+      "previewClicked",
+      'registrationThemeCreated',
     );
 
     const eventBeforeUpdate = await Event.findById(req.params.id);

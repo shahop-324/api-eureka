@@ -41,6 +41,7 @@
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
+    "country-code-lookup": "0.0.20",
     "crypto": "^1.0.1",
     "crypto-random-string": "^4.0.0",
     "currency-converter-lt": "^1.1.4",
