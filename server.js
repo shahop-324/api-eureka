@@ -130,7 +130,7 @@ io.on("connect", (socket) => {
 
       const msgToUser = {
         to: blockedUserDoc.email, // Change to your recipient
-        from: "", // Change to your verified sender
+        from: "no-reply@bluemeet.in", // Change to your verified sender
         subject: `You have been suspended from ${eventDoc.eventName}`,
         text: `You have been suspended from ${eventDoc.eventName}. Here is what event organisers have to say about this ${warning}`,
         html: YouHaveBeenSuspended(
@@ -1125,8 +1125,19 @@ io.on("connect", (socket) => {
     });
   });
 
-  socket.on("joinBooth", async ({ boothId }, callback) => {
+  socket.on("joinBooth", async ({ boothId, userId }, callback) => {
     socket.join(boothId);
+
+    const boothDoc = await Booth.findById(boothId);
+
+    boothDoc.attendedBy = boothDoc.attendedBy.filter(
+      (el) => el.toString() !== userId.toString()
+    );
+
+    boothDoc.attendedBy.push(userId);
+
+    await boothDoc.save({ new: true, validateModifiedOnly: true });
+
     console.log("This is join Booth");
   });
 
@@ -4127,6 +4138,23 @@ io.on("connect", (socket) => {
   );
 
   socket.on(
+    "markVisitedToNetworking",
+    async ({ userId, eventId }, callback) => {
+      // Just mark networkingAttendedBy and save event doc making sure its not duplicated
+
+      const eventDoc = await Event.findById(eventId);
+
+      eventDoc.networkingAttendedBy = eventDoc.networkingAttendedBy.filter(
+        (el) => el.toString() !== userId.toString()
+      );
+
+      eventDoc.networkingAttendedBy.push(userId);
+
+      await eventDoc.save({ new: true, validateModifiedOnly: true });
+    }
+  );
+
+  socket.on(
     "updateChair",
     async (
       {
@@ -4173,6 +4201,16 @@ io.on("connect", (socket) => {
           }
         });
       };
+
+      const eventDoc = await Event.findById(eventId);
+
+      eventDoc.loungeAttendedBy = eventDoc.loungeAttendedBy.filter(
+        (el) => el.toString() !== userId.toString()
+      );
+
+      eventDoc.loungeAttendedBy.push(userId);
+
+      await eventDoc.save({ new: true, validateModifiedOnly: true });
 
       // Add this user to onStagePeople of this loungeTable
 
@@ -4380,6 +4418,12 @@ io.on("connect", (socket) => {
 
       eventDoc.people.push(userId);
 
+      eventDoc.attendedBy = eventDoc.attendedBy.filter(
+        (el) => el.toString() !== userId.toString()
+      );
+
+      eventDoc.attendedBy.push(userId); // This will make sure that we know who attended this event
+
       await eventDoc.save({ new: true, validateModifiedOnly: true });
 
       // Send updated event to everyone in this event right now
@@ -4571,7 +4615,15 @@ io.on("connect", (socket) => {
         (person) => person._id.toString() !== userId.toString()
       );
 
+      sessionDoc.attendedBy = sessionDoc.attendedBy.filter(
+        (person) => person.toString() !== userId.toString()
+      );
+
+      sessionDoc.attendedBy.push(userId); // This will make sure that we know who attended this session
+
       sessionDoc.people.push(userId);
+
+      console.log(sessionDoc.attendedBy, "New attended by");
 
       await sessionDoc.save({ new: true, validateModifiedOnly: true });
 

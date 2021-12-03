@@ -74,6 +74,12 @@ const boothSchema = new mongoose.Schema({
       ref: "BoothChair",
     },
   ],
+  attendedBy: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 boothSchema.index({

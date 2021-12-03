@@ -52,6 +52,7 @@ const mailRoutes = require("./routes/mailRoutes");
 const trackRoutes = require("./routes/trackRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const recordingRoutes = require("./routes/recordingRoutes");
+const reportRoutes = require("./routes/reportRoutes");
 const authController = require("./controllers/authController.js");
 
 const MailChimp = require("./models/mailChimpModel");
@@ -248,6 +249,7 @@ app.use("/api-eureka/eureka/v1/mail", mailRoutes);
 app.use("/api-eureka/eureka/v1/track", trackRoutes);
 app.use("/api-eureka/eureka/v1/review", reviewRoutes);
 app.use("/api-eureka/eureka/v1/recording", recordingRoutes);
+app.use("/api-eureka/eureka/v1/reports", reportRoutes);
 
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 

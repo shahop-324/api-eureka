@@ -120,7 +120,6 @@ exports.createEvent = catchAsync(async (req, res, next) => {
       startTime: new Date(req.body.startTime),
       endTime: new Date(req.body.endTime),
       socialMediaHandles: communityGettingEvent.socialMediaHandles,
-      Timezone: req.body.timezone,
       communityName: communityGettingEvent.name,
       communityLogo: communityGettingEvent.image,
       organisedBy: communityGettingEvent.name,
@@ -1044,7 +1043,6 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
       "startTime",
       "endDate",
       "endTime",
-      "selectTimeZone",
       "selectCategories",
       "visibility",
       "editingComment",
@@ -1077,7 +1075,7 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
       "eventVenueVisited",
       "integrationVisited",
       "previewClicked",
-      'registrationThemeCreated',
+      "registrationThemeCreated"
     );
 
     const eventBeforeUpdate = await Event.findById(req.params.id);

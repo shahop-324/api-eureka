@@ -64,24 +64,7 @@ const eventSchema = new mongoose.Schema(
       required: [true, "An event must have a end time."],
       default: Date.now() + 6 * 60 * 60 * 1000,
     },
-    Timezone: {
-      type: String,
-      required: [
-        true,
-        "Time zone is required to provide localtime at various places to the users.",
-      ],
-      enum: [
-        // TODO Here I have to add all Time Zones
-        "(GMT + 00:00) UTC",
-        "(GMT-10:00) Hawaii",
-        "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai",
-        "(GMT+5:45) Kathmandu",
-        "(GMT + 00:00) Edinburgh",
-        "(GMT + 00:00) Lisbon",
-        "(GMT + 00:00) London",
-      ],
-      default: "(GMT + 00:00) UTC",
-    },
+
     visibility: {
       type: String,
       enum: ["Public", "Private", "Hidden"],
@@ -713,6 +696,27 @@ const eventSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+
+    attendedBy: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
+
+    networkingAttendedBy: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
+
+    loungeAttendedBy: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     versionKey: false,

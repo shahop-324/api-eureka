@@ -235,6 +235,12 @@ const sessionSchema = new mongoose.Schema(
     vibe: {
       type: String,
     },
+    attendedBy: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     versionKey: false,
