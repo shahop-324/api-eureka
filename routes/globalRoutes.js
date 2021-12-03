@@ -468,4 +468,6 @@ router.get(
   globalController.getChecklistDetails
 );
 
+router.post("/updateStreamingUsage/:eventId/:duration", authController.protect, globalController.updateStreamingUsage);
+
 module.exports = router;

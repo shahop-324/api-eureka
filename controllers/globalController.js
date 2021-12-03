@@ -3050,3 +3050,31 @@ exports.getChecklistDetails = catchAsync(async (req, res, next) => {
     console.log(error);
   }
 });
+
+exports.updateStreamingUsage = catchAsync(async (req, res, next) => {
+  const eventDoc = await Event.findById(req.params.eventId);
+
+  const communityId = eventDoc.communityId;
+
+  const communityDoc = await Community.findById(communityId);
+
+  communityDoc.streamingUsed = communityDoc.streamingUsed + req.params.duration;
+
+  communityDoc.streamingLeft = communityDoc.streamingLeft - req.params.duration;
+
+  // Start showing
+
+  // You have less than 10 hours of streaming left --- Please buy addon to enjoy uninterrupted service
+
+  if (communityDoc.streamingLeft <= 10 * 60 * 60) {
+    communityDoc.showStreamingAlert = true;
+  } else {
+    communityDoc.showStreamingAlert = false;
+  }
+
+  await communityDoc.save({ new: true, validateModifiedOnly: true });
+
+  res.status(200).json({
+    status: "success",
+  });
+});
