@@ -875,7 +875,7 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
     providedUsedCode = communityDoc.codesApplied.includes(element);
   }
 
-  // Check if any the provided code is already added into community if yes then reject this redemption
+  // Check if any of the provided code is already added into community if yes then reject this redemption
   // Check if community has already used 3 codes if yes then reject this redemption
 
   const eligible = bool && !providedUsedCode && numOfCodesRedeemed * 1 <= 2;
@@ -898,9 +898,9 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
         // If total = 1 => Orgainser: 2, Mails: 2500, Storage: 15GB, Registrations: 100, Streaming: 72 hours, backdrop: true, coupons: true, mail: true, live Stream: false, integration: none, analytics: false, booth: false, sponsor: false, customisation: false, tables: upto 60
         communityDoc.isAppSumoCustomer = true;
         communityDoc.tablesLimit = 60;
-        communityDoc.isAnalyticsAvailable = false;
+        communityDoc.isAnalyticsAvailable = true;
         communityDoc.isLiveStreamingAvailable = false;
-        communityDoc.availableIntegrations = "none";
+        communityDoc.availableIntegrations = "zapier";
         communityDoc.isCustomisationAvailable = false;
         communityDoc.isBoothAvailable = false;
         communityDoc.isSponsorAvailable = false;
@@ -908,17 +908,15 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
         communityDoc.isBackdropAvailable = true;
         communityDoc.ticketingCharge = 7;
         communityDoc.allowedRegistrationLimit = 100;
-        communityDoc.cloudStorageLimit = 15;
-        communityDoc.emailLimit = 2500;
         communityDoc.streamingHoursLimit = 72;
         communityDoc.organisersLimit = 2;
         communityDoc.planName = "AppSumo";
       }
+
       if (totalNumOfCodes * 1 === 2) {
         // If total = 2 => Orgainser: 4, Mails: 4000, Storage: 30GB, Registrations: 250, Streaming: 72 hours, backdrop: true, coupons: true, mail: true, live Stream: true, integration: Zapier, Google Analytics, Facebook pixel, analytics: true, booth: false, sponsor: false, customisation: false, tables: upto 210
-
         communityDoc.isAppSumoCustomer = true;
-        communityDoc.tablesLimit = 210;
+        communityDoc.tablesLimit = 100;
         communityDoc.isAnalyticsAvailable = true;
         communityDoc.isLiveStreamingAvailable = true;
         communityDoc.availableIntegrations = "zapier google facebook";
@@ -928,18 +926,15 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
         communityDoc.isCouponsAvailable = true;
         communityDoc.isBackdropAvailable = true;
         communityDoc.ticketingCharge = 7;
-        communityDoc.allowedRegistrationLimit = 250;
-        communityDoc.cloudStorageLimit = 30;
-        communityDoc.emailLimit = 4000;
-        communityDoc.streamingHoursLimit = 72;
+        communityDoc.allowedRegistrationLimit = 500;
+        communityDoc.streamingHoursLimit = 144;
         communityDoc.organisersLimit = 4;
         communityDoc.planName = "AppSumo";
       }
       if (totalNumOfCodes * 1 === 3) {
         // If total = 2 => Orgainser: 8, Mails: 8000, Storage: 60GB, Registrations: 500, Streaming: 144 hours, backdrop: true, coupons: true, mail: true, live Stream: true, integration: all, analytics: true, booth: true, sponsor: true, customisation: true, tables: upto 600
-
         communityDoc.isAppSumoCustomer = true;
-        communityDoc.tablesLimit = 600;
+        communityDoc.tablesLimit = 300;
         communityDoc.isAnalyticsAvailable = true;
         communityDoc.isLiveStreamingAvailable = true;
         communityDoc.availableIntegrations = "all";
@@ -949,10 +944,8 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
         communityDoc.isCouponsAvailable = true;
         communityDoc.isBackdropAvailable = true;
         communityDoc.ticketingCharge = 7;
-        communityDoc.allowedRegistrationLimit = 500;
-        communityDoc.cloudStorageLimit = 60;
-        communityDoc.emailLimit = 8000;
-        communityDoc.streamingHoursLimit = 144;
+        communityDoc.allowedRegistrationLimit = 1000;
+        communityDoc.streamingHoursLimit = 250;
         communityDoc.organisersLimit = 8;
         communityDoc.planName = "AppSumo";
       }
@@ -2177,98 +2170,155 @@ exports.getShowcaseEvents = catchAsync(async (req, res, next) => {
 });
 
 exports.editPayPalPayoutEmail = catchAsync(async (req, res, next) => {
-  const communityId = req.body.communityId;
+  try {
+    const communityId = req.body.communityId;
 
-  const communityDoc = await Community.findById(communityId);
+    const communityDoc = await Community.findById(communityId);
 
-  const email = req.body.email;
+    const email = req.body.email;
 
-  // Create new paypal Email change request and expire all previous ones for this community
+    // Create new paypal Email change request and expire all previous ones for this community
 
-  const allPreviousEmailChangeRequests = await PaypalEmailChange.find({
-    communityId: mongoose.Types.ObjectId(communityId),
-  });
+    const allPreviousEmailChangeRequests = await PaypalEmailChange.find({
+      communityId: mongoose.Types.ObjectId(communityId),
+    });
 
-  for (let element of allPreviousEmailChangeRequests) {
-    await PaypalEmailChange.findByIdAndUpdate(
-      element._id,
-      { status: "Expired" },
-      { new: true, validateModifiedOnly: true }
-    );
+    for (let element of allPreviousEmailChangeRequests) {
+      await PaypalEmailChange.findByIdAndUpdate(
+        element._id,
+        { status: "Expired" },
+        { new: true, validateModifiedOnly: true }
+      );
+    }
+
+    const paypalEmailUpdateRequest = await PaypalEmailChange.create({
+      communityId: communityId,
+      email: email,
+      createdAt: Date.now(),
+      status: "Active",
+    });
+
+    communityDoc.payPalPayoutEmailId = email;
+
+    communityDoc.paypalEmailIsVerified = false;
+
+    const updatedCommunity = await communityDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    // Create a notification for this community and send verification mail to newly registered email
+
+    const msg = {
+      to: email, // Change to your recipient
+      from: "payments@bluemeet.in", // Change to your verified sender
+      subject: "Please verify your Paypal Payout email.",
+      text: `Hi, please click on the button below to verify this email for reciving Paypal Payouts for your Bluemeet Community ${
+        updatedCommunity.name
+      }. ${`https://www.bluemeet.in/verify-paypal-email/${paypalEmailUpdateRequest._id}`}`,
+      html: VerifyPayPalEmail(
+        `https://www.bluemeet.in/verify-paypal-email/${paypalEmailUpdateRequest._id}`,
+        updatedCommunity.name
+      ),
+    };
+
+    sgMail
+      .send(msg)
+      .then(async () => {
+        console.log("Verification mail sent to newly added email");
+      })
+      .catch(async (error) => {
+        console.log("Failed to send verification mail to newly added email.");
+      });
+
+    // Send a alert mail to community superAdmin
+
+    const superAdmin = communityDoc.superAdmin;
+    const userDoc = await User.findById(superAdmin);
+    const superAdminEmail = userDoc.email;
+
+    const msgToSuperAdmin = {
+      to: superAdminEmail, // Change to your recipient
+      from: "security@bluemeet.in", // Change to your verified sender
+      subject: "Alert!, Bluemeet Paypal Payout email changed.",
+      text: `Hi, This is to inform you that your Bluemeet community ${updatedCommunity.name} Paypal Payout email has been updated to ${email}. Please verify the same through mail sent on provided email or if not done by you, then report immediately at support@bluemeet.in`,
+      html: AlertPayoutEmailChanged(
+        userDoc.firstName,
+        updatedCommunity.name,
+        email
+      ),
+    };
+
+    sgMail
+      .send(msgToSuperAdmin)
+      .then(async () => {
+        console.log("Confirmation mail sent to super admin email");
+      })
+      .catch(async (error) => {
+        console.log(
+          "Failed to send confirmation mail sent to super admin email"
+        );
+      });
+
+    res.status(200).json({
+      status: "success",
+      data: updatedCommunity,
+    });
+  } catch (error) {
+    console.log(error);
   }
-
-  const paypalEmailUpdateRequest = await PaypalEmailChange.create({
-    communityId: communityId,
-    email: email,
-    createdAt: Date.now(),
-    status: "Active",
-  });
-
-  communityDoc.payPalPayoutEmailId = email;
-
-  communityDoc.paypalEmailIsVerified = false;
-
-  const updatedCommunity = await communityDoc.save({
-    new: true,
-    validateModifiedOnly: true,
-  });
-
-  // Create a notification for this community and send verification mail to newly registered email
-
-  const msg = {
-    to: email, // Change to your recipient
-    from: "payments@bluemeet.in", // Change to your verified sender
-    subject: "Please verify your Paypal Payout email.",
-    text: `Hi, please click on the button below to verify this email for reciving Paypal Payouts for your Bluemeet Community ${
-      updatedCommunity.name
-    }. ${`https://www.bluemeet.in/verify-paypal-email/${paypalEmailUpdateRequest._id}`}`,
-    html: VerifyPayPalEmail(
-      `https://www.bluemeet.in/verify-paypal-email/${paypalEmailUpdateRequest._id}`,
-      updatedCommunity.name
-    ),
-  };
-
-  sgMail
-    .send(msg)
-    .then(async () => {
-      console.log("Verification mail sent to newly added email");
-    })
-    .catch(async (error) => {
-      console.log("Failed to send verification mail to newly added email.");
-    });
-
-  // Send a alert mail to community superAdmin
-
-  const superAdmin = communityDoc.superAdmin;
-  const userDoc = await User.findById(superAdmin);
-  const superAdminEmail = userDoc.email;
-
-  const msgToSuperAdmin = {
-    to: superAdminEmail, // Change to your recipient
-    from: "security@bluemeet.in", // Change to your verified sender
-    subject: "Alert!, Bluemeet Paypal Payout email changed.",
-    text: `Hi, This is to inform you that your Bluemeet community ${updatedCommunity.name} Paypal Payout email has been updated to ${email}. Please verify the same through mail sent on provided email or if not done by you, then report immediately at support@bluemeet.in`,
-    html: AlertPayoutEmailChanged(
-      userDoc.firstName,
-      updatedCommunity.name,
-      email
-    ),
-  };
-
-  sgMail
-    .send(msgToSuperAdmin)
-    .then(async () => {
-      console.log("Confirmation mail sent to super admin email");
-    })
-    .catch(async (error) => {
-      console.log("Failed to send confirmation mail sent to super admin email");
-    });
-
-  res.status(200).json({
-    status: "success",
-    data: updatedCommunity,
-  });
 });
+
+exports.resendPayPalEmailVerificationLink = catchAsync(
+  async (req, res, next) => {
+    const communityId = req.params.communityId;
+
+    const communityDoc = await Community.findById(communityId);
+
+    const requestObject = await PaypalEmailChange.findOne({
+      $and: [
+        { status: "Active" },
+        { communityId: mongoose.Types.ObjectId(communityId) },
+      ],
+    });
+
+    if (requestObject) {
+      const msg = {
+        to: requestObject.email, // Change to your recipient
+        from: "payments@bluemeet.in", // Change to your verified sender
+        subject: "Please verify your Paypal Payout email.",
+        text: `Hi, please click on the button below to verify this email for reciving Paypal Payouts for your Bluemeet Community ${
+          communityDoc.name
+        }. ${`https://www.bluemeet.in/verify-paypal-email/${requestObject._id}`}`,
+        html: VerifyPayPalEmail(
+          `https://www.bluemeet.in/verify-paypal-email/${requestObject._id}`,
+          communityDoc.name
+        ),
+      };
+
+      sgMail
+        .send(msg)
+        .then(async () => {
+          console.log("Verification mail sent to newly added email");
+          res.status(200).json({
+            status: "success",
+          });
+        })
+        .catch(async (error) => {
+          console.log("Failed to send verification mail to newly added email.");
+          res.status(400).json({
+            status: "error",
+          });
+        });
+    } else {
+      // Your mail has been verified already please refresh this page
+      res.status(200).json({
+        status: "success",
+        emailVerified: true,
+      });
+    }
+  }
+);
 
 exports.verifyPayPalEmail = catchAsync(async (req, res, next) => {
   const id = req.params.id;

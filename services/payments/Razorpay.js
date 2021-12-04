@@ -283,14 +283,13 @@ exports.createAddOnOrder = catchAsync(async (req, res, next) => {
   const communityId = req.body.communityId;
   const userId = req.body.userId;
 
-  console.log(price);
-
-  let priceToBeCharged = Math.ceil(price * 100 * 1.03);
+  // let priceToBeCharged = Math.ceil(price * 100);
+  let priceToBeCharged = Math.ceil(1 * 100);
 
   const newOrder = razorpay.orders.create(
     {
       amount: priceToBeCharged,
-      currency: "USD",
+      currency: "INR",
       receipt: UUID(),
       notes: {
         purpose: "add on",
@@ -330,7 +329,8 @@ exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
   const communityId = req.body.communityId;
   const userId = req.body.userId;
 
-  let priceToBeCharged = Math.ceil(price * 100);
+  // let priceToBeCharged = Math.ceil(price * 100);
+  let priceToBeCharged = Math.ceil(1 * 100);
 
   if (duration === "yearly") {
     priceToBeCharged = priceToBeCharged;
@@ -339,7 +339,7 @@ exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
   const newOrder = razorpay.orders.create(
     {
       amount: priceToBeCharged,
-      currency: "USD",
+      currency: "INR",
       receipt: UUID(),
       notes: {
         purpose: "community plan",
@@ -968,6 +968,17 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         communityDoc.isUsingFreePlan = false;
         communityDoc.planTransactions.push(newCommunityTransaction._id);
         communityDoc.downgradeToFreeOnNextCycle = false;
+        communityDoc.streamingHoursLimit = 72;
+        communityDoc.organisersLimit = 2;
+        communityDoc.tablesLimit = 100;
+        communityDoc.availableIntegrations = "all";
+        communityDoc.isCustomisationAvailable = true;
+        communityDoc.isBoothAvailable = true;
+        communityDoc.isSponsorAvailable = true;
+        communityDoc.isCouponsAvailable = true;
+        communityDoc.isBackdropAvailable = true;
+        communityDoc.ticketingCharge = 7;
+        communityDoc.isAnalyticsAvailable = true;
 
         await communityDoc.save({ new: true, validateModifiedOnly: true });
 

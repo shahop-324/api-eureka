@@ -350,6 +350,12 @@ router.post(
 );
 
 router.post(
+  "/resendPayPalEmailVerificationLink/:communityId",
+  authController.protectCommunity,
+  globalController.resendPayPalEmailVerificationLink
+);
+
+router.post(
   "/createUserAccountRequest",
   globalController.createUserAccountRequest
 );
@@ -468,6 +474,10 @@ router.get(
   globalController.getChecklistDetails
 );
 
-router.post("/updateStreamingUsage/:eventId/:duration", authController.protect, globalController.updateStreamingUsage);
+router.post(
+  "/updateStreamingUsage/:eventId/:duration",
+  authController.protect,
+  globalController.updateStreamingUsage
+);
 
 module.exports = router;

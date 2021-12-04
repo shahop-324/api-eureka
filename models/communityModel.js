@@ -124,7 +124,7 @@ const communitySchema = new mongoose.Schema(
     availableIntegrations: {
       type: String,
       default: "none", // * For Free plan
-      enum: ["none", "all", "zapier google facebook"],
+      enum: ["none", "zapier", "all", "zapier google facebook"],
     },
     isCustomisationAvailable: {
       type: Boolean,
@@ -169,44 +169,7 @@ const communitySchema = new mongoose.Schema(
       type: Number, // This will be resetted to 0 at the end of every billing cycle.
       default: 0,
     },
-    cloudStorageLimit: {
-      type: Number, // In GB
-      default: 1, // * For Free plan
-    },
-    extraCloudStorageLimit: {
-      type: Number,
-      default: 0,
-    },
-    extraCloudStorageLimitToBeExpiredAt: {
-      type: Date,
-    },
-    extraStorageLimitUtilised: {
-      type: Number,
-      default: 0,
-    },
-    storageLimitUtilised: {
-      type: Number,
-      default: 0,
-    },
-    emailLimit: {
-      type: Number, // Limit on emails that can be sent
-      default: 100, // * For Free plan
-    },
-    extraEmailLimit: {
-      type: Number,
-      default: 0,
-    },
-    extraEmailLimitToBeExpiredAt: {
-      type: Date,
-    },
-    extraEmailLimitUsed: {
-      type: Number,
-      default: 0,
-    },
-    emailLimitUsed: {
-      type: Number,
-      default: 0,
-    },
+
     streamingHoursLimit: {
       type: Number, // Limit on streaming hours
       default: 2, // * For Free plan
@@ -534,31 +497,39 @@ const communitySchema = new mongoose.Schema(
       default: 0,
     },
     totalRegistrations: {
+      // This is the count of lifetime registrations received by a community
       // We need to inc this whenever some one registers for any event of this community
       type: Number,
       default: 0,
     },
-    streamingUsed: {
+    totalStreamingLimit: {
+      // Number of streaming hours as per plan + any add on
       type: Number,
       default: 0,
     },
     streamingLeft: {
       type: Number,
     },
-    emailsLeft: {
-      type: Number,
-    },
-    emailsUsed: {
-      type: Number,
-      default: 0,
-    },
-    showEmailAlert: {
-      type: Boolean,
-      default: false,
-    },
     showStreamingAlert: {
       type: Boolean,
       default: false,
+    },
+    totalRegistartionsLimitThisMonth: {
+      // Registartions as per plan + any registration due to add on
+      type: Number,
+    },
+    registrationsUsedThisMonth: {
+      // Registrations used in this month
+      type: Number,
+      default: 0,
+    },
+    totalTeamMemberSeatsLimit: {
+      // Total no. of seats as per plan + any seat due to add on
+      type: Number,
+    },
+    teamMemberSeatsUsed: {
+      type: Number,
+      default: 0,
     },
   },
   {
