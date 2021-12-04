@@ -56,11 +56,7 @@ const raisedHandsSchema = new mongoose.Schema(
 
 const sessionSchema = new mongoose.Schema(
   {
-    type: {
-      type: String,
-      enum: ["Session", "Stream"],
-    },
-
+  
     RTMPstreamKey: {
       type: String,
     },

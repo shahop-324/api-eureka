@@ -6537,6 +6537,7 @@ server.listen(port, () => {
 process.on("unhandledRejection", (err) => {
   console.log(err);
   console.log("UNHANDLED REJECTION! Shutting down ...");
+  console.log('Unhandled Rejection at:', promise, 'reason:', reason);
   server.close(() => {
     process.exit(1);
   });

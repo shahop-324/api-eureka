@@ -630,7 +630,6 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
       for (let element of processedArray) {
         const sessionToUpdate = await Session.findById(element);
         sessionToUpdate.speaker.push(element);
-
         await sessionToUpdate.save({ new: true, validateModifiedOnly: true });
       }
 
@@ -648,25 +647,23 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         ),
       };
 
-      if (req.body.sendInvitation) {
-        sgMail
-          .send(msg)
-          .then(async () => {
-            console.log("Invitation sent to speaker.");
-            // Mark that invitation is sent
-            speaker.invitationStatus = "Sent";
-            await speaker.save({ new: true, validateModifiedOnly: true });
-          })
-          .catch(async (error) => {
-            console.log("Failed to send invitation to speaker");
-            // Mark that invitation is not yet sent
-            speaker.invitationStatus = "Not sent";
-            await speaker.save({ new: true, validateModifiedOnly: true });
-          });
-      } else {
-        speaker.invitationStatus = "Not sent";
-        await speaker.save({ new: true, validateModifiedOnly: true });
-      }
+      sgMail
+        .send(msg)
+        .then(async () => {
+          console.log("Invitation sent to speaker.");
+          // Mark that invitation is sent
+          speaker.invitationStatus = "Sent";
+          await speaker.save({ new: true, validateModifiedOnly: true });
+        })
+        .catch(async (error) => {
+          console.log("Failed to send invitation to speaker");
+          // Mark that invitation is not yet sent
+          speaker.invitationStatus = "Not sent";
+          await speaker.save({ new: true, validateModifiedOnly: true });
+        });
+
+      speaker.invitationStatus = "Sent";
+      await speaker.save({ new: true, validateModifiedOnly: true });
 
       const document = await SpeakersIdsCommunityWise.findById(
         communityGettingSpeaker.speakersDocIdCommunityWise
@@ -832,7 +829,6 @@ exports.addSession = catchAsync(async (req, res, next) => {
     }
 
     let session = await Session.create({
-      type: req.body.type,
       name: req.body.name,
       startDate: req.body.startDate,
       startTime: req.body.startTime,
@@ -869,18 +865,6 @@ exports.addSession = catchAsync(async (req, res, next) => {
       if (!eventGettingSessions.hosts.includes(element)) {
         eventGettingSessions.hosts.push(element);
       }
-    }
-
-    if (req.body.type === "Stream") {
-      const muxRes = await Video.LiveStreams.create({
-        playback_policy: "public",
-        new_asset_settings: { playback_policy: "public" },
-      });
-
-      session.RTMPstreamKey = muxRes.stream_key;
-      session.RTMPPlaybackId = muxRes.playback_ids[0].id;
-      session.RTMPCredentialsId = muxRes.id;
-      session.RTMPstreamURL = `rtmps://global-live.mux.com:443/app`;
     }
 
     await session.save({ new: true, validateModifiedOnly: true });

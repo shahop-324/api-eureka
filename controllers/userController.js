@@ -787,7 +787,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       from: "security@bluemeet.in", // Change to your verified sender
       subject: "Your Password Reset Link",
       text: "use this link to reset your password. This link is valid for only 10 min.",
-      html: PasswordResetLink(user.firstName, `https://www.bluemeet.in/resetPassword/${resetToken}`),
+      html: PasswordResetLink(
+        user.firstName,
+        `https://www.bluemeet.in/resetPassword/${resetToken}`
+      ),
     };
 
     sgMail
@@ -847,10 +850,12 @@ exports.createNewCommunityRequest = catchAsync(async (req, res, next) => {
       to: req.body.email, // Change to your recipient
       from: "security@bluemeet.im", // Change to your verified sender
       subject: `Verify your community mail.`,
-      text: `Hi ${user.firstName} ${
-        user.lastName
-      }. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`https://www.bluemeet.in/verifying-community/${accountRequest._id}`}`,
-      html: VerifyCommunityEmail(`https://www.bluemeet.in/verifying-community/${accountRequest._id}`),
+      // text: `Hi ${user.firstName} ${
+      //   user.lastName
+      // }. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`https://www.bluemeet.in/verifying-community/${accountRequest._id}`}`,
+      html: VerifyCommunityEmail(
+        `https://www.bluemeet.in/verifying-community/${accountRequest._id}`
+      ),
     };
 
     sgMail
@@ -962,17 +967,23 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
         const msgToSuperAdmin = {
           to: userDoc.email, // Mail to super admin
           from: "shreyanshshah242@gmail.com", // Change to your verified sender
-          subject: `Welcome to ${req.body.name}`,
+          subject: `Welcome to ${communityAccountRequestDoc.name}`,
           text: `Hi ${userDoc.firstName} ${userDoc.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on Bluemeet. Happy Bluemeeting  🥳 🥳!`,
-          html: WelcomeToTeam(userDoc.firstName, communityAccountRequestDoc.name),
+          html: WelcomeToTeam(
+            userDoc.firstName,
+            communityAccountRequestDoc.name
+          ),
         };
 
         const msgToCommunity = {
           to: communityAccountRequestDoc.email, // Mail to community
           from: "welcome@bluemeet.in", // Change to your verified sender
-          subject: `Welcome to ${req.body.name}`,
+          subject: `Welcome to ${communityAccountRequestDoc.name}`,
           text: `Hi ${userDoc.firstName} ${userDoc.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on Bluemeet. Happy Bluemeeting  🥳 🥳!`,
-          html: WelcomeToTeam(userDoc.firstName, communityAccountRequestDoc.name),
+          html: WelcomeToTeam(
+            userDoc.firstName,
+            communityAccountRequestDoc.name
+          ),
         };
 
         sgMail
