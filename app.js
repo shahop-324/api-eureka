@@ -80,7 +80,7 @@ const BASE_URL =
     ? "http://127.0.0.1:3000"
     : "https://api.bluemeet.in";
 
-const OAUTH_CALLBACK = `http://127.0.0.1:3001/bluemeet/redirect`;
+const OAUTH_CALLBACK = `https://www.bluemeet.in/bluemeet/redirect`;
 
 app.use(
   cors({
