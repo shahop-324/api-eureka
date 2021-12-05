@@ -850,9 +850,6 @@ exports.createNewCommunityRequest = catchAsync(async (req, res, next) => {
       to: req.body.email, // Change to your recipient
       from: "security@bluemeet.im", // Change to your verified sender
       subject: `Verify your community mail.`,
-      // text: `Hi ${user.firstName} ${
-      //   user.lastName
-      // }. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`https://www.bluemeet.in/verifying-community/${accountRequest._id}`}`,
       html: VerifyCommunityEmail(
         `https://www.bluemeet.in/verifying-community/${accountRequest._id}`
       ),

@@ -397,7 +397,6 @@ app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res, next) {
 app.get(
   "/api-eureka/eureka/v1/oauth/salesforce/callback",
   (req, response, next) => {
-
     console.log(req.query.communityId, "This is community Id");
 
     const oauth2 = new jsforce.OAuth2({

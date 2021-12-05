@@ -897,14 +897,23 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
       if (totalNumOfCodes * 1 === 1) {
         // If total = 1 => Orgainser: 2, Mails: 2500, Storage: 15GB, Registrations: 100, Streaming: 72 hours, backdrop: true, coupons: true, mail: true, live Stream: false, integration: none, analytics: false, booth: false, sponsor: false, customisation: false, tables: upto 60
         communityDoc.isAppSumoCustomer = true;
-        communityDoc.tablesLimit = 60;
         communityDoc.isAnalyticsAvailable = true;
         communityDoc.isLiveStreamingAvailable = false;
-        communityDoc.availableIntegrations = "zapier";
+        communityDoc.isCouponsAvailable = true;
+        // communityDoc.availableIntegrations = "zapier";
+        communityDoc.isMailchimpAvailable = false;
+        communityDoc.isSalesforceAvailable = false;
+        communityDoc.isHubspotAvailable = false;
+        communityDoc.isTawkAvailable = true;
+        communityDoc.isTypeformAvailable = true;
+        communityDoc.isGoogleAnalyticsAvailable = true;
+        communityDoc.isFacebookPixelAvailable = true;
+        communityDoc.isZapierAvailable = false;
+
         communityDoc.isCustomisationAvailable = false;
         communityDoc.isBoothAvailable = false;
         communityDoc.isSponsorAvailable = false;
-        communityDoc.isCouponsAvailable = true;
+        
         communityDoc.isBackdropAvailable = true;
         communityDoc.ticketingCharge = 7;
         communityDoc.allowedRegistrationLimit = 100;

@@ -976,13 +976,20 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         communityDoc.downgradeToFreeOnNextCycle = false;
         communityDoc.streamingHoursLimit = 72;
         communityDoc.organisersLimit = 2;
-        communityDoc.tablesLimit = 100;
         communityDoc.availableIntegrations = "all";
+        communityDoc.isMailchimpAvailable = 
+        communityDoc.isSalesforceAvailable = 
+        communityDoc.isHubspotAvailable = 
+        communityDoc.isTawkAvailable = 
+        communityDoc.isTypeformAvailable = 
+        communityDoc.isGoogleAnalyticsAvailable = 
+        communityDoc.isFacebookPixelAvailable = 
+        communityDoc.isZapierAvailable = 
         communityDoc.isCustomisationAvailable = true;
         communityDoc.isBoothAvailable = true;
-        communityDoc.isSponsorAvailable = true;
         communityDoc.isCouponsAvailable = true;
         communityDoc.isBackdropAvailable = true;
+        communityDoc.isFreeTicketAvailable = 
         communityDoc.ticketingCharge = 7;
         communityDoc.isAnalyticsAvailable = true;
 
