@@ -848,7 +848,7 @@ exports.createNewCommunityRequest = catchAsync(async (req, res, next) => {
 
     const msg = {
       to: req.body.email, // Change to your recipient
-      from: "security@bluemeet.im", // Change to your verified sender
+      from: "security@bluemeet.in", // Change to your verified sender
       subject: `Verify your community mail.`,
       html: VerifyCommunityEmail(
         `https://www.bluemeet.in/verifying-community/${accountRequest._id}`
