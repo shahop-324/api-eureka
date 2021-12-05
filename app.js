@@ -270,75 +270,81 @@ app.get("/api-eureka/eureka/v1/auth/mailchimp", (req, res, next) => {
 });
 
 app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res, next) => {
-  const communityId = req.query.communityId;
+  try {
+    const communityId = req.query.communityId;
 
-  let accessToken = null;
-  const config = {
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-  };
-  const parameters = {
-    grant_type: "authorization_code",
-    code: req.query.code,
-    client_id: MAILCHIMP_CLIENT_ID,
-    client_secret: MAILCHIMP_CLIENT_SECRET,
-    redirect_uri: OAUTH_CALLBACK,
-  };
+    console.log(communityId, "This is community Id");
 
-  axios
-    .post(
-      "https://login.mailchimp.com/oauth2/token",
-      qs.stringify(parameters),
-      config
-    )
-    .then((response) => {
-      accessToken = response.data.access_token;
+    let accessToken = null;
+    const config = {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    };
+    const parameters = {
+      grant_type: "authorization_code",
+      code: req.query.code,
+      client_id: MAILCHIMP_CLIENT_ID,
+      client_secret: MAILCHIMP_CLIENT_SECRET,
+      redirect_uri: OAUTH_CALLBACK,
+    };
 
-      axios
-        .get("https://login.mailchimp.com/oauth2/metadata", {
-          headers: {
-            Authorization: `OAuth ${accessToken}`,
-          },
-        })
-        .then((metadataResponse) => {
-          Community.findById(communityId)
-            .then((community) => {
-              const isConnectedMailChimp = community.isConnectedMailChimp;
+    axios
+      .post(
+        "https://login.mailchimp.com/oauth2/token",
+        qs.stringify(parameters),
+        config
+      )
+      .then((response) => {
+        accessToken = response.data.access_token;
 
-              if (isConnectedMailChimp) {
-                //
-                res.status(200).json({
-                  status: "success",
-                  data: community,
-                });
-              } else {
-                MailChimp.create({
-                  communityId: community._id,
-                  accessToken,
-                  server: metadataResponse.data.dc,
+        axios
+          .get("https://login.mailchimp.com/oauth2/metadata", {
+            headers: {
+              Authorization: `OAuth ${accessToken}`,
+            },
+          })
+          .then((metadataResponse) => {
+            Community.findById(communityId)
+              .then((community) => {
+                const isConnectedMailChimp = community.isConnectedMailChimp;
 
-                  apiEndPoint: metadataResponse.data.api_endpoint,
-                })
-                  .then(async () => {
-                    community.isConnectedMailChimp = true;
-                    // const [a] = community;
-                    const updatedCommunity = await community.save({
-                      new: true,
+                if (isConnectedMailChimp) {
+                  //
+                  res.status(200).json({
+                    status: "success",
+                    data: community,
+                  });
+                } else {
+                  MailChimp.create({
+                    communityId: community._id,
+                    accessToken,
+                    server: metadataResponse.data.dc,
 
-                      validateModifiedOnly: true,
-                    });
-
-                    res.status(200).json({
-                      status: "success",
-                      data: updatedCommunity,
-                    });
+                    apiEndPoint: metadataResponse.data.api_endpoint,
                   })
-                  .catch((error) => next(error));
-              }
-            })
-            .catch((error) => next(error));
-        })
-        .catch((error) => next(error));
-    });
+                    .then(async () => {
+                      community.isConnectedMailChimp = true;
+                      // const [a] = community;
+                      const updatedCommunity = await community.save({
+                        new: true,
+
+                        validateModifiedOnly: true,
+                      });
+
+                      res.status(200).json({
+                        status: "success",
+                        data: updatedCommunity,
+                      });
+                    })
+                    .catch((error) => next(error));
+                }
+              })
+              .catch((error) => next(error));
+          })
+          .catch((error) => next(error));
+      });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 app.get(
@@ -391,6 +397,9 @@ app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res, next) {
 app.get(
   "/api-eureka/eureka/v1/oauth/salesforce/callback",
   (req, response, next) => {
+
+    console.log(req.query.communityId, "This is community Id");
+
     const oauth2 = new jsforce.OAuth2({
       clientId: process.env.SALESFORCE_CLIENT_ID,
       clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
