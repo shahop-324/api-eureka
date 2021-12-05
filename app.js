@@ -406,30 +406,32 @@ app.get(
         accessToken: conn.accessToken,
       });
 
-      conn2.identity(function (err, res) {
+      conn2.identity(async (err, res) => {
         if (err) {
           return console.error(err);
         }
-        Community.findById(req.query.communityId, async (err, community) => {
-          SalesForce.create({
-            communityId: req.query.communityId,
-            accessToken: conn.accessToken,
-            instanceUrl: conn.instanceUrl,
-            refreshToken: conn.refreshToken,
-          });
+        await Community.findById(
+          req.query.communityId,
+          async (err, community) => {
+            SalesForce.create({
+              communityId: req.query.communityId,
+              accessToken: conn.accessToken,
+              instanceUrl: conn.instanceUrl,
+              refreshToken: conn.refreshToken,
+            });
 
-          community.isConnectedSalesforce = true;
-          const updatedCommunity = await community.save({
-            new: true,
-            validateModifiedOnly: true,
-          });
+            community.isConnectedSalesforce = true;
+            const updatedCommunity = await community.save({
+              new: true,
+              validateModifiedOnly: true,
+            });
 
-          response.status(200).json({
-            status: "success",
-            data: updatedCommunity,
-          });
-        })
-        .catch((err) => next(err));
+            response.status(200).json({
+              status: "success",
+              data: updatedCommunity,
+            });
+          }
+        ).catch((err) => next(err));
       });
     });
   }
