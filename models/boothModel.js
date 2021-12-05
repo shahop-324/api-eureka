@@ -68,6 +68,9 @@ const boothSchema = new mongoose.Schema({
   googleTag: {
     type: String,
   },
+  pixel: {
+    type: String,
+  },
   chairs: [
     {
       type: mongoose.Schema.ObjectId,

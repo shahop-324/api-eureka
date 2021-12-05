@@ -418,6 +418,15 @@ exports.disconnectMailchimp = catchAsync(async (req, res, next) => {
 
   await MailChimp.findOneAndDelete({ communityId: communityId });
 
+  // Find all events of this community and disable mailchimp 
+
+  const events = await Event.find({communityId: communityId});
+
+  for (let element of events) {
+    element.isMailchimpEnabled = false;
+    await element.save({new: true, validateModifiedOnly: true});
+  }
+
   res.status(200).json({
     status: "success",
     data: updatedCommunity,
@@ -435,6 +444,15 @@ exports.disconnectSalesforce = catchAsync(async (req, res, next) => {
 
   // Delete all occurence of mailchimp object for this community
   await SalesForce.findOneAndDelete({ communityId: communityId });
+
+    // Find all events of this community and disable salesforce
+
+    const events = await Event.find({communityId: communityId});
+
+    for (let element of events) {
+      element.isSalesforceEnabled = false;
+      await element.save({new: true, validateModifiedOnly: true});
+    }
 
   res.status(200).json({
     status: "success",

@@ -220,18 +220,39 @@ const eventSchema = new mongoose.Schema(
     mailChimpAudienceListIdForInterestedPeople: {
       type: String,
     },
-
     mailChimpAudienceTag: [
       {
         type: String,
       },
     ],
-
     isMailchimpEnabled: {
       type: Boolean,
       default: false,
     },
-
+    isSalesforceEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    isHubspotEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    isTawkEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    isTypeformEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    isGoogleAnalyticsEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    isFacebookPixelEnabled: {
+      type: Boolean,
+      default: false,
+    },
     addDirectAccessLinkToMailChimp: {
       type: Boolean,
       default: false,

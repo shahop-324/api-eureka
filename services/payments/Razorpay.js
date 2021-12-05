@@ -776,7 +776,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
         // Update mailchimp, salesforce and hubspot
 
-        if (hapikey) {
+        if (hapikey && eventGettingEventTransaction.isHubspotEnabled) {
           hubspotRegistrationCapture(
             hapikey,
             user.firstName,
@@ -786,19 +786,25 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
           );
         }
 
-        // if (salesForceAccount) {
-        //   salesForceRegistrationCapture(
-        //     salesForceAccount,
-        //     user.firstName,
-        //     user.lastName,
-        //     user.email,
-        //     event.eventName,
-        //     ticket.name,
-        //     amount
-        //   );
-        // }
+        if (
+          salesForceAccount &&
+          eventGettingEventTransaction.isSalesforceEnabled
+        ) {
+          salesForceRegistrationCapture(
+            salesForceAccount,
+            user.firstName,
+            user.lastName,
+            user.email,
+            event.eventName,
+            ticket.name,
+            amount
+          );
+        }
 
-        if (mailChimpAccount) {
+        if (
+          mailChimpAccount &&
+          eventGettingEventTransaction.isMailchimpEnabled
+        ) {
           let mailChimpFormValues = {};
           mailChimpFormValues.tags = [];
           mailChimpFormValues.email_address = user.email;
@@ -1566,7 +1572,7 @@ exports.registerFreeTicket = catchAsync(async (req, res, next) => {
 
     // Update mailchimp, salesforce and hubspot
 
-    if (hapikey) {
+    if (hapikey && eventGettingEventTransaction.isHubspotEnabled) {
       hubspotRegistrationCapture(
         hapikey,
         user.firstName,
@@ -1576,19 +1582,19 @@ exports.registerFreeTicket = catchAsync(async (req, res, next) => {
       );
     }
 
-    // if (salesForceAccount) {
-    //   salesForceRegistrationCapture(
-    //     salesForceAccount,
-    //     user.firstName,
-    //     user.lastName,
-    //     user.email,
-    //     event.eventName,
-    //     ticket.name,
-    //     amount
-    //   );
-    // }
+    if (salesForceAccount && eventGettingEventTransaction.isSalesforceEnabled) {
+      salesForceRegistrationCapture(
+        salesForceAccount,
+        user.firstName,
+        user.lastName,
+        user.email,
+        event.eventName,
+        ticket.name,
+        amount
+      );
+    }
 
-    if (mailChimpAccount) {
+    if (mailChimpAccount && eventGettingEventTransaction.isMailchimpEnabled) {
       let mailChimpFormValues = {};
       mailChimpFormValues.tags = [];
       mailChimpFormValues.email_address = user.email;

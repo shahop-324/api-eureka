@@ -480,4 +480,34 @@ router.post(
   globalController.updateStreamingUsage
 );
 
+router.post(
+  "/uninstallHubspot/:communityId",
+  authController.protectCommunity,
+  globalController.uninstallHubspot
+);
+
+router.post(
+  "/uninstallFacebookPixel/:communityId",
+  authController.protectCommunity,
+  globalController.uninstallFacebookPixel
+);
+
+router.post(
+  "/uninstallGoogleAnalytics/:communityId",
+  authController.protectCommunity,
+  globalController.uninstallGoogleAnalytics
+);
+
+router.post(
+  "/uninstallTawk/:communityId",
+  authController.protectCommunity,
+  globalController.uninstallTawk
+);
+
+router.post(
+  "/uninstallTypeform/:communityId",
+  authController.protectCommunity,
+  globalController.uninstallTypeform
+);
+
 module.exports = router;

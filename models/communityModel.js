@@ -46,11 +46,9 @@ const communitySchema = new mongoose.Schema(
     hubspotApiKey: {
       type: String,
     },
-
     googleAnalyticsCode: {
       type: String,
     },
-
     facebookPixelCode: {
       type: String,
     },
@@ -80,10 +78,6 @@ const communitySchema = new mongoose.Schema(
       default: false,
     },
     isConnectedTypeform: {
-      type: Boolean,
-      default: false,
-    },
-    isConnectedSlido: {
       type: Boolean,
       default: false,
     },

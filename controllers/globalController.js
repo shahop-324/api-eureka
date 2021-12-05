@@ -3128,3 +3128,74 @@ exports.updateStreamingUsage = catchAsync(async (req, res, next) => {
     status: "success",
   });
 });
+
+exports.uninstallHubspot = catchAsync(async (req, res, next) => {
+  const communityId = req.params.communityId;
+
+  const events = await Event.find({ communityId: communityId });
+
+  for (let element of events) {
+    element.isHubspotEnabled = false;
+    await element.save({ new: true, validateModifiedOnly: true });
+  }
+
+  res.status(200).json({
+    status: "success",
+  });
+});
+exports.uninstallGoogleAnalytics = catchAsync(async (req, res, next) => {
+  const communityId = req.params.communityId;
+
+  const events = await Event.find({ communityId: communityId });
+
+  for (let element of events) {
+    element.isGoogleAnalyticsEnabled = false;
+    await element.save({ new: true, validateModifiedOnly: true });
+  }
+
+  res.status(200).json({
+    status: "success",
+  });
+});
+exports.uninstallFacebookPixel = catchAsync(async (req, res, next) => {
+  const communityId = req.params.communityId;
+
+  const events = await Event.find({ communityId: communityId });
+
+  for (let element of events) {
+    element.isFacebookPixelEnabled = false;
+    await element.save({ new: true, validateModifiedOnly: true });
+  }
+
+  res.status(200).json({
+    status: "success",
+  });
+});
+exports.uninstallTawk = catchAsync(async (req, res, next) => {
+  const communityId = req.params.communityId;
+
+  const events = await Event.find({ communityId: communityId });
+
+  for (let element of events) {
+    element.isTawkEnabled = false;
+    await element.save({ new: true, validateModifiedOnly: true });
+  }
+
+  res.status(200).json({
+    status: "success",
+  });
+});
+exports.uninstallTypeform = catchAsync(async (req, res, next) => {
+  const communityId = req.params.communityId;
+
+  const events = await Event.find({ communityId: communityId });
+
+  for (let element of events) {
+    element.isTypeformEnabled = false;
+    await element.save({ new: true, validateModifiedOnly: true });
+  }
+
+  res.status(200).json({
+    status: "success",
+  });
+});
