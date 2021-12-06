@@ -944,6 +944,8 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
             communityDoc.organisersLimit = 3;
 
+            communityDoc.canCreateFreeTicket = false;
+
             break;
           case 300:
             communityDoc.isAppSumoCustomer = false;
@@ -977,6 +979,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             communityDoc.streamingHoursLimit = 144;
 
             communityDoc.organisersLimit = 5;
+            communityDoc.canCreateFreeTicket = false;
             break;
           case 500:
             communityDoc.isAppSumoCustomer = false;

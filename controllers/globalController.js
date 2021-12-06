@@ -2531,7 +2531,7 @@ exports.createPayPalPayoutRequest = catchAsync(async (req, res, next) => {
 
           const msgToPayoutTeam = {
             to: "payments@bluemeet.in", // Change to your recipient
-            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            from: "omprakash.shah@bluemeet.in", // Change to your verified sender
             subject: `Please process payout with payout Id ${newPayout._id}`,
             text: `We have recieved a payout request with this payout Id ${newPayout._id}. Please process it ASAP with utmost care.`,
             html: ProcessPayout(communityDoc.name, newPayout._id),
@@ -2634,7 +2634,7 @@ exports.reportEvent = catchAsync(async (req, res, next) => {
 
     const msgToSurveillanceTeam = {
       to: "security@bluemeet.in", // Change to your recipient
-      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      from: "omprakash.shah@bluemeet.in", // Change to your verified sender
       subject: `Please review this event immediately and take appropriate action.`,
       text: `Please review event report with following Id: ${newEventReport._id}.`,
       html: PleaseReviewEvent(newEventReport._id),

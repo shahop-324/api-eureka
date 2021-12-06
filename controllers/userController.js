@@ -634,8 +634,8 @@ exports.deactivateMe = catchAsync(async (req, res, next) => {
 
       const msg = {
         to: updatedUser.email, // Change to your recipient
-        from: "shreyanshshah242@gmail.com", // Change to your verified sender
-        subject: "no-reply@bluemeet.in",
+        from: "no-reply@bluemeet.in", // Change to your verified sender
+        subject: "Bluemeet account deactivated",
         text: `Hi, ${
           updatedUser.firstName + " " + updatedUser.lastName
         } we have successfully deactivated your Bluemeet account as requested. You can still get back access to your account by logging in before ${Date.now()}. After that your account data will be deleted from Bluemeet permanently and cannot be restored in any way. Hope you enjoyed your journey with us. Looking forward to see you again. `,
@@ -936,7 +936,45 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
           superAdminImage: userDoc.image,
         });
 
-        createdCommunity.planName = 
+        createdCommunity.planName = "Free";
+        createdCommunity.allowedRegistrationLimit = 10;
+        createdCommunity.isUsingFreePlan = true;
+        createdCommunity.isAnalyticsAvailable = false;
+        createdCommunity.isBackdropAvailable = false;
+        createdCommunity.isAppSumoCustomer = false;
+
+        createdCommunity.isMailchimpAvailable = false;
+        createdCommunity.isSalesforceAvailable = false;
+        createdCommunity.isHubspotAvailable = false;
+        createdCommunity.isTawkAvailable = false;
+        createdCommunity.isTypeformAvailable = false;
+        createdCommunity.isGoogleAnalyticsAvailable = false;
+        createdCommunity.isFacebookPixelAvailable = false;
+        createdCommunity.isZapierAvailable = false;
+
+        createdCommunity.canMakeUnlimitedEvents = true;
+
+        // Booth & Sponsor will be available only for stacking 3 codes
+        createdCommunity.isBoothAvailable = false;
+        createdCommunity.isSponsorAvailable = false;
+
+        createdCommunity.isLiveStreamingAvailable = false;
+        createdCommunity.isCouponsAvailable = false;
+        // createdCommunity.availableIntegrations = "zapier";
+
+        // No Branding is allowed
+        createdCommunity.isCustomisationAvailable = true;
+
+        // Ticketing charge is 7% for all except free in which case it will be 15%
+        createdCommunity.ticketingCharge = 15;
+
+        createdCommunity.streamingHoursLimit = 2;
+
+        createdCommunity.organisersLimit = 1;
+
+        createdCommunity.canCreateFreeTicket = false;
+
+        await createdCommunity.save({ new: true, validateModifiedOnly: true });
 
         userCreatingCommunity.communities.push(createdCommunity.id);
         await userCreatingCommunity.save({ validateModifiedOnly: true });
@@ -964,7 +1002,7 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
 
         const msgToSuperAdmin = {
           to: userDoc.email, // Mail to super admin
-          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          from: "welcome@bluemeet.in", // Change to your verified sender
           subject: `Welcome to ${communityAccountRequestDoc.name}`,
           text: `Hi ${userDoc.firstName} ${userDoc.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on Bluemeet. Happy Bluemeeting  🥳 🥳!`,
           html: WelcomeToTeam(

@@ -61,10 +61,6 @@ const communitySchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
-    planName: {
-      type: String,
-      default: "Free",
-    },
     isConnectedMailChimp: {
       type: Boolean,
       default: false,
@@ -94,6 +90,77 @@ const communitySchema = new mongoose.Schema(
       default: false,
     },
     // ! /////////////////////////////////////////////////////////////////////////
+
+    isMailchimpAvailable: {
+      // ? This indicates if mailchimp integration is available or not
+      type: Boolean,
+      default: false,
+    },
+
+    isSalesforceAvailable: {
+      type: Boolean,
+      default: false,
+    },
+
+    isHubspotAvailable: {
+      type: Boolean,
+      default: false,
+    },
+
+    isTawkAvailable: {
+      type: Boolean,
+      default: false,
+    },
+
+    isTypeformAvailable: {
+      type: Boolean,
+      default: false,
+    },
+
+    isGoogleAnalyticsAvailable: {
+      type: Boolean,
+      default: false,
+    },
+
+    isFacebookPixelAvailable: {
+      type: Boolean,
+      default: false,
+    },
+    isZapierAvailable: {
+      type: Boolean,
+      default: false,
+    },
+
+    canMakeUnlimitedEvents: {
+      type: Boolean,
+      default: true, // This is always going to be true
+    },
+
+    isBoothAvailable: {
+      type: Boolean,
+      default: false,
+    },
+
+    isSponsorAvailable: {
+      type: Boolean,
+      default: false,
+    },
+
+    isLiveStreamingAvailable: {
+      type: Boolean,
+      default: false,
+    },
+
+    isCouponsAvailable: {
+      type: Boolean,
+      default: false,
+    },
+
+    isCustomisationAvailable: {
+      type: Boolean,
+      default: false,
+    },
+
     isAppSumoCustomer: {
       type: Boolean,
       default: false,
@@ -103,37 +170,8 @@ const communitySchema = new mongoose.Schema(
         type: String,
       },
     ],
-    tablesLimit: {
-      type: Number,
-      default: 10, // For free plan
-    },
     isAnalyticsAvailable: {
       type: Boolean, // * will only be checked if customer is from App Sumo
-      default: false, // * For Free plan
-    },
-    isLiveStreamingAvailable: {
-      type: Boolean, // * will only be checked if customer is from App Sumo
-      default: false, // * For Free plan
-    },
-    availableIntegrations: {
-      type: String,
-      default: "none", // * For Free plan
-      enum: ["none", "zapier", "all", "zapier google facebook"],
-    },
-    isCustomisationAvailable: {
-      type: Boolean,
-      default: false, // * For Free plan
-    },
-    isBoothAvailable: {
-      type: Boolean,
-      default: false, // * For Free plan
-    },
-    isSponsorAvailable: {
-      type: Boolean,
-      default: false, // * For Free plan
-    },
-    isCouponsAvailable: {
-      type: Boolean,
       default: false, // * For Free plan
     },
     isBackdropAvailable: {
@@ -163,7 +201,6 @@ const communitySchema = new mongoose.Schema(
       type: Number, // This will be resetted to 0 at the end of every billing cycle.
       default: 0,
     },
-
     streamingHoursLimit: {
       type: Number, // Limit on streaming hours
       default: 2, // * For Free plan
@@ -186,6 +223,10 @@ const communitySchema = new mongoose.Schema(
     organisersLimit: {
       type: Number, // Limit on number of organisers in team
       default: 1, // * For Free plan
+    },
+    canCreateFreeTicket: {
+      type: Boolean,
+      default: false,
     },
     extraOrganiserLimit: {
       type: Number,
