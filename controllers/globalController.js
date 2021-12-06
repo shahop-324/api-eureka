@@ -895,12 +895,14 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
       // Now get back total no. of codes in community doc
 
       if (totalNumOfCodes * 1 === 1) {
-        // If total = 1 => Orgainser: 2, Mails: 2500, Storage: 15GB, Registrations: 100, Streaming: 72 hours, backdrop: true, coupons: true, mail: true, live Stream: false, integration: none, analytics: false, booth: false, sponsor: false, customisation: false, tables: upto 60
+        // If total = 1 => Analytics => true, Available integrations (GA, FB pixel, Typeform, Tawk), unlimited events, no booth, no sponsor, 72 hour, 100 Registrations, only paid ticket, No branding, No Coupon, No Live Streaming, 2 team members 
+
+        // Set up isAppSumoCustomer & analytics available => true
+
         communityDoc.isAppSumoCustomer = true;
         communityDoc.isAnalyticsAvailable = true;
-        communityDoc.isLiveStreamingAvailable = false;
-        communityDoc.isCouponsAvailable = true;
-        // communityDoc.availableIntegrations = "zapier";
+
+        // Setting up integrations permissions
         communityDoc.isMailchimpAvailable = false;
         communityDoc.isSalesforceAvailable = false;
         communityDoc.isHubspotAvailable = false;
@@ -910,53 +912,131 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
         communityDoc.isFacebookPixelAvailable = true;
         communityDoc.isZapierAvailable = false;
 
-        communityDoc.isCustomisationAvailable = false;
+
+        communityDoc.canMakeUnlimitedEvents = true; // if false then only 2 events per month will be allowed
+
+        // Booth & Sponsor will be available only for stacking 3 codes
         communityDoc.isBoothAvailable = false;
         communityDoc.isSponsorAvailable = false;
         
+        communityDoc.isLiveStreamingAvailable = false;
+        communityDoc.isCouponsAvailable = false;
+        // communityDoc.availableIntegrations = "zapier";
+        
+        // No Branding is allowed
+        communityDoc.isCustomisationAvailable = false;
+        
+        // Stage backdrop is allowed
         communityDoc.isBackdropAvailable = true;
+
+        // Ticketing charge is 7% for all except free in which case it will be 15%
         communityDoc.ticketingCharge = 7;
+
         communityDoc.allowedRegistrationLimit = 100;
+
         communityDoc.streamingHoursLimit = 72;
+
         communityDoc.organisersLimit = 2;
+
         communityDoc.planName = "AppSumo";
+
+        communityDoc.canCreateFreeTicket = false;
       }
 
       if (totalNumOfCodes * 1 === 2) {
-        // If total = 2 => Orgainser: 4, Mails: 4000, Storage: 30GB, Registrations: 250, Streaming: 72 hours, backdrop: true, coupons: true, mail: true, live Stream: true, integration: Zapier, Google Analytics, Facebook pixel, analytics: true, booth: false, sponsor: false, customisation: false, tables: upto 210
+
+        // If total = 2 => Analytics => true, Available integrations (GA, FB pixel, Typeform, Tawk, Hubspot, Mailchimp), unlimited events, no booth, no sponsor, 144 hour, 300 Registrations, only paid ticket, branding available, unlimited Coupon, Live Streaming available, 4 team members 
+
+        // Set up isAppSumoCustomer & analytics available => true
+
         communityDoc.isAppSumoCustomer = true;
-        communityDoc.tablesLimit = 100;
         communityDoc.isAnalyticsAvailable = true;
-        communityDoc.isLiveStreamingAvailable = true;
-        communityDoc.availableIntegrations = "zapier google facebook";
-        communityDoc.isCustomisationAvailable = false;
-        communityDoc.isBoothAvailable = false;
-        communityDoc.isSponsorAvailable = false;
-        communityDoc.isCouponsAvailable = true;
-        communityDoc.isBackdropAvailable = true;
-        communityDoc.ticketingCharge = 7;
-        communityDoc.allowedRegistrationLimit = 500;
-        communityDoc.streamingHoursLimit = 144;
-        communityDoc.organisersLimit = 4;
+
+       // Setting up integrations permissions
+       communityDoc.isMailchimpAvailable = true;
+       communityDoc.isSalesforceAvailable = false;
+       communityDoc.isHubspotAvailable = true;
+       communityDoc.isTawkAvailable = true;
+       communityDoc.isTypeformAvailable = true;
+       communityDoc.isGoogleAnalyticsAvailable = true;
+       communityDoc.isFacebookPixelAvailable = true;
+       communityDoc.isZapierAvailable = false;
+
+       communityDoc.canMakeUnlimitedEvents = true; // if false then only 2 events per month will be allowed
+
+       // Booth & Sponsor will be available only for stacking 3 codes
+       communityDoc.isBoothAvailable = false;
+       communityDoc.isSponsorAvailable = false;
+       
+       communityDoc.isLiveStreamingAvailable = true;
+       communityDoc.isCouponsAvailable = true;
+       // communityDoc.availableIntegrations = "zapier";
+       
+       // No Branding is allowed
+       communityDoc.isCustomisationAvailable = true;
+       
+       // Stage backdrop is allowed
+       communityDoc.isBackdropAvailable = true;
+
+       // Ticketing charge is 7% for all except free in which case it will be 15%
+       communityDoc.ticketingCharge = 7;
+
+       communityDoc.allowedRegistrationLimit = 300;
+
+       communityDoc.streamingHoursLimit = 144;
+
+       communityDoc.organisersLimit = 4;
+
         communityDoc.planName = "AppSumo";
+
+        communityDoc.canCreateFreeTicket = false;
       }
       if (totalNumOfCodes * 1 === 3) {
-        // If total = 2 => Orgainser: 8, Mails: 8000, Storage: 60GB, Registrations: 500, Streaming: 144 hours, backdrop: true, coupons: true, mail: true, live Stream: true, integration: all, analytics: true, booth: true, sponsor: true, customisation: true, tables: upto 600
+                // If total = 3 => Analytics => true, Available integrations (GA, FB pixel, Typeform, Tawk, Hubspot, Mailchimp, Salesforce, Zapier), unlimited events, booth available, sponsor available, 288 hour, 500 Registrations, Free & Paid ticket, branding available, unlimited Coupon, Live Streaming available, 8 team members 
+
+        // Set up isAppSumoCustomer & analytics available => true
+
         communityDoc.isAppSumoCustomer = true;
-        communityDoc.tablesLimit = 300;
         communityDoc.isAnalyticsAvailable = true;
-        communityDoc.isLiveStreamingAvailable = true;
-        communityDoc.availableIntegrations = "all";
-        communityDoc.isCustomisationAvailable = true;
-        communityDoc.isBoothAvailable = true;
-        communityDoc.isSponsorAvailable = true;
-        communityDoc.isCouponsAvailable = true;
-        communityDoc.isBackdropAvailable = true;
-        communityDoc.ticketingCharge = 7;
-        communityDoc.allowedRegistrationLimit = 1000;
-        communityDoc.streamingHoursLimit = 250;
-        communityDoc.organisersLimit = 8;
+
+       // Setting up integrations permissions
+       communityDoc.isMailchimpAvailable = true;
+       communityDoc.isSalesforceAvailable = true;
+       communityDoc.isHubspotAvailable = true;
+       communityDoc.isTawkAvailable = true;
+       communityDoc.isTypeformAvailable = true;
+       communityDoc.isGoogleAnalyticsAvailable = true;
+       communityDoc.isFacebookPixelAvailable = true;
+       communityDoc.isZapierAvailable = true;
+
+       communityDoc.canMakeUnlimitedEvents = true; // if false then only 2 events per month will be allowed
+
+       // Booth & Sponsor will be available only for stacking 3 codes
+       communityDoc.isBoothAvailable = true;
+       communityDoc.isSponsorAvailable = true;
+       
+       communityDoc.isLiveStreamingAvailable = true;
+       communityDoc.isCouponsAvailable = true;
+       // communityDoc.availableIntegrations = "zapier";
+       
+       // No Branding is allowed
+       communityDoc.isCustomisationAvailable = true;
+       
+       // Stage backdrop is allowed
+       communityDoc.isBackdropAvailable = true;
+
+       // Ticketing charge is 7% for all except free in which case it will be 15%
+       communityDoc.ticketingCharge = 7;
+
+       communityDoc.allowedRegistrationLimit = 500;
+
+       communityDoc.streamingHoursLimit = 288;
+
+       communityDoc.organisersLimit = 8;
+
         communityDoc.planName = "AppSumo";
+
+        communityDoc.canCreateFreeTicket = true;
       }
 
       // Save all changes

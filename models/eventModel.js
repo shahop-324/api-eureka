@@ -747,7 +747,14 @@ const eventSchema = new mongoose.Schema(
 );
 
 eventSchema.pre(/^find/, function (next) {
-  this.find({}).populate("people");
+  this.find({})
+    .populate("people")
+    .populate("speaker")
+    .populate("session")
+    .populate("booths")
+    .populate("sponsors")
+    .populate("coupon")
+    .populate("tickets");
   next();
 });
 

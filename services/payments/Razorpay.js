@@ -897,73 +897,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
           const superAdminDoc = await User.findById(superAdminId);
 
-          const referredBy = superAdminDoc.referrer;
-
-          if (referredBy) {
-            // This person joined Bluemeet via referral
-
-            const referredBydoc = await User.findById(referredBy);
-
-            // Add USD 10 to both super admin and referrer and add 1 to upgrades of referrer
-
-            superAdminDoc.credit = superAdminDoc.credit + 10;
-            await superAdminDoc.save({ new: true, validateModifiedOnly: true });
-
-            // Send mail to super admin informing about credits that were applied to their account
-            const referralRedeemedMsg = {
-              to: superAdminDoc.email, // Change to your recipient
-              from: "payments@bluemeet.in", // Change to your verified sender
-              subject: `$10 Bluemeet credits applied to your account.`,
-              text: `We have applied your $10 referral credits to your account. Encourage others to switch to Bluemeet and earn $10 and give your referral $10 too. Its a win win for all of us. Cheers.`,
-              // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
-            };
-
-            sgMail
-              .send(referralRedeemedMsg)
-              .then(async () => {
-                console.log("Referral redeemed mail sent to super admin.");
-              })
-              .catch(async (error) => {
-                console.log(
-                  "Failed to send Referral redeemed mail to super admin."
-                );
-              });
-
-            if (referredBydoc) {
-              // Means referrer exists
-              referredBydoc.credit = referredBydoc.credit + 10;
-              referredBydoc.upgrades = referredBydoc.upgrades + 1;
-
-              await referredBydoc.save({
-                new: true,
-                validateModifiedOnly: true,
-              });
-
-              // Send mail to referrer informing about credits that were applied to their account
-
-              const creditsAppliedMsg = {
-                to: referredBydoc.email, // Change to your recipient
-                from: "payments@bluemeet.in", // Change to your verified sender
-                subject: `$10 Bluemeet credits applied to your account.`,
-                text: `Someone has just upgraded their Bluemeet plan by your referral. So we have added $10 to your Bluemeet account.`,
-                // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
-              };
-
-              sgMail
-                .send(creditsAppliedMsg)
-                .then(async () => {
-                  console.log("Credits applied mail sent to referrer.");
-                })
-                .catch(async (error) => {
-                  console.log(
-                    "Failed to send credits applied mail to referrer."
-                  );
-                });
-            }
-
-            //
-          }
-
           // Mark that this community has upgraded their account before
           communityDoc.upgradedForFirstTime = true; // This is a flag that this community has upgraded their account to premium before
         }
@@ -974,24 +907,221 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         communityDoc.isUsingFreePlan = false;
         communityDoc.planTransactions.push(newCommunityTransaction._id);
         communityDoc.downgradeToFreeOnNextCycle = false;
-        communityDoc.streamingHoursLimit = 72;
-        communityDoc.organisersLimit = 2;
-        communityDoc.availableIntegrations = "all";
-        communityDoc.isMailchimpAvailable = 
-        communityDoc.isSalesforceAvailable = 
-        communityDoc.isHubspotAvailable = 
-        communityDoc.isTawkAvailable = 
-        communityDoc.isTypeformAvailable = 
-        communityDoc.isGoogleAnalyticsAvailable = 
-        communityDoc.isFacebookPixelAvailable = 
-        communityDoc.isZapierAvailable = 
-        communityDoc.isCustomisationAvailable = true;
-        communityDoc.isBoothAvailable = true;
-        communityDoc.isCouponsAvailable = true;
-        communityDoc.isBackdropAvailable = true;
-        communityDoc.isFreeTicketAvailable = 
-        communityDoc.ticketingCharge = 7;
         communityDoc.isAnalyticsAvailable = true;
+        communityDoc.isBackdropAvailable = true;
+
+        switch (registrations * 1) {
+          case 100:
+            communityDoc.isAppSumoCustomer = false;
+
+            // Setting up integrations permissions
+            communityDoc.isMailchimpAvailable = false;
+            communityDoc.isSalesforceAvailable = false;
+            communityDoc.isHubspotAvailable = false;
+            communityDoc.isTawkAvailable = true;
+            communityDoc.isTypeformAvailable = true;
+            communityDoc.isGoogleAnalyticsAvailable = true;
+            communityDoc.isFacebookPixelAvailable = true;
+            communityDoc.isZapierAvailable = false;
+
+            communityDoc.canMakeUnlimitedEvents = true; // if false then only 2 events per month will be allowed
+
+            // Booth & Sponsor will be available only for stacking 3 codes
+            communityDoc.isBoothAvailable = false;
+            communityDoc.isSponsorAvailable = false;
+
+            communityDoc.isLiveStreamingAvailable = true;
+            communityDoc.isCouponsAvailable = true;
+            // communityDoc.availableIntegrations = "zapier";
+
+            // No Branding is allowed
+            communityDoc.isCustomisationAvailable = true;
+
+            // Ticketing charge is 7% for all except free in which case it will be 15%
+            communityDoc.ticketingCharge = 7;
+
+            communityDoc.streamingHoursLimit = 72;
+
+            communityDoc.organisersLimit = 3;
+
+            break;
+          case 300:
+            communityDoc.isAppSumoCustomer = false;
+
+            // Setting up integrations permissions
+            communityDoc.isMailchimpAvailable = false;
+            communityDoc.isSalesforceAvailable = false;
+            communityDoc.isHubspotAvailable = true;
+            communityDoc.isTawkAvailable = true;
+            communityDoc.isTypeformAvailable = true;
+            communityDoc.isGoogleAnalyticsAvailable = true;
+            communityDoc.isFacebookPixelAvailable = true;
+            communityDoc.isZapierAvailable = false;
+
+            communityDoc.canMakeUnlimitedEvents = true; // if false then only 2 events per month will be allowed
+
+            // Booth & Sponsor will be available only for stacking 3 codes
+            communityDoc.isBoothAvailable = false;
+            communityDoc.isSponsorAvailable = false;
+
+            communityDoc.isLiveStreamingAvailable = true;
+            communityDoc.isCouponsAvailable = true;
+            // communityDoc.availableIntegrations = "zapier";
+
+            // No Branding is allowed
+            communityDoc.isCustomisationAvailable = true;
+
+            // Ticketing charge is 7% for all except free in which case it will be 15%
+            communityDoc.ticketingCharge = 7;
+
+            communityDoc.streamingHoursLimit = 144;
+
+            communityDoc.organisersLimit = 5;
+            break;
+          case 500:
+            communityDoc.isAppSumoCustomer = false;
+
+            // Setting up integrations permissions
+            communityDoc.isMailchimpAvailable = true;
+            communityDoc.isSalesforceAvailable = false;
+            communityDoc.isHubspotAvailable = true;
+            communityDoc.isTawkAvailable = true;
+            communityDoc.isTypeformAvailable = true;
+            communityDoc.isGoogleAnalyticsAvailable = true;
+            communityDoc.isFacebookPixelAvailable = true;
+            communityDoc.isZapierAvailable = true;
+
+            communityDoc.canMakeUnlimitedEvents = true; // if false then only 2 events per month will be allowed
+
+            // Booth & Sponsor will be available only for stacking 3 codes
+            communityDoc.isBoothAvailable = true;
+            communityDoc.isSponsorAvailable = true;
+
+            communityDoc.isLiveStreamingAvailable = true;
+            communityDoc.isCouponsAvailable = true;
+            // communityDoc.availableIntegrations = "zapier";
+
+            // No Branding is allowed
+            communityDoc.isCustomisationAvailable = true;
+
+            // Ticketing charge is 7% for all except free in which case it will be 15%
+            communityDoc.ticketingCharge = 7;
+
+            communityDoc.streamingHoursLimit = 216;
+
+            communityDoc.organisersLimit = 8;
+
+            communityDoc.canCreateFreeTicket = true;
+            break;
+          case 700:
+            communityDoc.isAppSumoCustomer = false;
+
+            // Setting up integrations permissions
+            communityDoc.isMailchimpAvailable = true;
+            communityDoc.isSalesforceAvailable = true;
+            communityDoc.isHubspotAvailable = true;
+            communityDoc.isTawkAvailable = true;
+            communityDoc.isTypeformAvailable = true;
+            communityDoc.isGoogleAnalyticsAvailable = true;
+            communityDoc.isFacebookPixelAvailable = true;
+            communityDoc.isZapierAvailable = true;
+
+            communityDoc.canMakeUnlimitedEvents = true; // if false then only 2 events per month will be allowed
+
+            // Booth & Sponsor will be available only for stacking 3 codes
+            communityDoc.isBoothAvailable = true;
+            communityDoc.isSponsorAvailable = true;
+
+            communityDoc.isLiveStreamingAvailable = true;
+            communityDoc.isCouponsAvailable = true;
+            // communityDoc.availableIntegrations = "zapier";
+
+            // No Branding is allowed
+            communityDoc.isCustomisationAvailable = true;
+
+            // Ticketing charge is 7% for all except free in which case it will be 15%
+            communityDoc.ticketingCharge = 7;
+
+            communityDoc.streamingHoursLimit = 288;
+
+            communityDoc.organisersLimit = 12;
+
+            communityDoc.canCreateFreeTicket = true;
+            break;
+          case 900:
+            communityDoc.isAppSumoCustomer = false;
+
+            // Setting up integrations permissions
+            communityDoc.isMailchimpAvailable = true;
+            communityDoc.isSalesforceAvailable = true;
+            communityDoc.isHubspotAvailable = true;
+            communityDoc.isTawkAvailable = true;
+            communityDoc.isTypeformAvailable = true;
+            communityDoc.isGoogleAnalyticsAvailable = true;
+            communityDoc.isFacebookPixelAvailable = true;
+            communityDoc.isZapierAvailable = true;
+
+            communityDoc.canMakeUnlimitedEvents = true; // if false then only 2 events per month will be allowed
+
+            // Booth & Sponsor will be available only for stacking 3 codes
+            communityDoc.isBoothAvailable = true;
+            communityDoc.isSponsorAvailable = true;
+
+            communityDoc.isLiveStreamingAvailable = true;
+            communityDoc.isCouponsAvailable = true;
+            // communityDoc.availableIntegrations = "zapier";
+
+            // No Branding is allowed
+            communityDoc.isCustomisationAvailable = true;
+
+            // Ticketing charge is 7% for all except free in which case it will be 15%
+            communityDoc.ticketingCharge = 7;
+
+            communityDoc.streamingHoursLimit = 360;
+
+            communityDoc.organisersLimit = 15;
+
+            communityDoc.canCreateFreeTicket = true;
+            break;
+          case 1000:
+            communityDoc.isAppSumoCustomer = false;
+
+            // Setting up integrations permissions
+            communityDoc.isMailchimpAvailable = true;
+            communityDoc.isSalesforceAvailable = true;
+            communityDoc.isHubspotAvailable = true;
+            communityDoc.isTawkAvailable = true;
+            communityDoc.isTypeformAvailable = true;
+            communityDoc.isGoogleAnalyticsAvailable = true;
+            communityDoc.isFacebookPixelAvailable = true;
+            communityDoc.isZapierAvailable = true;
+
+            communityDoc.canMakeUnlimitedEvents = true; // if false then only 2 events per month will be allowed
+
+            // Booth & Sponsor will be available only for stacking 3 codes
+            communityDoc.isBoothAvailable = true;
+            communityDoc.isSponsorAvailable = true;
+
+            communityDoc.isLiveStreamingAvailable = true;
+            communityDoc.isCouponsAvailable = true;
+            // communityDoc.availableIntegrations = "zapier";
+
+            // No Branding is allowed
+            communityDoc.isCustomisationAvailable = true;
+
+            // Ticketing charge is 7% for all except free in which case it will be 15%
+            communityDoc.ticketingCharge = 7;
+
+            communityDoc.streamingHoursLimit = 460;
+
+            communityDoc.organisersLimit = 20;
+
+            communityDoc.canCreateFreeTicket = true;
+            break;
+
+          default:
+            break;
+        }
 
         await communityDoc.save({ new: true, validateModifiedOnly: true });
 
