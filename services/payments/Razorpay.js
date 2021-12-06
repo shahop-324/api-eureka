@@ -1493,16 +1493,16 @@ exports.registerFreeTicket = catchAsync(async (req, res, next) => {
     eventGettingEventTransaction.totalRegistrations =
       eventGettingEventTransaction.totalRegistrations + 1;
 
-    if (countryISOAplha2Code) {
-      let existingCountry =
-        eventGettingEventTransaction.countries.countryISOAplha2Code;
-      if (existingCountry) {
-        eventGettingEventTransaction.countries.countryISOAplha2Code =
-          eventGettingEventTransaction.countries.countryISOAplha2Code + 1;
-      } else {
-        eventGettingEventTransaction.countries.countryISOAplha2Code = 1;
-      }
-    }
+    // if (countryISOAplha2Code) {
+    //   let existingCountry =
+    //     eventGettingEventTransaction.countries.countryISOAplha2Code;
+    //   if (existingCountry) {
+    //     eventGettingEventTransaction.countries.countryISOAplha2Code =
+    //       eventGettingEventTransaction.countries.countryISOAplha2Code + 1;
+    //   } else {
+    //     eventGettingEventTransaction.countries.countryISOAplha2Code = 1;
+    //   }
+    // }
 
     await eventGettingEventTransaction.save({
       new: true,

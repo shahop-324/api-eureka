@@ -911,7 +911,6 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
         initialisedAt: Date.now(),
       }
     );
-
     if (communityAccountRequestDoc) {
       if (!communityAccountRequestDoc.expired) {
         // Not yet expired
@@ -936,6 +935,8 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
           superAdminEmail: userDoc.email,
           superAdminImage: userDoc.image,
         });
+
+        createdCommunity.planName = 
 
         userCreatingCommunity.communities.push(createdCommunity.id);
         await userCreatingCommunity.save({ validateModifiedOnly: true });
