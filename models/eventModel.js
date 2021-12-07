@@ -731,13 +731,24 @@ const eventSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
-
     loungeAttendedBy: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "User",
       },
     ],
+    allSeatsFull: {
+      // This field will be marked as true when all registrations of community have been utilised for this month
+      // * When this is true then we will show a message that all seats are full
+      type: Boolean,
+      default: false,
+    },
+    allStreamingHourUsed: {
+      // This field will be marked as true when all streaming hours of community have been utilised for this month
+      // * When this is true then we will show a message that all streaming hours have been utilised
+      type: Boolean,
+      default: false,
+    },
   },
   {
     versionKey: false,

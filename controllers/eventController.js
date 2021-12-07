@@ -1155,6 +1155,8 @@ exports.updateCustomisationSettings = catchAsync(async (req, res, next) => {
     "sponsorsEnabled"
   );
 
+  console.log(req.body, "This is the review setting")
+
   const eventDoc = await Event.findByIdAndUpdate(
     req.params.eventId,
     filteredBody,
@@ -1189,10 +1191,12 @@ exports.updateCustomisationSettings = catchAsync(async (req, res, next) => {
       },
     })
     .populate("hosts");
+
   res.status(200).json({
     status: "success",
     eventDoc,
   });
+
 });
 
 exports.updateRegistrationForm = catchAsync(async (req, res, next) => {

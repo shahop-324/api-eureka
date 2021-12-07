@@ -640,6 +640,9 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
           validateModifiedOnly: true,
         });
 
+        communityGettingEventTransaction.registrationsUsedThisMonth =
+          communityGettingEventTransaction.registrationsUsedThisMonth + 1;
+
         communityGettingEventTransaction.totalRegistrations =
           communityGettingEventTransaction.totalRegistrations + 1;
 
@@ -1186,6 +1189,15 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             communityId: communityId,
           });
 
+          let eventDocs = await Event.find({
+            communityId: mongoose.Types.ObjectId(communityId),
+          });
+
+          for (let element of eventDocs) {
+            element.allSeatsFull = false;
+            await element.save({ new: true, validateModifiedOnly: true });
+          }
+
           communityDoc.extraRegistrationsLimit =
             communityDoc.extraRegistrationsLimit + numOfRegistrations * 1;
           communityDoc.extraRegistrationsToBeExpiredAt =
@@ -1599,6 +1611,28 @@ exports.registerFreeTicket = catchAsync(async (req, res, next) => {
       new: true,
       validateModifiedOnly: true,
     });
+
+    communityGettingEventTransaction.registrationsUsedThisMonth =
+      communityGettingEventTransaction.registrationsUsedThisMonth + 1;
+
+    if (
+      communityGettingEventTransaction.registrationsUsedThisMonth >=
+      communityGettingEventTransaction.extraRegistrationsLimit +
+        communityGettingEventTransaction.allowedRegistrationLimit
+    ) {
+      // Stop registration for all events of this community saying that all seats are now full
+
+      let eventDocs = await Event.find({
+        communityId: mongoose.Types.ObjectId(
+          communityGettingEventTransaction._id
+        ),
+      });
+
+      for (let element of eventDocs) {
+        element.allSeatsFull = true;
+        await element.save({ new: true, validateModifiedOnly: true });
+      }
+    }
 
     communityGettingEventTransaction.totalRegistrations =
       communityGettingEventTransaction.totalRegistrations + 1;

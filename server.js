@@ -101,6 +101,39 @@ const port = process.env.PORT || 8000;
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
 io.on("connect", (socket) => {
+  socket.on("updateStreamingUsage", async ({ eventId, duration }, callback) => {
+    const eventDoc = await Event.findById(eventId);
+
+    const communityId = eventDoc.communityId;
+
+    const communityDoc = await Community.findById(communityId);
+
+    communityDoc.streamingUsedThisMonth =
+      communityDoc.streamingUsedThisMonth * 1 + duration * 1;
+
+    if (
+      communityDoc.streamingUsedThisMonth >=
+      (communityDoc.streamingHoursLimit + communityDoc.extraStreamingHours) *
+        60 *
+        60
+    ) {
+      // find all events for this community and mark that all streaming hours have been used and send everyone out of this event
+
+      const events = await Event.find({
+        communityId: mongoose.Types.ObjectId(communityId),
+      });
+
+      for (let element of events) {
+        element.allStreamingHourUsed = true;
+        await element.save({ new: true, validateModifiedOnly: true });
+      }
+
+      io.to(eventId).emit("streamingHourUsedCompletely");
+    }
+
+    await communityDoc.save({ new: true, validateModifiedOnly: true });
+  });
+
   socket.on(
     "suspendOnly",
     async ({ eventId, userId, senderId, warning }, callback) => {
@@ -6537,7 +6570,7 @@ server.listen(port, () => {
 process.on("unhandledRejection", (err) => {
   console.log(err);
   console.log("UNHANDLED REJECTION! Shutting down ...");
-  console.log('Unhandled Rejection at:', promise, 'reason:', reason);
+  console.log("Unhandled Rejection at:", promise, "reason:", reason);
   server.close(() => {
     process.exit(1);
   });

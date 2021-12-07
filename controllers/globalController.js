@@ -899,6 +899,8 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
 
         // Set up isAppSumoCustomer & analytics available => true
 
+        communityDoc.isUsingFreePlan = false;
+
         communityDoc.isAppSumoCustomer = true;
         communityDoc.isAnalyticsAvailable = true;
 
@@ -947,6 +949,8 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
 
         // Set up isAppSumoCustomer & analytics available => true
 
+        communityDoc.isUsingFreePlan = false;
+
         communityDoc.isAppSumoCustomer = true;
         communityDoc.isAnalyticsAvailable = true;
 
@@ -993,6 +997,8 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
         // If total = 3 => Analytics => true, Available integrations (GA, FB pixel, Typeform, Tawk, Hubspot, Mailchimp, Salesforce, Zapier), unlimited events, booth available, sponsor available, 288 hour, 500 Registrations, Free & Paid ticket, branding available, unlimited Coupon, Live Streaming available, 8 team members
 
         // Set up isAppSumoCustomer & analytics available => true
+
+        communityDoc.isUsingFreePlan = false;
 
         communityDoc.isAppSumoCustomer = true;
         communityDoc.isAnalyticsAvailable = true;
@@ -3188,33 +3194,26 @@ exports.getChecklistDetails = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.updateStreamingUsage = catchAsync(async (req, res, next) => {
-  const eventDoc = await Event.findById(req.params.eventId);
+// exports.updateStreamingUsage = catchAsync(async (req, res, next) => {
+//   const eventDoc = await Event.findById(req.params.eventId);
 
-  const communityId = eventDoc.communityId;
+//   const communityId = eventDoc.communityId;
 
-  const communityDoc = await Community.findById(communityId);
+//   const communityDoc = await Community.findById(communityId);
 
-  communityDoc.streamingUsed = communityDoc.streamingUsed + req.params.duration;
+//   console.log(req.params.duration, "This is the duration");
 
-  communityDoc.streamingLeft = communityDoc.streamingLeft - req.params.duration;
+//   communityDoc.streamingUsedThisMonth =
+//     communityDoc.streamingUsedThisMonth*1 + req.params.duration*1;
 
-  // Start showing
+//     console.log(communityDoc.streamingUsedThisMonth, "This is updated usage")
 
-  // You have less than 10 hours of streaming left --- Please buy addon to enjoy uninterrupted service
+//   await communityDoc.save({ new: true, validateModifiedOnly: true });
 
-  if (communityDoc.streamingLeft <= 10 * 60 * 60) {
-    communityDoc.showStreamingAlert = true;
-  } else {
-    communityDoc.showStreamingAlert = false;
-  }
-
-  await communityDoc.save({ new: true, validateModifiedOnly: true });
-
-  res.status(200).json({
-    status: "success",
-  });
-});
+//   res.status(200).json({
+//     status: "success",
+//   });
+// });
 
 exports.uninstallHubspot = catchAsync(async (req, res, next) => {
   const communityId = req.params.communityId;

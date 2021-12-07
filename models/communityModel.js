@@ -33,7 +33,6 @@ const communitySchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
     policySigned: {
       type: Boolean,
       required: [true, "A community must sign policy"],
@@ -130,37 +129,30 @@ const communitySchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
     canMakeUnlimitedEvents: {
       type: Boolean,
       default: true, // This is always going to be true
     },
-
     isBoothAvailable: {
       type: Boolean,
       default: false,
     },
-
     isSponsorAvailable: {
       type: Boolean,
       default: false,
     },
-
     isLiveStreamingAvailable: {
       type: Boolean,
       default: false,
     },
-
     isCouponsAvailable: {
       type: Boolean,
       default: false,
     },
-
     isCustomisationAvailable: {
       type: Boolean,
       default: false,
     },
-
     isAppSumoCustomer: {
       type: Boolean,
       default: false,
@@ -537,33 +529,14 @@ const communitySchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    totalStreamingLimit: {
-      // Number of streaming hours as per plan + any add on
-      type: Number,
-      default: 0,
-    },
-    streamingLeft: {
-      type: Number,
-    },
-    showStreamingAlert: {
-      type: Boolean,
-      default: false,
-    },
-    totalRegistartionsLimitThisMonth: {
-      // Registartions as per plan + any registration due to add on
-      type: Number,
-    },
     registrationsUsedThisMonth: {
       // Registrations used in this month
       type: Number,
       default: 0,
     },
-    totalTeamMemberSeatsLimit: {
-      // Total no. of seats as per plan + any seat due to add on
-      type: Number,
-    },
-    teamMemberSeatsUsed: {
-      type: Number,
+    streamingUsedThisMonth: {
+      // This field indicated the total amount of streaming that has been used by this community this month
+      type: Number, // In seconds
       default: 0,
     },
   },
