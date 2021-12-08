@@ -3776,6 +3776,16 @@ io.on("connect", (socket) => {
       socket.join(tableId);
       console.log(chairId, tableId, userId, eventId);
 
+      // If this is the last person to leave this table then remove all of this tables messages
+
+     const roomTableDoc = await RoomTable.findOne({tableId: tableId});
+
+     if(roomTableDoc.onStagePeople.length * 1 === 1) {
+      // This is the last person to leave so remove all messages of this table
+
+      await TableChats.deleteMany({tableId: tableId});
+     }
+
       fetchCurrentRoomChairs = async () => {
         await Event.findById(eventId, (err, doc) => {
           if (err) {
@@ -3868,6 +3878,17 @@ io.on("connect", (socket) => {
     async ({ chairId, tableId, userId, eventId, boothId }, callback) => {
       socket.join(tableId);
       console.log(chairId, tableId, userId, eventId, boothId);
+
+      // If this is the last person to leave this table then remove all of this tables messages
+
+     const boothTableDoc = await BoothTable.findOne({tableId: tableId});
+
+     if(boothTableDoc.onStagePeople.length * 1 === 1) {
+      // This is the last person to leave so remove all messages of this table
+
+      await BoothTableChats.deleteMany({tableId: tableId});
+     }
+
       fetchCurrentRoomChairs = async () => {
         await Booth.findById(boothId, (err, doc) => {
           if (err) {
@@ -3883,8 +3904,6 @@ io.on("connect", (socket) => {
       };
 
       // Remove this user from onStagePeople of this boothTable
-
-      const boothTableDoc = await BoothTable.findOne({ tableId: tableId });
 
       console.log(boothTableDoc.onStagePeople, "Before");
       console.log(chairId, tableId, userId, eventId, boothId);
