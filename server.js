@@ -2263,7 +2263,7 @@ io.on("connect", (socket) => {
         if (person.camera) {
           io.to(person.socketId).emit("unMuteYourVideo");
         }
-        if(person.mic) {
+        if (person.mic) {
           io.to(person.socketId).emit("unMuteYourAudio");
         }
       }
@@ -2356,7 +2356,7 @@ io.on("connect", (socket) => {
         if (person.camera) {
           io.to(person.socketId).emit("unMuteYourVideo");
         }
-        if(person.mic) {
+        if (person.mic) {
           io.to(person.socketId).emit("unMuteYourAudio");
         }
       }
@@ -2463,7 +2463,7 @@ io.on("connect", (socket) => {
         if (person.camera) {
           io.to(person.socketId).emit("unMuteYourVideo");
         }
-        if(person.mic) {
+        if (person.mic) {
           io.to(person.socketId).emit("unMuteYourAudio");
         }
       }
@@ -2601,7 +2601,7 @@ io.on("connect", (socket) => {
         if (person.camera) {
           io.to(person.socketId).emit("unMuteYourVideo");
         }
-        if(person.mic) {
+        if (person.mic) {
           io.to(person.socketId).emit("unMuteYourAudio");
         }
       }
@@ -3989,6 +3989,23 @@ io.on("connect", (socket) => {
           .populate("chairs");
       };
 
+      fetchPeopleOnTable = async () => {
+        const boothTableDoc = await BoothTable.findOne({ tableId: tableId });
+
+        let people = [];
+
+        if (boothTableDoc) {
+          for (let element of boothTableDoc.onStagePeople) {
+            const userDoc = await User.findById(element.user);
+            if (userDoc) {
+              people.push(userDoc);
+            }
+          }
+        }
+
+        io.in(tableId).emit("updatedPeopleOnBoothTable", { people: people });
+      };
+
       fetchNumberOfPeopleOnTable = async () => {
         await BoothTable.findOne({ tableId: tableId }, (err, tableDoc) => {
           if (err) {
@@ -4235,6 +4252,23 @@ io.on("connect", (socket) => {
           .populate("chairs");
       };
 
+      fetchPeopleOnTable = async () => {
+        const roomTableDoc = await RoomTable.findOne({ tableId: tableId });
+
+        let people = [];
+
+        if (roomTableDoc) {
+          for (let element of roomTableDoc.onStagePeople) {
+            const userDoc = await User.findById(element.user);
+            if (userDoc) {
+              people.push(userDoc);
+            }
+          }
+        }
+
+        io.in(tableId).emit("updatedPeopleOnLoungeTable", { people: people });
+      };
+
       fetchNumberOfPeopleOnTable = async () => {
         await RoomTable.findOne({ tableId: tableId }, (err, tableDoc) => {
           if (err) {
@@ -4355,6 +4389,7 @@ io.on("connect", (socket) => {
                               if (err) {
                                 console.log(err);
                               } else {
+                                fetchPeopleOnTable();
                                 fetchCurrentRoomChairs();
                               }
                             }
@@ -4406,6 +4441,7 @@ io.on("connect", (socket) => {
                     if (err) {
                       console.log(err);
                     } else {
+                      fetchPeopleOnTable();
                       fetchCurrentRoomChairs();
                     }
                   }
