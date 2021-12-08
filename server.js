@@ -3288,6 +3288,9 @@ io.on("connect", (socket) => {
       if (person.camera) {
         io.to(person.socketId).emit("unMuteYourVideo");
       }
+      if (person.mic) {
+        io.to(person.socketId).emit("unMuteYourAudio");
+      }
     }
   });
 
@@ -3371,6 +3374,9 @@ io.on("connect", (socket) => {
     for (let person of filteredPeople) {
       if (person.camera) {
         io.to(person.socketId).emit("unMuteYourVideo");
+      }
+      if (person.mic) {
+        io.to(person.socketId).emit("unMuteYourAudio");
       }
     }
   });
