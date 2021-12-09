@@ -74,7 +74,13 @@ const tableChatsSchema = new mongoose.Schema({
   reportedBy: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
-  }
+  },
+  seenBy: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 const TableChats = mongoose.model(

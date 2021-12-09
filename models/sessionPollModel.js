@@ -14,6 +14,7 @@ const pollOptionSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+  
 });
 
 const sessionPollSchema = new mongoose.Schema({
@@ -62,6 +63,12 @@ const sessionPollSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  seenBy: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 const SessionPoll = mongoose.model("SessionPoll", sessionPollSchema);

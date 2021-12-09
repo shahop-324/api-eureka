@@ -45,6 +45,12 @@ const sessionQnASchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "Event",
     },
+    seenBy: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },

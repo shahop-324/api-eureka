@@ -74,7 +74,13 @@ const boothTableChatsSchema = new mongoose.Schema({
   reportedBy: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
-  }
+  },
+  seenBy: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 const BoothTableChats = mongoose.model(

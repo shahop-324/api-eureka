@@ -10,6 +10,8 @@ exports.getPreviousEventAlert = catchAsync(async (req, res, next) => {
       $and: [{ eventId: mongoose.Types.ObjectId(eventId) }, { deleted: false }],
     }).populate("userId", "firstName lastName email image");
 
+    console.log(eventAlerts);
+
     res.status(200).json({
       status: "success",
       data: eventAlerts,

@@ -46,6 +46,12 @@ const raisedHandsSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
+    seenBy: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     versionKey: false,

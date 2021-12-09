@@ -63,6 +63,12 @@ const eventReportSchema = new mongoose.Schema({
   warningMsg: {
     type: String,
   },
+  seenBy: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+    },
+  ],
   // ! Note that message will be automatically deleted whenever some action is taken against it
 });
 

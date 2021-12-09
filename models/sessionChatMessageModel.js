@@ -79,7 +79,13 @@ const sessionChatMessageSchema = new mongoose.Schema({
   reportedBy: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
-  }
+  },
+  seenBy: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 const SessionChatMessage = mongoose.model(

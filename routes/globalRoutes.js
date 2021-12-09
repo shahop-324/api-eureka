@@ -6,6 +6,7 @@ const eventAlertController = require("../controllers/eventAlertController");
 const eventPollController = require("../controllers/eventPollController");
 const networkingController = require("./../controllers/networkingController");
 const userController = require("./../controllers/userController");
+const seenByController = require("../controllers/SeenByController");
 
 const videoController = require("./../controllers/videoController");
 
@@ -509,5 +510,47 @@ router.post(
   authController.protectCommunity,
   globalController.uninstallTypeform
 );
+
+router.post(
+  "/markEventAlertAsSeen/:alertId",
+  authController.protect,
+  seenByController.seenEventAlert
+);
+
+router.post(
+  "/markEventMsgAsSeen/:msgId",
+  authController.protect,
+  seenByController.seenEventChat
+);
+
+router.post(
+  "/markSessionHandAsSeen/:userId/:sessionId",
+  authController.protect,
+  seenByController.seenRaisedHand
+);
+
+router.post(
+  "/markSessionPollAsRead/:pollId",
+  authController.protect,
+  seenByController.seenSessionPoll
+);
+
+router.post(
+  "/markSessionChatAsRead/:msgId",
+  authController.protect,
+  seenByController.seenSessionChat
+);
+
+router.post(
+  "/markSessionQnAAsRead/:qnaId",
+  authController.protect,
+  seenByController.seenSessionQnA
+);
+
+router.post("/markBoothMsgAsRead/:msgId", authController.protect, seenByController.seenBoothChats);
+
+router.post("/markBoothTableMsgAsRead/:msgId", authController.protect, seenByController.seenBoothTableChat);
+
+router.post("/markLoungeMsgAsRead/:msgId", authController.protect, seenByController.seenRoomChat);
 
 module.exports = router;

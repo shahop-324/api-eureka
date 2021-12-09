@@ -20,6 +20,12 @@ const eventAlertSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  seenBy: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 const EventAlert = mongoose.model("EventAlert", eventAlertSchema);

@@ -19,6 +19,12 @@ const reportSchema = new mongoose.Schema(
       enum: ["Nothing wrong", "Removed", "Banned", "Under review"],
       default: "Under review",
     },
+    seenBy: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
