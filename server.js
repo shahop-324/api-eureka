@@ -1862,6 +1862,19 @@ io.on("connect", (socket) => {
       // Find session and make this user available in people onLiveStage array or onBackStage People based on his channel
       // Then send updated session to all users in this session
 
+      console.log(
+        role,
+        state,
+        userId,
+        userEmail,
+        registrationId,
+        sessionId,
+        eventId,
+        microphone,
+        camera,
+        screen
+      );
+
       const sessionDoc = await Session.findById(sessionId)
         .populate("host")
         .populate("speaker")
@@ -3778,13 +3791,13 @@ io.on("connect", (socket) => {
 
       // If this is the last person to leave this table then remove all of this tables messages
 
-     const roomTableDoc = await RoomTable.findOne({tableId: tableId});
+      const roomTableDoc = await RoomTable.findOne({ tableId: tableId });
 
-     if(roomTableDoc.onStagePeople.length * 1 === 1) {
-      // This is the last person to leave so remove all messages of this table
+      if (roomTableDoc.onStagePeople.length * 1 === 1) {
+        // This is the last person to leave so remove all messages of this table
 
-      await TableChats.deleteMany({tableId: tableId});
-     }
+        await TableChats.deleteMany({ tableId: tableId });
+      }
 
       fetchCurrentRoomChairs = async () => {
         await Event.findById(eventId, (err, doc) => {
@@ -3881,13 +3894,13 @@ io.on("connect", (socket) => {
 
       // If this is the last person to leave this table then remove all of this tables messages
 
-     const boothTableDoc = await BoothTable.findOne({tableId: tableId});
+      const boothTableDoc = await BoothTable.findOne({ tableId: tableId });
 
-     if(boothTableDoc.onStagePeople.length * 1 === 1) {
-      // This is the last person to leave so remove all messages of this table
+      if (boothTableDoc.onStagePeople.length * 1 === 1) {
+        // This is the last person to leave so remove all messages of this table
 
-      await BoothTableChats.deleteMany({tableId: tableId});
-     }
+        await BoothTableChats.deleteMany({ tableId: tableId });
+      }
 
       fetchCurrentRoomChairs = async () => {
         await Booth.findById(boothId, (err, doc) => {
