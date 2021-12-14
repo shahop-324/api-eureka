@@ -5242,7 +5242,6 @@ io.on("connect", (socket) => {
                 const populatedChatMsg = await EventChatMessage.findById(
                   chatMsgDoc._id
                 ).populate("replyTo");
-
                 eventDoc.save({ validateModifiedOnly: true }, (err, data) => {
                   if (err) {
                     console.log(err);
