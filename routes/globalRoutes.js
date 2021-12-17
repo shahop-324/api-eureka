@@ -9,6 +9,7 @@ const userController = require("./../controllers/userController");
 const seenByController = require("../controllers/SeenByController");
 
 const videoController = require("./../controllers/videoController");
+const { createWhiteboardRoom, generateWhiteboardRoomToken } = require("../controllers/WhiteboardController");
 
 const router = express.Router();
 
@@ -547,10 +548,26 @@ router.post(
   seenByController.seenSessionQnA
 );
 
-router.post("/markBoothMsgAsRead/:msgId", authController.protect, seenByController.seenBoothChats);
+router.post(
+  "/markBoothMsgAsRead/:msgId",
+  authController.protect,
+  seenByController.seenBoothChats
+);
 
-router.post("/markBoothTableMsgAsRead/:msgId", authController.protect, seenByController.seenBoothTableChat);
+router.post(
+  "/markBoothTableMsgAsRead/:msgId",
+  authController.protect,
+  seenByController.seenBoothTableChat
+);
 
-router.post("/markLoungeMsgAsRead/:msgId", authController.protect, seenByController.seenRoomChat);
+router.post(
+  "/markLoungeMsgAsRead/:msgId",
+  authController.protect,
+  seenByController.seenRoomChat
+);
+
+router.post("/createWhiteboardRoom", createWhiteboardRoom);
+
+router.post("/generateWhiteboardRoomToken", generateWhiteboardRoomToken);
 
 module.exports = router;
