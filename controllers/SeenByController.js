@@ -74,29 +74,42 @@ exports.seenEventReport = catchAsync(async (req, res, next) => {
 });
 
 exports.seenRaisedHand = catchAsync(async (req, res, next) => {
-  const handRaisedByUser = req.params.userId;
-  const sessionId = req.params.sessionId;
-  const userId = req.user._id;
+  try {
+    const handRaisedByUser = req.params.userId;
+    const sessionId = req.params.sessionId;
+    const userId = req.user._id;
 
-  // Ensure that this userId is not already present in seenBy Array
+    // Ensure that this userId is not already present in seenBy Array
 
-  const sessionDoc = await Session.findById(sessionId);
+    const sessionDoc = await Session.findById(sessionId);
 
-  const raisedHand = sessionDoc.raisedHands.filter(
-    (el) => el.userId.toString() === handRaisedByUser.toString()
-  );
+    let allRaisedHands = sessionDoc.raisedHands;
 
-  raisedHand.seenBy = raisedHand.seenBy.filter(
-    (el) => el.userId.toString() !== userId.toString()
-  );
+    console.log(allRaisedHands, handRaisedByUser);
 
-  raisedHand.seenBy.push(userId);
+    const raisedHand = allRaisedHands.find(
+      (el) => el.userId.toString() == handRaisedByUser.toString()
+    );
 
-  await raisedHand.save({ new: true, validateModifiedOnly: true });
+    if (raisedHand) {
+      raisedHand.seenBy = raisedHand.seenBy.filter(
+        (el) => el.userId.toString() !== userId.toString()
+      );
 
-  res.status(200).json({
-    status: "success",
-  });
+      raisedHand.seenBy.push(userId);
+
+      await raisedHand.save({ new: true, validateModifiedOnly: true });
+    }
+
+    res.status(200).json({
+      status: "success",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      status: "Errror",
+    });
+  }
 });
 exports.seenSessionChat = catchAsync(async (req, res, next) => {
   const chatId = req.params.msgId;
