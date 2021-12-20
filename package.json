@@ -14,10 +14,7 @@
  
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/shahop-324/project-eureka/issues"
-  },
-  "homepage": "https://github.com/shahop-324/project-eureka#readme",
+
   "dependencies": {
     "@amplitude/node": "^1.9.0",
     "@hubspot/api-client": "^5.0.0",
