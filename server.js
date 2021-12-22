@@ -44,6 +44,7 @@ process.on("uncaughtException", (err) => {
 });
 
 dotenv.config({ path: "./config.env" });
+
 const cors = require("cors");
 const app = require("./app");
 const http = require("http");
@@ -86,6 +87,7 @@ const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
   process.env.DATABASE_PASSWORD
 );
+
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
@@ -941,6 +943,8 @@ io.on("connect", (socket) => {
         },
       }
     );
+
+    console.log(response);
 
     if (!response.ok) {
       // res.status(400).json({
