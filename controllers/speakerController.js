@@ -103,12 +103,12 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
           registrationId
         );
 
-        // check if there is any user with updated mail on Bluemeet platform
+        // check if there is any user with updated mail on LetStream platform
 
         const userOnPlatform = await User.findOne({ email: req.body.email });
 
         if (userOnPlatform) {
-          // * Already a Bluemeet user
+          // * Already a LetStream user
 
           // TODO => Create a speaker registration with status as completed and cancelled as false.
 
@@ -139,8 +139,8 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
 
           // Add invitaion and magic link to this registration
 
-          newSpeakerRegistration.magic_link = `https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
-          newSpeakerRegistration.invitationLink = `https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
+          newSpeakerRegistration.magic_link = `https://www.letstream.live/event/speaker/${newSpeakerRegistration._id}`;
+          newSpeakerRegistration.invitationLink = `https://www.letstream.live/event/speaker/${newSpeakerRegistration._id}`;
 
           await newSpeakerRegistration.save({
             new: true,
@@ -161,10 +161,10 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
           // 2.) Send new Invitation via mail to speaker
           const msg = {
             to: req.body.email, // Change to your recipient
-            from: "no-reply@bluemeet.in", // Change to your verified sender
+            from: "no-reply@letstream.live", // Change to your verified sender
             subject: `Your are invited as speaker in ${eventDoc.eventName}`,
-            text: `use this link to join this event as a speaker. ${`https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`https://www.bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
-            html: SpeakerMagicLink(eventDoc.eventName, `https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`),
+            text: `use this link to join this event as a speaker. ${`https://www.letstream.live/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`https://www.letstream.live/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
+            html: SpeakerMagicLink(eventDoc.eventName, `https://www.letstream.live/event/speaker/${newSpeakerRegistration._id}`),
           };
 
           sgMail
@@ -184,7 +184,7 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
               await eventDoc.save({ new: true, validateModifiedOnly: true });
             });
         } else {
-          // * Not a Bluemeet user yet
+          // * Not a LetStream user yet
 
           // TODO => Create a speaker registration with status as pending and cancelled as false.
 
@@ -210,8 +210,8 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
 
           // Add invitaion and magic link to this registration
 
-          newSpeakerRegistration.magic_link = `https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
-          newSpeakerRegistration.invitationLink = `https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
+          newSpeakerRegistration.magic_link = `https://www.letstream.live/event/speaker/${newSpeakerRegistration._id}`;
+          newSpeakerRegistration.invitationLink = `https://www.letstream.live/event/speaker/${newSpeakerRegistration._id}`;
 
           await newSpeakerRegistration.save({
             new: true,
@@ -221,10 +221,10 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
           // 2.) Send new Invitation via mail to speaker
           const msg = {
             to: req.body.email, // Change to your recipient
-            from: "no-reply@bluemeet.in", // Change to your verified sender
+            from: "no-reply@letstream.live", // Change to your verified sender
             subject: `Your are invited as speaker in ${eventDoc.eventName}`,
-            text: `use this link to join this event as a speaker. ${`https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`https://www.bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
-            html: SpeakerMagicLink(eventDoc.eventName, `https://www.bluemeet.in/event/speaker/${newSpeakerRegistration._id}`),
+            text: `use this link to join this event as a speaker. ${`https://www.letstream.live/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`https://www.letstream.live/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
+            html: SpeakerMagicLink(eventDoc.eventName, `https://www.letstream.live/event/speaker/${newSpeakerRegistration._id}`),
           };
 
           sgMail
@@ -362,7 +362,7 @@ exports.sendInvitation = catchAsync(async (req, res, next) => {
 
   const msg = {
     to: speakerEmail, // Change to your recipient
-    from: "no-reply@bluemeet.in", // Change to your verified sender
+    from: "no-reply@letstream.live", // Change to your verified sender
     subject: "Your Event Invitation Link",
     text: `Hi, ${speakerName} use this link to join this event as a speaker. ${invitationLink}. You have been invited in these sessions ${sessions}`,
     html: SpeakerMagicLink(eventDoc.eventName, invitationLink),
@@ -411,7 +411,7 @@ exports.sendBulkInvite = catchAsync(async (req, res, next) => {
   for (let element of bulkMailInfo) {
     const msg = {
       to: element.email, // Change to your recipient
-      from: "no-reply@bluemeet.in", // Change to your verified sender
+      from: "no-reply@letstream.live", // Change to your verified sender
       subject: "Your Event Invitation Link",
       text: `Hi, ${element.name} use this link to join this event (${eventDoc.eventName}). ${element.invitationLink}. And you can access your dashboard using this link ${element.dashboardLink}`,
       html: SpeakerMagicLink(eventDoc.eventName, element.invitationLink),

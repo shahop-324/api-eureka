@@ -25,7 +25,7 @@ module.exports = (url, community, invitee) => {
             letter-spacing: 0px;
             color: #343434;
             opacity: 1;">
-              You have been invited to join ${community.name} by ${invitee.firstName} on Bluemeet platform. We welcome you to our Bluemeet family.  
+              You have been invited to join ${community.name} by ${invitee.firstName} on LetStream platform. We welcome you to our LetStream family.  
               Here's your link to join this community. 
             </div>
             <div className="email-action-btn-wrapper d-flex flex-row justify-content-center mb-5">
@@ -58,7 +58,7 @@ module.exports = (url, community, invitee) => {
             font: normal normal 700 0.95rem/1.53rem Helvetica Neue;
             letter-spacing: 0px;
             color: #535353;">
-            Bluemeet Inc.
+            LetStream Inc.
             </div>
           </div>
            </div>

@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
+const StreamChat = require('stream-chat').StreamChat;
+const { connect } = require('getstream');
 const Community = require("../models/communityModel");
 const MailList = require("../models/emailListModel");
 const SalesDepartment = require("../models/salesDepartmentModel");
@@ -154,6 +156,19 @@ exports.signup = catchAsync(async (req, res, next) => {
             upgrades: 0,
             credit: 0,
           });
+
+          const userId = newUser._id;
+
+          const api_key="3r4n3gwpmk7y";
+          const api_secret="egscsww6rnky7aetrx7tpuct6zavms6cn6m7acrfqt6jvjrt8stxaay9ynrgvz9a";
+          const app_id="1158257"
+
+          const streamServerClient = connect(api_key, api_secret, app_id);
+          const streamToken = streamServerClient.createUserToken(userId.toString());
+
+          newUser.streamToken = streamToken;
+          await newUser.save({new: true, validateModifiedOnly: true});
+
           const name = `${userAccountrequestDoc.firstName} ${userAccountrequestDoc.lastName}`;
           await MailList.create({
             name: name,
@@ -331,33 +346,32 @@ exports.signup = catchAsync(async (req, res, next) => {
 
           // Send a welcome email to our user here
 
-        const msg = {
-          to: newUser.email, // Change to your recipient
-          from: "welcome@bluemeet.in", // Change to your verified sender
-          subject: `Welcome to Bluemeet`,
-          text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
-          html: WelcomeToBluemeet(newUser.firtsName),
-        };
+          const msg = {
+            to: newUser.email, // Change to your recipient
+            from: "welcome@letstream.live", // Change to your verified sender
+            subject: `Welcome to LetStream`,
+            text: ` We are glad to have you on LetStream. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of LetStream platform. Cheers!`,
+            html: WelcomeToBluemeet(newUser.firtsName),
+          };
 
-        sgMail
-          .send(msg)
-          .then(async () => {
-            console.log("Welcome mail sent successfully!");
-          })
-          .catch(async (error) => {
-            console.log("Failed to send welcome message to our user.");
+          sgMail
+            .send(msg)
+            .then(async () => {
+              console.log("Welcome mail sent successfully!");
+            })
+            .catch(async (error) => {
+              console.log("Failed to send welcome message to our user.");
+            });
+
+          res.status(200).json({
+            status: "success",
+            token,
+            user: newUser,
+            referralCode: MyReferralCode,
+            intent: userAccountrequestDoc.intent,
+            eventId: userAccountrequestDoc.eventId,
           });
-
-        res.status(200).json({
-          status: "success",
-          token,
-          user: newUser,
-          referralCode: MyReferralCode,
-          intent: userAccountrequestDoc.intent,
-          eventId: userAccountrequestDoc.eventId,
-        });
-        }
-        else {
+        } else {
           // ! What happens when the user is referred but referrer account was not found
 
           const newUser = await User.create({
@@ -549,32 +563,31 @@ exports.signup = catchAsync(async (req, res, next) => {
 
           // Send a welcome email to our user here
 
-        const msg = {
-          to: newUser.email, // Change to your recipient
-          from: "welcome@bluemeet.in", // Change to your verified sender
-          subject: `Welcome to Bluemeet`,
-          text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
-          html: WelcomeToBluemeet(newUser.firstName),
-        };
+          const msg = {
+            to: newUser.email, // Change to your recipient
+            from: "welcome@letstream.live", // Change to your verified sender
+            subject: `Welcome to LetStream`,
+            text: ` We are glad to have you on LetStream. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of LetStream platform. Cheers!`,
+            html: WelcomeToBluemeet(newUser.firstName),
+          };
 
-        sgMail
-          .send(msg)
-          .then(async () => {
-            console.log("Welcome mail sent successfully!");
-          })
-          .catch(async (error) => {
-            console.log("Failed to send welcome message to our user.");
+          sgMail
+            .send(msg)
+            .then(async () => {
+              console.log("Welcome mail sent successfully!");
+            })
+            .catch(async (error) => {
+              console.log("Failed to send welcome message to our user.");
+            });
+
+          res.status(200).json({
+            status: "success",
+            token,
+            user: newUser,
+            referralCode: MyReferralCode,
+            intent: userAccountrequestDoc.intent,
+            eventId: userAccountrequestDoc.eventId,
           });
-
-        res.status(200).json({
-          status: "success",
-          token,
-          user: newUser,
-          referralCode: MyReferralCode,
-          intent: userAccountrequestDoc.intent,
-          eventId: userAccountrequestDoc.eventId,
-        });
-
         }
       } else {
         const newUser = await User.create({
@@ -750,9 +763,9 @@ exports.signup = catchAsync(async (req, res, next) => {
 
         const msg = {
           to: newUser.email, // Change to your recipient
-          from: "welcome@bluemeet.in", // Change to your verified sender
-          subject: `Welcome to Bluemeet`,
-          text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
+          from: "welcome@letstream.live", // Change to your verified sender
+          subject: `Welcome to LetStream`,
+          text: ` We are glad to have you on LetStream. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of LetStream platform. Cheers!`,
           html: WelcomeToBluemeet(newUser.firstName),
         };
 
@@ -952,9 +965,9 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
     const msg = {
       to: user.email, // Change to your recipient
-      from: "security@bluemeet.in", // Change to your verified sender
+      from: "security@letstream.live", // Change to your verified sender
       subject: "Your Password has been changed.",
-      text: "Hi we have changed your password as requested by you. If you think its a mistake then please contact us via support room or write to us at support@bluemeet.in",
+      text: "Hi we have changed your password as requested by you. If you think its a mistake then please contact us via support room or write to us at support@letstream.live",
       html: PasswordChanged(user.firstName),
     };
 

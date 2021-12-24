@@ -439,8 +439,8 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
       },
 
       mode: "payment",
-      success_url: "https://bluemeet.in",
-      cancel_url: "https://bluemeet.in/privacy-policy",
+      success_url: "https://letstream.live",
+      cancel_url: "https://letstream.live/privacy-policy",
     },
     {
       stripeAccount: "acct_1JdAqMSDXW2aFh0d",
@@ -484,11 +484,11 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
     const currency = session.currency; // Currency in which this transaction happened
     const customerId = session.customer; // Customer Id of this user for our platform in Stripe database
     const email = session.customer_details.email; // email of this customer
-    const userId = session.metadata.userId; // user Id of this customer in bluemeet database
-    const ticketId = session.metadata.ticketId; // ticket Id in bluemeet database
-    const eventId = session.metadata.eventId; // event Id in bluemeet database
-    const couponId = session.metadata.couponId; // coupon Id in bluemeet database
-    const communityId = session.metadata.communityId; // community Id in bluemeet database
+    const userId = session.metadata.userId; // user Id of this customer in letstream database
+    const ticketId = session.metadata.ticketId; // ticket Id in letstream database
+    const eventId = session.metadata.eventId; // event Id in letstream database
+    const couponId = session.metadata.couponId; // coupon Id in letstream database
+    const communityId = session.metadata.communityId; // community Id in letstream database
     const registrationType = session.metadata.registrationType; // Registration type [enum] => ["Live event", "VOD one time", "VOD Subscription"]
     const paymentIntentId = session.payment_intent; // Payment intent Id which can be used to fetch deep details of payment and issue refund
     const paymentStatus = session.payment_status; // Payment status
@@ -589,12 +589,12 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
         ticket_name: ticketBeingPurchased.name,
         registration_amount: amountTotal / 100,
         currency: currency,
-        event_picture: `https://bluemeet.s3.us-west-1.amazonaws.com/${eventGettingEventTransaction.image}`,
-        community_picture: `https://bluemeet.s3.us-west-1.amazonaws.com/${communityGettingEventTransaction.image}`,
+        event_picture: `https://letstream.s3.us-west-1.amazonaws.com/${eventGettingEventTransaction.image}`,
+        community_picture: `https://letstream.s3.us-west-1.amazonaws.com/${communityGettingEventTransaction.image}`,
       });
 
-      newlyCreatedRegistration.invitationLink = `https://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`;
-      newlyCreatedRegistration.magic_link = `https://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`;
+      newlyCreatedRegistration.invitationLink = `https://letstream.live/event/link/attendee/${newlyCreatedRegistration._id}`;
+      newlyCreatedRegistration.magic_link = `https://letstream.live/event/link/attendee/${newlyCreatedRegistration._id}`;
       await newlyCreatedRegistration.save({
         new: true,
         validateModifiedOnly: true,
@@ -789,7 +789,7 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
         mailChimpFormValues.merge_fields = {
           FNAME: user.firstName,
           LNAME: user.lastName,
-          MAGIC_LINK: `http://bluemeet/event/link/attendee/${newlyCreatedRegistration._id}`,
+          MAGIC_LINK: `http://letstream/event/link/attendee/${newlyCreatedRegistration._id}`,
         };
         mailChimpFormValues.status = "subscribed";
         for (let element of event.mailChimpAudienceTag) {
@@ -805,9 +805,9 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
 
       const msg = {
         to: email, // Change to your recipient
-        from: "payments@bluemeet.in", // Change to your verified sender
+        from: "payments@letstream.live", // Change to your verified sender
         subject: "Your Event Registration Confirmation.",
-        text: `You have just successfully registered in an event. Checkout your Bluemeet user dashboard for more information. Thanks! Here is your magic link http://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`,
+        text: `You have just successfully registered in an event. Checkout your LetStream user dashboard for more information. Thanks! Here is your magic link http://letstream.live/event/link/attendee/${newlyCreatedRegistration._id}`,
         html: EventRegistrationConfirmation(),
       };
 
@@ -849,8 +849,8 @@ exports.CreateCommunityBillOrder = catchAsync(async (req, res, next) => {
         },
       ],
       mode: "payment",
-      success_url: "https://bluemeet.in/",
-      cancel_url: "https://bluemeet.in/privacy-policy/",
+      success_url: "https://letstream.live/",
+      cancel_url: "https://letstream.live/privacy-policy/",
     });
 
     res.redirect(303, session.url);

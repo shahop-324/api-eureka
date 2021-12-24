@@ -634,11 +634,11 @@ exports.deactivateMe = catchAsync(async (req, res, next) => {
 
       const msg = {
         to: updatedUser.email, // Change to your recipient
-        from: "no-reply@bluemeet.in", // Change to your verified sender
-        subject: "Bluemeet account deactivated",
+        from: "no-reply@letstream.live", // Change to your verified sender
+        subject: "LetStream account deactivated",
         text: `Hi, ${
           updatedUser.firstName + " " + updatedUser.lastName
-        } we have successfully deactivated your Bluemeet account as requested. You can still get back access to your account by logging in before ${Date.now()}. After that your account data will be deleted from Bluemeet permanently and cannot be restored in any way. Hope you enjoyed your journey with us. Looking forward to see you again. `,
+        } we have successfully deactivated your LetStream account as requested. You can still get back access to your account by logging in before ${Date.now()}. After that your account data will be deleted from LetStream permanently and cannot be restored in any way. Hope you enjoyed your journey with us. Looking forward to see you again. `,
         html: BluemeetAccountDeactivated(updatedUser.firstName),
       };
 
@@ -778,18 +778,18 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // 3) Send it to user's email
   try {
-    const resetURL = `https://www.bluemeet.in/resetPassword/${resetToken}`;
+    const resetURL = `https://www.letstream.live/resetPassword/${resetToken}`;
 
     // Send Grid is implemented here
 
     const msg = {
       to: user.email, // Change to your recipient
-      from: "security@bluemeet.in", // Change to your verified sender
+      from: "security@letstream.live", // Change to your verified sender
       subject: "Your Password Reset Link",
       text: "use this link to reset your password. This link is valid for only 10 min.",
       html: PasswordResetLink(
         user.firstName,
-        `https://www.bluemeet.in/resetPassword/${resetToken}`
+        `https://www.letstream.live/resetPassword/${resetToken}`
       ),
     };
 
@@ -848,10 +848,10 @@ exports.createNewCommunityRequest = catchAsync(async (req, res, next) => {
 
     const msg = {
       to: req.body.email, // Change to your recipient
-      from: "security@bluemeet.in", // Change to your verified sender
+      from: "security@letstream.live", // Change to your verified sender
       subject: `Verify your community mail.`,
       html: VerifyCommunityEmail(
-        `https://www.bluemeet.in/verifying-community/${accountRequest._id}`
+        `https://www.letstream.live/verifying-community/${accountRequest._id}`
       ),
     };
 
@@ -1002,9 +1002,9 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
 
         const msgToSuperAdmin = {
           to: userDoc.email, // Mail to super admin
-          from: "welcome@bluemeet.in", // Change to your verified sender
+          from: "welcome@letstream.live", // Change to your verified sender
           subject: `Welcome to ${communityAccountRequestDoc.name}`,
-          text: `Hi ${userDoc.firstName} ${userDoc.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on Bluemeet. Happy Bluemeeting  🥳 🥳!`,
+          text: `Hi ${userDoc.firstName} ${userDoc.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on LetStream. Happy Bluemeeting  🥳 🥳!`,
           html: WelcomeToTeam(
             userDoc.firstName,
             communityAccountRequestDoc.name
@@ -1013,9 +1013,9 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
 
         const msgToCommunity = {
           to: communityAccountRequestDoc.email, // Mail to community
-          from: "welcome@bluemeet.in", // Change to your verified sender
+          from: "welcome@letstream.live", // Change to your verified sender
           subject: `Welcome to ${communityAccountRequestDoc.name}`,
-          text: `Hi ${userDoc.firstName} ${userDoc.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on Bluemeet. Happy Bluemeeting  🥳 🥳!`,
+          text: `Hi ${userDoc.firstName} ${userDoc.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on LetStream. Happy Bluemeeting  🥳 🥳!`,
           html: WelcomeToTeam(
             userDoc.firstName,
             communityAccountRequestDoc.name

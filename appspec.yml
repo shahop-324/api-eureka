@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/bluemeet
+    destination: /home/ubuntu/letstream
 permissions:
   - object: /home/ubuntu
     owner: ubuntu

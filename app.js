@@ -78,17 +78,17 @@ const MAILCHIMP_CLIENT_SECRET =
 const BASE_URL =
   process.env.NODE_ENV === "development"
     ? "http://127.0.0.1:3000"
-    : "https://api.bluemeet.in";
+    : "https://api.letstream.live";
 
-const OAUTH_CALLBACK = `https://www.bluemeet.in/bluemeet/redirect`;
+const OAUTH_CALLBACK = `https://www.letstream.live/letstream/redirect`;
 
 app.use(
   cors({
     origin: [
       "http://127.0.0.1:3001",
       "http://localhost:3001",
-      "https://www.bluemeet.in",
-      "https://bluemeet.in",
+      "https://www.letstream.live",
+      "https://letstream.live",
       "https://zapier.com",
       "https://www.zapier.com",
     ],
@@ -174,7 +174,7 @@ app.get("/api-eureka/getUserCredentials", (req, res, next) => {
   const parameters = {
     grant_type: "authorization_code",
     code: code,
-    redirect_uri: "https://bluemeet.in/signin",
+    redirect_uri: "https://letstream.live/signin",
     client_id: "7761igbj4li3f2",
     client_secret: "aitQmTG7uYvSkaRZ",
   };
@@ -389,7 +389,7 @@ app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res, next) {
   const oauth2 = new jsforce.OAuth2({
     clientId: process.env.SALESFORCE_CLIENT_ID,
     clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
-    redirectUri: "https://www.bluemeet.in/bluemeet/salesforce/redirect",
+    redirectUri: "https://www.letstream.live/letstream/salesforce/redirect",
   });
   res.redirect(oauth2.getAuthorizationUrl({}));
 });
@@ -402,7 +402,7 @@ app.get(
     const oauth2 = new jsforce.OAuth2({
       clientId: process.env.SALESFORCE_CLIENT_ID,
       clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
-      redirectUri: "https://www.bluemeet.in/bluemeet/salesforce/redirect",
+      redirectUri: "https://www.letstream.live/letstream/salesforce/redirect",
     });
     const conn = new jsforce.Connection({ oauth2: oauth2 });
     conn.authorize(req.query.code, function (err, userInfo) {

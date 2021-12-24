@@ -38,9 +38,9 @@ jobs:
       matrix:
         python-version: [3.8]
         node-version: ['12.x']
-        appname: ['bluemeet-client']
+        appname: ['letstream-client']
         deploy-group: ['staging']
-        s3-bucket: ['aws-bluemeet-codedeploy-deployments']
+        s3-bucket: ['aws-letstream-codedeploy-deployments']
         s3-filename: ['staging-aws-codedeploy-${{ github.sha }}']
 
     needs: buildAndTest

@@ -157,7 +157,7 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
         });
       }
 
-      // Check which emails are new => Check if user with that email exists on Bluemeet or not => Follow regular way as did during adding booth
+      // Check which emails are new => Check if user with that email exists on LetStream or not => Follow regular way as did during adding booth
 
       let difference = req.body.emails.filter(
         (x) => !emailsBeforeUpdate.includes(x)
@@ -170,7 +170,7 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
         // Step 1 => check if there is any user with that email already on platform
         const existingUser = await User.findOne({ email: element });
         if (existingUser) {
-          // user already have account on Bluemeet
+          // user already have account on LetStream
           // => create exhibitor registration and mark as completed for this email and send magic link to exhibitor mail
           const newRegistration = await Registration.create({
             boothId: boothDoc._id,
@@ -200,8 +200,8 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
           });
 
           // Provide magic_link and invitation link
-          newRegistration.magic_link = `https://www.bluemeet.in/event/booth/${newRegistration._id}`;
-          newRegistration.invitationLink = `https://www.bluemeet.in/event/booth/${newRegistration._id}`;
+          newRegistration.magic_link = `https://www.letstream.live/event/booth/${newRegistration._id}`;
+          newRegistration.invitationLink = `https://www.letstream.live/event/booth/${newRegistration._id}`;
 
           // Add this event in users registered events and push this registration in users resgistrations doc.
           existingUser.registeredInEvents.push(eventDoc._id);
@@ -218,15 +218,15 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
 
           const msg = {
             to: element,
-            from: "dinesh.shah@bluemeet.in",
+            from: "dinesh.shah@letstream.live",
             subject: `Your are invited as a exhibitor in ${eventDoc.eventName}`,
             text: `use this link to join this event ${
               eventDoc.eventName
-            } as a booth exhibitor. ${`https://www.bluemeet.in/event/booth/${newRegistration._id}`}`,
+            } as a booth exhibitor. ${`https://www.letstream.live/event/booth/${newRegistration._id}`}`,
             html: ExhibitorInvitation(
               communityDoc.name,
               eventDoc.eventName,
-              `https://www.bluemeet.in/event/booth/${newRegistration._id}`,
+              `https://www.letstream.live/event/booth/${newRegistration._id}`,
               existingUser.firstName
             ),
           };
@@ -242,7 +242,7 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
 
           // This case is properly handled.
         } else {
-          // user does not  have account on Bluemeet
+          // user does not  have account on LetStream
           // => create exhibitor registration and mark as pending for this email and send magic link to exhibitor mail
 
           const newRegistration = await Registration.create({
@@ -263,8 +263,8 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
           });
 
           // Provide magic_link and invitation link
-          newRegistration.magic_link = `https://www.bluemeet.in/event/booth/${newRegistration._id}`;
-          newRegistration.invitationLink = `https://www.bluemeet.in/event/booth/${newRegistration._id}`;
+          newRegistration.magic_link = `https://www.letstream.live/event/booth/${newRegistration._id}`;
+          newRegistration.invitationLink = `https://www.letstream.live/event/booth/${newRegistration._id}`;
 
           // Save user doc and registration doc
           await newRegistration.save({
@@ -276,15 +276,15 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
 
           const msg = {
             to: element,
-            from: "dinesh.shah@bluemeet.in",
+            from: "dinesh.shah@letstream.live",
             subject: `Your are invited as a exhibitor in ${eventDoc.eventName}`,
             text: `use this link to join this event ${
               eventDoc.eventName
-            } as a booth exhibitor. ${`https://www.bluemeet.in/event/booth/${newRegistration._id}`}`,
+            } as a booth exhibitor. ${`https://www.letstream.live/event/booth/${newRegistration._id}`}`,
             html: ExhibitorInvitation(
               communityDoc.name,
               eventDoc.eventName,
-              `https://www.bluemeet.in/event/booth/${newRegistration._id}`
+              `https://www.letstream.live/event/booth/${newRegistration._id}`
             ),
           };
 
@@ -407,7 +407,7 @@ exports.sendBoothInvitation = catchAsync(async (req, res, next) => {
 
         const msg = {
           to: element, // Change to your recipient
-          from: "dinesh.shah@bluemeet.in", // Change to your verified sender
+          from: "dinesh.shah@letstream.live", // Change to your verified sender
           subject: "Your Booth Exhibitor Event Link",
           text: `Hi, use this link to join this event as a booth exhibitor. ${doc.invitationLink}.`,
           html: ExhibitorInvitation(

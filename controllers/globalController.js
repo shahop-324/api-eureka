@@ -1060,16 +1060,16 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
         // Updated codes status as well
       }
 
-      //* Now send a mail to community admin and person who applied code that the process was successful. Enjoy Bluemeet and have a good day ahead. Thanks for embarking on this journey with us. See you soon.
+      //* Now send a mail to community admin and person who applied code that the process was successful. Enjoy LetStream and have a good day ahead. Thanks for embarking on this journey with us. See you soon.
 
       const mailsArray = [communityDoc.superAdminEmail, userDoc.email];
 
       for (let element of mailsArray) {
         const msg = {
           to: element, // Change to your recipient
-          from: "payments@bluemeet.in", // Change to your verified sender
+          from: "payments@letstream.live", // Change to your verified sender
           subject: "AppSumo codes redeemed!",
-          text: `${totalNumOfCodes} Codes have been successfully applied to your Bluemeet Community. ${communityDoc.name}.`,
+          text: `${totalNumOfCodes} Codes have been successfully applied to your LetStream Community. ${communityDoc.name}.`,
           html: AppSumoCodeRedeemed(communityDoc.name, totalNumOfCodes),
         };
 
@@ -1126,7 +1126,7 @@ exports.requestIntegration = catchAsync(async (req, res, next) => {
     initiatedAt: Date.now(),
   });
 
-  // TODO Send a mail to a bluemeet person saying that someone has requested an integration
+  // TODO Send a mail to a letstream person saying that someone has requested an integration
 
   res.status(200).json({
     status: "success",
@@ -1151,7 +1151,7 @@ exports.buildWithBluemeet = catchAsync(async (req, res, next) => {
     initiatedAt: Date.now(),
   });
 
-  // TODO Send a mail to a bluemeet person saying that someone has proposed an integration
+  // TODO Send a mail to a letstream person saying that someone has proposed an integration
 
   res.status(200).json({
     status: "success",
@@ -1268,7 +1268,7 @@ exports.acquireRecordingResource = catchAsync(async (req, res, next) => {
             storageConfig: {
               accessKey: "AKIA4IKLDA4ABVU7DUJJ",
               region: 2,
-              bucket: "bluemeet-inc",
+              bucket: "letstream-inc",
               secretKey: "IBL4uBLaHv7RDyZo6c1gNTKqttwGrybHCll/wtBF",
               vendor: 1,
               fileNamePrefix: ["cloudrecording", "session"],
@@ -1570,7 +1570,7 @@ exports.getSpeakerRegistrationInfoForMagicLinkPage = catchAsync(
           userIsOnBluemeet: true,
         });
       } else {
-        // Send that user is not registered on Bluemeet platform => Send event details
+        // Send that user is not registered on LetStream platform => Send event details
 
         // * send userIsOnBluemeet => false
 
@@ -1630,7 +1630,7 @@ exports.getExhibitorRegistrationInfoForMagicLinkPage = catchAsync(
           userIsOnBluemeet: true,
         });
       } else {
-        // Send that user is not registered on Bluemeet platform => Send event details
+        // Send that user is not registered on LetStream platform => Send event details
 
         // * send userIsOnBluemeet => false
 
@@ -1836,7 +1836,7 @@ exports.sendStageReminder = catchAsync(async (req, res, next) => {
 
   const msg = {
     to: user.email, // Change to your recipient
-    from: "no-reply@bluemeet.in", // Change to your verified sender
+    from: "no-reply@letstream.live", // Change to your verified sender
     subject: Subject,
     text: msgToUser,
     html: SessionReminder(),
@@ -1882,11 +1882,11 @@ exports.resendCommunityVerificationMail = catchAsync(async (req, res, next) => {
 
   const msg = {
     to: communityAccountRequest.email, // Change to your recipient
-    from: "security@bluemeet.in", // Change to your verified sender
+    from: "security@letstream.live", // Change to your verified sender
     subject: `Verify your community mail.`,
-    text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`https://www.bluemeet.in/verifying-community/${communityAccountRequest._id}`}`,
+    text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`https://www.letstream.live/verifying-community/${communityAccountRequest._id}`}`,
     html: VerifyCommunityEmail(
-      `https://www.bluemeet.in/verifying-community/${communityAccountRequest._id}`
+      `https://www.letstream.live/verifying-community/${communityAccountRequest._id}`
     ),
   };
 
@@ -1941,11 +1941,11 @@ exports.createUserAccountRequest = catchAsync(async (req, res, next) => {
 
     const msg = {
       to: req.body.email, // Change to your recipient
-      from: "security@bluemeet.in", // Change to your verified sender
+      from: "security@letstream.live", // Change to your verified sender
       subject: `Verify your user account email.`,
-      text: `Congratulations on joining Bluemeet platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://www.bluemeet.in/verifying-account/${newAccountDoc._id}`}`,
+      text: `Congratulations on joining LetStream platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://www.letstream.live/verifying-account/${newAccountDoc._id}`}`,
       html: VerifyUserEmail(
-        `http://www.bluemeet.in/verifying-account/${newAccountDoc._id}`
+        `http://www.letstream.live/verifying-account/${newAccountDoc._id}`
       ),
     };
 
@@ -1978,11 +1978,11 @@ exports.resendUserVerificationEmail = catchAsync(async (req, res, next) => {
 
   const msg = {
     to: userAccountRequest.email, // Change to your recipient
-    from: "security@bluemeet.in", // Change to your verified sender
+    from: "security@letstream.live", // Change to your verified sender
     subject: `Verify your account email.`,
-    text: `Congratulations on joining Bluemeet platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://www.bluemeet.in/verifying-account/${userAccountRequest._id}`}`,
+    text: `Congratulations on joining LetStream platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://www.letstream.live/verifying-account/${userAccountRequest._id}`}`,
     html: VerifyUserEmail(
-      `http://www.bluemeet.in/verifying-account/${userAccountRequest._id}`
+      `http://www.letstream.live/verifying-account/${userAccountRequest._id}`
     ),
   };
 
@@ -2034,11 +2034,11 @@ exports.changeCommunityAccountRequestEmail = catchAsync(
 
       const msg = {
         to: updatedCommunityAccountRequest.email, // Change to your recipient
-        from: "security@bluemeet.in", // Change to your verified sender
+        from: "security@letstream.live", // Change to your verified sender
         subject: `Verify your community email.`,
-        text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`http://www.bluemeet.in/verifying-community/${updatedCommunityAccountRequest._id}`}`,
+        text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`http://www.letstream.live/verifying-community/${updatedCommunityAccountRequest._id}`}`,
         html: VerifyCommunityEmail(
-          `http://www.bluemeet.in/verifying-community/${updatedCommunityAccountRequest._id}`
+          `http://www.letstream.live/verifying-community/${updatedCommunityAccountRequest._id}`
         ),
       };
 
@@ -2304,13 +2304,13 @@ exports.editPayPalPayoutEmail = catchAsync(async (req, res, next) => {
 
     const msg = {
       to: email, // Change to your recipient
-      from: "payments@bluemeet.in", // Change to your verified sender
+      from: "payments@letstream.live", // Change to your verified sender
       subject: "Please verify your Paypal Payout email.",
-      text: `Hi, please click on the button below to verify this email for reciving Paypal Payouts for your Bluemeet Community ${
+      text: `Hi, please click on the button below to verify this email for reciving Paypal Payouts for your LetStream Community ${
         updatedCommunity.name
-      }. ${`https://www.bluemeet.in/verify-paypal-email/${paypalEmailUpdateRequest._id}`}`,
+      }. ${`https://www.letstream.live/verify-paypal-email/${paypalEmailUpdateRequest._id}`}`,
       html: VerifyPayPalEmail(
-        `https://www.bluemeet.in/verify-paypal-email/${paypalEmailUpdateRequest._id}`,
+        `https://www.letstream.live/verify-paypal-email/${paypalEmailUpdateRequest._id}`,
         updatedCommunity.name
       ),
     };
@@ -2332,9 +2332,9 @@ exports.editPayPalPayoutEmail = catchAsync(async (req, res, next) => {
 
     const msgToSuperAdmin = {
       to: superAdminEmail, // Change to your recipient
-      from: "security@bluemeet.in", // Change to your verified sender
-      subject: "Alert!, Bluemeet Paypal Payout email changed.",
-      text: `Hi, This is to inform you that your Bluemeet community ${updatedCommunity.name} Paypal Payout email has been updated to ${email}. Please verify the same through mail sent on provided email or if not done by you, then report immediately at support@bluemeet.in`,
+      from: "security@letstream.live", // Change to your verified sender
+      subject: "Alert!, LetStream Paypal Payout email changed.",
+      text: `Hi, This is to inform you that your LetStream community ${updatedCommunity.name} Paypal Payout email has been updated to ${email}. Please verify the same through mail sent on provided email or if not done by you, then report immediately at support@letstream.live`,
       html: AlertPayoutEmailChanged(
         userDoc.firstName,
         updatedCommunity.name,
@@ -2378,13 +2378,13 @@ exports.resendPayPalEmailVerificationLink = catchAsync(
     if (requestObject) {
       const msg = {
         to: requestObject.email, // Change to your recipient
-        from: "payments@bluemeet.in", // Change to your verified sender
+        from: "payments@letstream.live", // Change to your verified sender
         subject: "Please verify your Paypal Payout email.",
-        text: `Hi, please click on the button below to verify this email for reciving Paypal Payouts for your Bluemeet Community ${
+        text: `Hi, please click on the button below to verify this email for reciving Paypal Payouts for your LetStream Community ${
           communityDoc.name
-        }. ${`https://www.bluemeet.in/verify-paypal-email/${requestObject._id}`}`,
+        }. ${`https://www.letstream.live/verify-paypal-email/${requestObject._id}`}`,
         html: VerifyPayPalEmail(
-          `https://www.bluemeet.in/verify-paypal-email/${requestObject._id}`,
+          `https://www.letstream.live/verify-paypal-email/${requestObject._id}`,
           communityDoc.name
         ),
       };
@@ -2451,7 +2451,7 @@ exports.verifyPayPalEmail = catchAsync(async (req, res, next) => {
 exports.createPayPalPayoutRequest = catchAsync(async (req, res, next) => {
   // Create a payout request and send a confirmation mail to verified Paypal email and super admin
   // Create a notification for community
-  // Also send a mail to payouts@bluemeet.in to proceed with this payout handling
+  // Also send a mail to payouts@letstream.live to proceed with this payout handling
 
   // * NOTE => We also need to provide payoutId
 
@@ -2497,7 +2497,7 @@ exports.createPayPalPayoutRequest = catchAsync(async (req, res, next) => {
 
           const msgToSuperAdmin = {
             to: superAdminEmail, // Change to your recipient
-            from: "payments@bluemeet.in", // Change to your verified sender
+            from: "payments@letstream.live", // Change to your verified sender
             subject: `Your payout of $${amount} is on its way.`,
             text: `Hi, This is to inform you that we have received your request for payout and we are working on that and it will be safely delivered to your paypal account associated with this email ${email} in 4-6 hours.`,
             html: PayPalPayoutOnItsWay(superAdminFirstName, amount),
@@ -2516,7 +2516,7 @@ exports.createPayPalPayoutRequest = catchAsync(async (req, res, next) => {
 
           const msgToVerifiedEmail = {
             to: email, // Change to your recipient
-            from: "payments@bluemeet.in", // Change to your verified sender
+            from: "payments@letstream.live", // Change to your verified sender
             subject: `Your payout of $${amount} is on its way.`,
             text: `Hi, This is to inform you that we have received your request for payout and we are working on that and it will be safely delivered to your paypal account associated with this email ${email} in 4-6 hours.`,
             html: PayPalPayoutOnItsWay(superAdminFirstName, amount),
@@ -2536,8 +2536,8 @@ exports.createPayPalPayoutRequest = catchAsync(async (req, res, next) => {
           // Mail to payout team
 
           const msgToPayoutTeam = {
-            to: "payments@bluemeet.in", // Change to your recipient
-            from: "omprakash.shah@bluemeet.in", // Change to your verified sender
+            to: "payments@letstream.live", // Change to your recipient
+            from: "omprakash.shah@letstream.live", // Change to your verified sender
             subject: `Please process payout with payout Id ${newPayout._id}`,
             text: `We have recieved a payout request with this payout Id ${newPayout._id}. Please process it ASAP with utmost care.`,
             html: ProcessPayout(communityDoc.name, newPayout._id),
@@ -2609,7 +2609,7 @@ exports.reportEvent = catchAsync(async (req, res, next) => {
     const eventDoc = await Event.findById(eventId);
     const userDoc = await User.findById(userId);
 
-    // mark event as reported and increase reported count => send a mail to report@bluemeet.in and SuperAdmin, community Verified mail and also create a notification for community
+    // mark event as reported and increase reported count => send a mail to report@letstream.live and SuperAdmin, community Verified mail and also create a notification for community
 
     const newEventReport = await Report.create({
       event: eventId,
@@ -2621,7 +2621,7 @@ exports.reportEvent = catchAsync(async (req, res, next) => {
 
     const msgToUser = {
       to: userDoc.email, // Change to your recipient
-      from: "security@bluemeet.in", // Change to your verified sender
+      from: "security@letstream.live", // Change to your verified sender
       subject: `We have recieved your report for following event ${eventDoc.eventName}`,
       text: `Hi, ${userDoc.firstName}, we have successfully recieved your report for the event ${eventDoc.eventName} and we are currently reviewing it. Thanks for reporting, We will take appropriate action and will reach out to you with our conclusion.`,
       html: ReportReceived(userDoc.firstName, eventDoc.eventName),
@@ -2639,8 +2639,8 @@ exports.reportEvent = catchAsync(async (req, res, next) => {
     // Send a mail to event surveillance team
 
     const msgToSurveillanceTeam = {
-      to: "security@bluemeet.in", // Change to your recipient
-      from: "omprakash.shah@bluemeet.in", // Change to your verified sender
+      to: "security@letstream.live", // Change to your recipient
+      from: "omprakash.shah@letstream.live", // Change to your verified sender
       subject: `Please review this event immediately and take appropriate action.`,
       text: `Please review event report with following Id: ${newEventReport._id}.`,
       html: PleaseReviewEvent(newEventReport._id),
@@ -2790,7 +2790,7 @@ exports.acceptInEvent = catchAsync(async (req, res, next) => {
 
   const msgToUser = {
     to: acceptedUserDoc.email, // Change to your recipient
-    from: "no-reply@bluemeet.in", // Change to your verified sender
+    from: "no-reply@letstream.live", // Change to your verified sender
     subject: `You have been accepted in ${eventDoc.eventName}.`,
     text: `Here is a good news for you, You have been accepted in following event ${eventDoc.eventName}. You can now join this event by visiting your user dashboard. `,
     html: AcceptedInEvent(eventDoc.eventName),

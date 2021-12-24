@@ -180,7 +180,7 @@ module.exports = (link, communityName) => {
 
                               <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.199999999999996px;"><strong><span style="line-height: 39.199999999999996px; font-size: 28px;">Verify your PayPal Email to receive Bluemeet Payouts</span></strong>
+                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 28px; line-height: 39.199999999999996px;"><strong><span style="line-height: 39.199999999999996px; font-size: 28px;">Verify your PayPal Email to receive LetStream Payouts</span></strong>
                                   </span>
                                 </p>
                               </div>
@@ -222,7 +222,7 @@ module.exports = (link, communityName) => {
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi,</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: large;">This email has been added by ${communityName} community on Bluemeet to receive PayPal Payouts. Please confirm that you are sure about that by clicking on verify button below.</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: large;">This email has been added by ${communityName} community on LetStream to receive PayPal Payouts. Please confirm that you are sure about that by clicking on verify button below.</span></p>
                                 <p style="line-height: 160%; font-size: 14px;">&nbsp;</p>
                                 <p style="line-height: 160%; font-size: 14px;">&nbsp;</p>
                               </div>
@@ -257,7 +257,7 @@ module.exports = (link, communityName) => {
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
                                 <p dir="ltr" style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">Thanks,</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">The Bluemeet Team</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">The LetStream Team</span></p>
                               </div>
 
                             </td>
@@ -297,7 +297,7 @@ module.exports = (link, communityName) => {
 
                               <div style="color: #003399; line-height: 160%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;"><strong>Get in touch</strong></span></p>
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;">Info@bluemeet.in</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;">Info@letstream.live</span></p>
                               </div>
 
                             </td>
@@ -334,7 +334,7 @@ module.exports = (link, communityName) => {
                                     <tbody>
                                       <tr style="vertical-align: top">
                                         <td align="left" valign="middle" style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-                                          <a href="https://linkedin.com/company/bluemeet-in/" title="LinkedIn" target="_blank">
+                                          <a href="https://linkedin.com/company/letstream-in/" title="LinkedIn" target="_blank">
                                             <img src="https://cdn.tools.unlayer.com/social/icons/rounded-black/linkedin.png" alt="LinkedIn" title="LinkedIn" width="32" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
                                           </a>
                                         </td>
@@ -440,7 +440,7 @@ module.exports = (link, communityName) => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="color: #fafafa; line-height: 180%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy;Bluemeet. &nbsp;All Rights Reserved</span></p>
+                                <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy;LetStream. &nbsp;All Rights Reserved</span></p>
                               </div>
 
                             </td>

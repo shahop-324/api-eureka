@@ -13,7 +13,7 @@ exports.createDemoRequest = catchAsync(async (req, res, next) => {
     region: req.body.region,
   });
 
-  // Send mail to Bluemeet person that someone has requested a demo for our product.
+  // Send mail to LetStream person that someone has requested a demo for our product.
 
   res.status(201).json({
     status: "success",

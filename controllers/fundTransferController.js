@@ -25,7 +25,7 @@ exports.createFundTransferRequest = catchAsync(async (req, res, next) => {
 
   const msg = {
     to: "dineshshah8234@gmail.com", // Change to your recipient
-    from: "payments@bluemeet.in", // Change to your verified sender
+    from: "payments@letstream.live", // Change to your verified sender
     subject: "There is a new fund transfer request.",
     text: `account: ${account}, ifsc: ${ifsc}, beneficiaryName: ${beneficiaryName}, communityId: ${communityId}, communityName: ${communityName}, amount: INR ${amount}, phoneNumber: ${phoneNumber}`,
     // html: ForgotPasswordTemplate(user, resetURL),

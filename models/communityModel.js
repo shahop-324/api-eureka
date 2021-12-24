@@ -501,7 +501,7 @@ const communitySchema = new mongoose.Schema(
       type: String,
     },
     upgradedForFirstTime: {
-      type: Boolean, // ! We will mark this as true after this community purchases their first plan on Bluemeet
+      type: Boolean, // ! We will mark this as true after this community purchases their first plan on LetStream
       default: false,
     },
     followers: [

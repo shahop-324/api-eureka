@@ -67,15 +67,15 @@ exports.createNewInvitation = catchAsync(async (req, res, next) => {
   });
 
   if (existingUser) {
-    urlToBeSent = `http://bluemeet.in/accept-invite/${newlyCreatedInvitation._id}`;
+    urlToBeSent = `http://letstream.live/accept-invite/${newlyCreatedInvitation._id}`;
   } else {
-    urlToBeSent = `http://bluemeet.in/team/invite/${newlyCreatedInvitation._id}`;
+    urlToBeSent = `http://letstream.live/team/invite/${newlyCreatedInvitation._id}`;
   }
 
   // 2.) Send new Invitation via mail to user
   const msg = {
     to: email, // Change to your recipient
-    from: "no-reply@bluemeet.in", // Change to your verified sender
+    from: "no-reply@letstream.live", // Change to your verified sender
     subject: "Your Community Invitation Link",
     text: `use this link ${urlToBeSent} to accept invitation from this community.`,
     html: CommunityInviteLink(urlToBeSent, communityDoc.name),
@@ -198,9 +198,9 @@ exports.acceptInvitation = catchAsync(async (req, res, next) => {
 
     const msg = {
       to: email, // Change to your recipient
-      from: "no-reply@bluemeet.in", // Change to your verified sender
-      subject: "New member added to your Bluemeet community",
-      text: `Hey ${CommunityDoc.superAdminName}. This is to inform you that ${userDoc.firstName} has accepted invitation to join your ${CommunityDoc.name} community on Bluemeet.`,
+      from: "no-reply@letstream.live", // Change to your verified sender
+      subject: "New member added to your LetStream community",
+      text: `Hey ${CommunityDoc.superAdminName}. This is to inform you that ${userDoc.firstName} has accepted invitation to join your ${CommunityDoc.name} community on LetStream.`,
       html: NewMemberAdded(CommunityDoc.superAdminName, userDoc.firstName, CommunityDoc.name),
     };
 
@@ -380,9 +380,9 @@ exports.removeFromTeam = catchAsync(async (req, res, next) => {
 
     const msgToSuperAdmin = {
       to: communityDoc.superAdminName, // Change to your recipient
-      from: "no-reply@bluemeet.in", // Change to your verified sender
+      from: "no-reply@letstream.live", // Change to your verified sender
       subject: `${userDoc.firstName} has been removed from your community.`,
-      text: `Hey ${communityDoc.superAdminName}. This is to inform you that ${userDoc.firstName} has been removed from your ${communityDoc.name} community on Bluemeet.`,
+      text: `Hey ${communityDoc.superAdminName}. This is to inform you that ${userDoc.firstName} has been removed from your ${communityDoc.name} community on LetStream.`,
       html: UserRemovedFromTeam(communityDoc.superAdminName,userDoc.firstName, communityDoc.name ),
     };
 
@@ -399,9 +399,9 @@ exports.removeFromTeam = catchAsync(async (req, res, next) => {
 
     const msgToConcernedPerson = {
       to: userDoc.email, // Change to your recipient
-      from: "no-reply@bluemeet.in", // Change to your verified sender
+      from: "no-reply@letstream.live", // Change to your verified sender
       subject: `You have been removed from ${communityDoc.name}`,
-      text: `Hey ${userDoc.firstName}. This is to inform you that you have been removed as community manager from ${CommunityDoc.name} community on Bluemeet.`,
+      text: `Hey ${userDoc.firstName}. This is to inform you that you have been removed as community manager from ${CommunityDoc.name} community on LetStream.`,
       html: YouHaveBeenRemovedFromTeam(userDoc.firstName, CommunityDoc.name),
     };
 

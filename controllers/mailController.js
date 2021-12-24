@@ -97,9 +97,9 @@ exports.sendMail = catchAsync(async (req, res, next) => {
     for (let element of receivers) {
       const msg = {
         to: element, // Change to your recipient
-        from: "no-reply@bluemeet.in", // Change to your verified sender
+        from: "no-reply@letstream.live", // Change to your verified sender
         subject: mailDoc.subject,
-        // text: `${totalNumOfCodes} Codes have been successfully applied to your Bluemeet Community. ${communityDoc.name}.`,
+        // text: `${totalNumOfCodes} Codes have been successfully applied to your LetStream Community. ${communityDoc.name}.`,
         html: mailDoc.html.replace(/&lt;/gi, "<"),
       };
 
@@ -210,9 +210,9 @@ exports.sendTestMail = catchAsync(async (req, res, next) => {
     } else {
       const msg = {
         to: receiver, // Change to your recipient
-        from: "no-reply@bluemeet.in", // Change to your verified sender
+        from: "no-reply@letstream.live", // Change to your verified sender
         subject: mailDoc.subject,
-        // text: `${totalNumOfCodes} Codes have been successfully applied to your Bluemeet Community. ${communityDoc.name}.`,
+        // text: `${totalNumOfCodes} Codes have been successfully applied to your LetStream Community. ${communityDoc.name}.`,
         html: newHTML,
         // html: ForgotPasswordTemplate({ firstName: "OP" }, "jkejke"),
       };

@@ -9,7 +9,7 @@ class Mailer extends helper.Mail {
     super();
 
     this.sgApi = sendgrid(process.env.SENDGRID_KEY);
-    this.from_email = new helper.Email('no-reply@bluemeet.in');
+    this.from_email = new helper.Email('no-reply@letstream.live');
     this.subject = subject;
     this.body = new helper.Content('text/html', content);
     this.recipients = this.formatAddresses(recipients);

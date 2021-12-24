@@ -192,7 +192,7 @@ router.post(
   globalController.requestIntegration
 );
 
-// * Build with Bluemeet
+// * Build with LetStream
 
 router.post(
   "/buildWithBluemeet",

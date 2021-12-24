@@ -224,7 +224,7 @@ module.exports = (superAdminName, communityName, numberOfOrganiserSeats ) => {
                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${superAdminName}</span></p>
                                 <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">This is to inform you that we have successfully applied ${numberOfOrganiserSeats} extra organiser seats to your ${communityName} community. </span></p>
                                 <p style="line-height: 160%; font-size: 14px;">&nbsp;</p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">You can get more info on this from your Bluemeet community Dashboard.&nbsp;</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">You can get more info on this from your LetStream community Dashboard.&nbsp;</span></p>
                               </div>
 
                             </td>
@@ -239,7 +239,7 @@ module.exports = (superAdminName, communityName, numberOfOrganiserSeats ) => {
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
                                 <p dir="ltr" style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">Thanks,</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">The Bluemeet Team</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">The LetStream Team</span></p>
                               </div>
 
                             </td>
@@ -279,7 +279,7 @@ module.exports = (superAdminName, communityName, numberOfOrganiserSeats ) => {
 
                               <div style="color: #003399; line-height: 160%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;"><strong>Get in touch</strong></span></p>
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;">Info@bluemeet.in</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;">Info@letstream.live</span></p>
                               </div>
 
                             </td>
@@ -316,7 +316,7 @@ module.exports = (superAdminName, communityName, numberOfOrganiserSeats ) => {
                                     <tbody>
                                       <tr style="vertical-align: top">
                                         <td align="left" valign="middle" style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-                                          <a href="https://linkedin.com/company/bluemeet-in/" title="LinkedIn" target="_blank">
+                                          <a href="https://linkedin.com/company/letstream-in/" title="LinkedIn" target="_blank">
                                             <img src="https://cdn.tools.unlayer.com/social/icons/rounded-black/linkedin.png" alt="LinkedIn" title="LinkedIn" width="32" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
                                           </a>
                                         </td>
@@ -422,7 +422,7 @@ module.exports = (superAdminName, communityName, numberOfOrganiserSeats ) => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="color: #fafafa; line-height: 180%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy;Bluemeet. &nbsp;All Rights Reserved</span></p>
+                                <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy;LetStream. &nbsp;All Rights Reserved</span></p>
                               </div>
 
                             </td>

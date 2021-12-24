@@ -346,7 +346,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
           // Step 1 => check if there is any user with that email already on platform
           const existingUser = await User.findOne({ email: element });
           if (existingUser) {
-            // user already have account on Bluemeet
+            // user already have account on LetStream
             // => create exhibitor registration and mark as completed for this email and send magic link to exhibitor mail
             const newRegistration = await Registration.create({
               boothId: doc._id,
@@ -376,8 +376,8 @@ exports.createBooth = catchAsync(async (req, res, next) => {
             });
 
             // Provide magic_link and invitation link
-            newRegistration.magic_link = `http://bluemeet.in/event/booth/${newRegistration._id}`;
-            newRegistration.invitationLink = `http://bluemeet.in/event/booth/${newRegistration._id}`;
+            newRegistration.magic_link = `http://letstream.live/event/booth/${newRegistration._id}`;
+            newRegistration.invitationLink = `http://letstream.live/event/booth/${newRegistration._id}`;
 
             // Add this event in users registered events and push this registration in users resgistrations doc.
             existingUser.registeredInEvents.push(eventGettingBooth._id);
@@ -394,15 +394,15 @@ exports.createBooth = catchAsync(async (req, res, next) => {
 
             const msg = {
               to: element,
-              from: "dinesh.shah@bluemeet.in",
+              from: "dinesh.shah@letstream.live",
               subject: `Your are invited as a exhibitor in ${eventGettingBooth.eventName}`,
               text: `use this link to join this event ${
                 eventGettingBooth.eventName
-              } as a booth exhibitor. ${`http://bluemeet.in/event/booth/${newRegistration._id}`}`,
+              } as a booth exhibitor. ${`http://letstream.live/event/booth/${newRegistration._id}`}`,
               html: ExhibitorInvitation(
                 communityGettingBooth.name,
                 eventGettingBooth.eventName,
-                `http://bluemeet.in/event/booth/${newRegistration._id}`,
+                `http://letstream.live/event/booth/${newRegistration._id}`,
                 existingUser.firstName
               ),
             };
@@ -418,7 +418,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
 
             // This case is properly handled.
           } else {
-            // user does not  have account on Bluemeet
+            // user does not  have account on LetStream
             // => create exhibitor registration and mark as pending for this email and send magic link to exhibitor mail
 
             const newRegistration = await Registration.create({
@@ -439,8 +439,8 @@ exports.createBooth = catchAsync(async (req, res, next) => {
             });
 
             // Provide magic_link and invitation link
-            newRegistration.magic_link = `http://bluemeet.in/event/booth/${newRegistration._id}`;
-            newRegistration.invitationLink = `http://bluemeet.in/event/booth/${newRegistration._id}`;
+            newRegistration.magic_link = `http://letstream.live/event/booth/${newRegistration._id}`;
+            newRegistration.invitationLink = `http://letstream.live/event/booth/${newRegistration._id}`;
 
             // Save user doc and registration doc
             await newRegistration.save({
@@ -452,15 +452,15 @@ exports.createBooth = catchAsync(async (req, res, next) => {
 
             const msg = {
               to: element,
-              from: "dinesh.shah@bluemeet.in",
+              from: "dinesh.shah@letstream.live",
               subject: `Your are invited as a exhibitor in ${eventGettingBooth.eventName}`,
               text: `use this link to join this event ${
                 eventGettingBooth.eventName
-              } as a booth exhibitor. ${`http://bluemeet.in/event/booth/${newRegistration._id}`}`,
+              } as a booth exhibitor. ${`http://letstream.live/event/booth/${newRegistration._id}`}`,
               html: ExhibitorInvitation(
                 communityGettingBooth.name,
                 eventGettingBooth.eventName,
-                `http://bluemeet.in/event/booth/${newRegistration._id}`
+                `http://letstream.live/event/booth/${newRegistration._id}`
               ),
             };
 
@@ -559,11 +559,11 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     // case 1.)  if exists then just add them as a speaker, create a speaker registration for them with speaker magic link and add this event in their list of registered events
     // case 2.) if not exists already then create a pending registration on thier name with a magic link and add as a speaker
 
-    // when that speaker creates their account on Bluemeet then mark each registration on their name as completed which are not cancelled and add this event in their registered events list
+    // when that speaker creates their account on LetStream then mark each registration on their name as completed which are not cancelled and add this event in their registered events list
     // Each speaker will have its registration which will have cancelled field and status(pending / completed) field.
 
     if (userOnPlatform) {
-      // * Already a Bluemeet user
+      // * Already a LetStream user
 
       // TODO => Create a speaker registration with status as completed and cancelled as false.
 
@@ -594,8 +594,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
 
       // Add invitaion and magic link to this registration
 
-      newSpeakerRegistration.magic_link = `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
-      newSpeakerRegistration.invitationLink = `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
+      newSpeakerRegistration.magic_link = `http://letstream.live/event/speaker/${newSpeakerRegistration._id}`;
+      newSpeakerRegistration.invitationLink = `http://letstream.live/event/speaker/${newSpeakerRegistration._id}`;
 
       await newSpeakerRegistration.save({
         new: true,
@@ -621,8 +621,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         eventId: eventGettingSpeaker.id,
         image: req.body.image,
         designation: req.body.designation,
-        invitationLink: `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`,
-        dashboardLink: `http://bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`,
+        invitationLink: `http://letstream.live/event/speaker/${newSpeakerRegistration._id}`,
+        dashboardLink: `http://letstream.live/event/speaker/dashboard/${newSpeakerRegistration._id}`,
       });
 
       // Add this speaker to all sessions in which he/she is assigned
@@ -638,12 +638,12 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
       // 2.) Send new Invitation via mail to speaker
       const msg = {
         to: req.body.email, // Change to your recipient
-        from: "dinesh.shah@bluemeet.in", // Change to your verified sender
+        from: "dinesh.shah@letstream.live", // Change to your verified sender
         subject: `Your are invited as speaker in ${eventGettingSpeaker.eventName}`,
-        text: `use this link to join this event as a speaker. ${`http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
+        text: `use this link to join this event as a speaker. ${`http://letstream.live/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://letstream.live/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
         html: SpeakerMagicLink(
           eventGettingSpeaker.eventName,
-          `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`
+          `http://letstream.live/event/speaker/${newSpeakerRegistration._id}`
         ),
       };
 
@@ -684,7 +684,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         data: populatedSpeaker,
       });
     } else {
-      // * Not a Bluemeet user yet
+      // * Not a LetStream user yet
 
       // TODO => Create a speaker registration with status as pending and cancelled as false.
 
@@ -710,8 +710,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
 
       // Add invitaion and magic link to this registration
 
-      newSpeakerRegistration.magic_link = `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
-      newSpeakerRegistration.invitationLink = `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
+      newSpeakerRegistration.magic_link = `http://letstream.live/event/speaker/${newSpeakerRegistration._id}`;
+      newSpeakerRegistration.invitationLink = `http://letstream.live/event/speaker/${newSpeakerRegistration._id}`;
 
       await newSpeakerRegistration.save({
         new: true,
@@ -729,8 +729,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         eventId: eventGettingSpeaker.id,
         image: req.body.image,
         designation: req.body.designation,
-        invitationLink: `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`,
-        dashboardLink: `http://bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`,
+        invitationLink: `http://letstream.live/event/speaker/${newSpeakerRegistration._id}`,
+        dashboardLink: `http://letstream.live/event/speaker/dashboard/${newSpeakerRegistration._id}`,
       });
 
       // Add this speaker to all sessions in which he/she is assigned
@@ -747,12 +747,12 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
       // 2.) Send new Invitation via mail to speaker
       const msg = {
         to: req.body.email, // Change to your recipient
-        from: "dinesh.shah@bluemeet.in", // Change to your verified sender
+        from: "dinesh.shah@letstream.live", // Change to your verified sender
         subject: `Your are invited as speaker in ${eventGettingSpeaker.eventName}`,
-        text: `use this link to join this event as a speaker. ${`http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
+        text: `use this link to join this event as a speaker. ${`http://letstream.live/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://letstream.live/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
         html: SpeakerMagicLink(
           eventGettingSpeaker.eventName,
-          `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`
+          `http://letstream.live/event/speaker/${newSpeakerRegistration._id}`
         ),
       };
 

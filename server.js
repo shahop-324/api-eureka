@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const { connect } = require('getstream');
 const LoggedInUsers = require("./models/loggedInUsers");
 const MailList = require("./models/emailListModel");
 const TableChats = require("./models/tableChatsModel");
@@ -54,8 +55,8 @@ const io = require("socket.io")(server, {
     origin: [
       "http://127.0.0.1:3001",
       "http://localhost:3001",
-      "https://www.bluemeet.in",
-      "https://bluemeet.in",
+      "https://www.letstream.live",
+      "https://letstream.live",
       "https://zapier.com",
       "https://www.zapier.com",
     ],
@@ -165,7 +166,7 @@ io.on("connect", (socket) => {
 
       const msgToUser = {
         to: blockedUserDoc.email, // Change to your recipient
-        from: "no-reply@bluemeet.in", // Change to your verified sender
+        from: "no-reply@letstream.live", // Change to your verified sender
         subject: `You have been suspended from ${eventDoc.eventName}`,
         text: `You have been suspended from ${eventDoc.eventName}. Here is what event organisers have to say about this ${warning}`,
         html: YouHaveBeenSuspended(
@@ -261,7 +262,7 @@ io.on("connect", (socket) => {
 
     const msgToUser = {
       to: acceptedUserDoc.email, // Change to your recipient
-      from: "no-reply@bluemeet.in", // Change to your verified sender
+      from: "no-reply@letstream.live", // Change to your verified sender
       subject: `You have been accepted in ${eventDoc.eventName}.`,
       text: `Here is a good news for you, You have been accepted in following event ${eventDoc.eventName}. You can now join this event by visiting your user dashboard. `,
       html: AcceptedInEvent(eventDoc.eventName, acceptedUserDoc.firstName),
@@ -414,7 +415,7 @@ io.on("connect", (socket) => {
 
       const msgToUser = {
         to: msgSenderUserDoc.email, // Change to your recipient
-        from: "no-reply@bluemeet.in", // Change to your verified sender
+        from: "no-reply@letstream.live", // Change to your verified sender
         subject: `You have been suspended from ${eventDoc.eventName}`,
         text: `You have been suspended from ${eventDoc.eventName}. Here is what event organisers have to say about this ${warning}`,
         html: YouHaveBeenSuspended(
@@ -565,7 +566,7 @@ io.on("connect", (socket) => {
 
     const msgToUser = {
       to: msgSenderUserDoc.email, // Change to your recipient
-      from: "no-reply@bluemeet.in", // Change to your verified sender
+      from: "no-reply@letstream.live", // Change to your verified sender
       subject: `You have a warning from ${eventDoc.eventName}`,
       text: YouHaveAWarning(
         msgSenderUserDoc.firstName,
@@ -5495,6 +5496,19 @@ io.on("connect", (socket) => {
             upgrades: 0,
             credit: 0,
           }).save({ validateModifiedOnly: true });
+
+          const userId = user._id;
+
+          const api_key="3r4n3gwpmk7y";
+          const api_secret="egscsww6rnky7aetrx7tpuct6zavms6cn6m7acrfqt6jvjrt8stxaay9ynrgvz9a";
+          const app_id="1158257"
+
+          const streamServerClient = connect(api_key, api_secret, app_id);
+          const streamToken = streamServerClient.createUserToken(userId.toString());
+
+          user.streamToken = streamToken;
+          await user.save({new: true, validateModifiedOnly: true});
+
           const name = `${firstName} ${lastName}`;
           await MailList.create({
             name: name,
@@ -5651,9 +5665,9 @@ io.on("connect", (socket) => {
 
           const msg = {
             to: user.email, // Change to your recipient
-            from: "welcome@bluemeet.in", // Change to your verified sender
-            subject: `Welcome to Bluemeet`,
-            text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
+            from: "welcome@letstream.live", // Change to your verified sender
+            subject: `Welcome to LetStream`,
+            text: ` We are glad to have you on LetStream. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of LetStream platform. Cheers!`,
             html: WelcomeToBluemeet(user.firstName),
           };
 
@@ -5681,6 +5695,19 @@ io.on("connect", (socket) => {
             upgrades: 0,
             credit: 0,
           }).save({ validateModifiedOnly: true });
+
+          const userId = user._id;
+
+          const api_key="3r4n3gwpmk7y";
+          const api_secret="egscsww6rnky7aetrx7tpuct6zavms6cn6m7acrfqt6jvjrt8stxaay9ynrgvz9a";
+          const app_id="1158257"
+
+          const streamServerClient = connect(api_key, api_secret, app_id);
+          const streamToken = streamServerClient.createUserToken(userId.toString());
+
+          user.streamToken = streamToken;
+          await user.save({new: true, validateModifiedOnly: true});
+
           const name = `${firstName} ${lastName}`;
           await MailList.create({
             name: name,
@@ -5837,9 +5864,9 @@ io.on("connect", (socket) => {
 
           const msg = {
             to: user.email, // Change to your recipient
-            from: "welcome@bluemeet.in", // Change to your verified sender
-            subject: `Welcome to Bluemeet`,
-            text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
+            from: "welcome@letstream.live", // Change to your verified sender
+            subject: `Welcome to LetStream`,
+            text: ` We are glad to have you on LetStream. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of LetStream platform. Cheers!`,
             html: WelcomeToBluemeet(user.firstName),
           };
 
@@ -5866,6 +5893,21 @@ io.on("connect", (socket) => {
           upgrades: 0,
           credit: 0,
         }).save({ validateModifiedOnly: true });
+
+        const userId = user._id;
+
+        
+
+          const api_key="3r4n3gwpmk7y";
+          const api_secret="egscsww6rnky7aetrx7tpuct6zavms6cn6m7acrfqt6jvjrt8stxaay9ynrgvz9a";
+          const app_id="1158257"
+
+          const streamServerClient = connect(api_key, api_secret, app_id);
+          const streamToken = streamServerClient.createUserToken(userId.toString());
+
+          user.streamToken = streamToken;
+          await user.save({new: true, validateModifiedOnly: true});
+
         const name = `${firstName} ${lastName}`;
         await MailList.create({
           name: name,
@@ -6023,9 +6065,9 @@ io.on("connect", (socket) => {
 
         const msg = {
           to: user.email, // Change to your recipient
-          from: "welcome@bluemeet.in", // Change to your verified sender
-          subject: `Welcome to Bluemeet`,
-          text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
+          from: "welcome@letstream.live", // Change to your verified sender
+          subject: `Welcome to LetStream`,
+          text: ` We are glad to have you on LetStream. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of LetStream platform. Cheers!`,
           html: WelcomeToBluemeet(user.firstName),
         };
 
@@ -6103,6 +6145,18 @@ io.on("connect", (socket) => {
             upgrades: 0,
             credit: 0,
           }).save({ validateModifiedOnly: true });
+
+          const userId = user._id;
+
+          const api_key="3r4n3gwpmk7y";
+          const api_secret="egscsww6rnky7aetrx7tpuct6zavms6cn6m7acrfqt6jvjrt8stxaay9ynrgvz9a";
+          const app_id="1158257"
+
+          const streamServerClient = connect(api_key, api_secret, app_id);
+          const streamToken = streamServerClient.createUserToken(userId.toString());
+
+          user.streamToken = streamToken;
+          await user.save({new: true, validateModifiedOnly: true});
 
           const name = `${firstName} ${lastName}`;
           await MailList.create({
@@ -6256,9 +6310,9 @@ io.on("connect", (socket) => {
 
           const msg = {
             to: user.email, // Change to your recipient
-            from: "welcome@bluemeet.in", // Change to your verified sender
-            subject: `Welcome to Bluemeet`,
-            text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
+            from: "welcome@letstream.live", // Change to your verified sender
+            subject: `Welcome to LetStream`,
+            text: ` We are glad to have you on LetStream. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of LetStream platform. Cheers!`,
             html: WelcomeToBluemeet(user.firstName),
           };
 
@@ -6284,6 +6338,18 @@ io.on("connect", (socket) => {
             upgrades: 0,
             credit: 0,
           }).save({ validateModifiedOnly: true });
+
+          const userId = user._id;
+
+          const api_key="3r4n3gwpmk7y";
+          const api_secret="egscsww6rnky7aetrx7tpuct6zavms6cn6m7acrfqt6jvjrt8stxaay9ynrgvz9a";
+          const app_id="1158257"
+
+          const streamServerClient = connect(api_key, api_secret, app_id);
+          const streamToken = streamServerClient.createUserToken(userId.toString());
+
+          user.streamToken = streamToken;
+          await user.save({new: true, validateModifiedOnly: true});
 
           const name = `${firstName} ${lastName}`;
           await MailList.create({
@@ -6441,9 +6507,9 @@ io.on("connect", (socket) => {
 
           const msg = {
             to: user.email, // Change to your recipient
-            from: "welcome@bluemeet.in", // Change to your verified sender
-            subject: `Welcome to Bluemeet`,
-            text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
+            from: "welcome@letstream.live", // Change to your verified sender
+            subject: `Welcome to LetStream`,
+            text: ` We are glad to have you on LetStream. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of LetStream platform. Cheers!`,
             html: WelcomeToBluemeet(user.firstName),
           };
 
@@ -6470,6 +6536,18 @@ io.on("connect", (socket) => {
           upgrades: 0,
           credit: 0,
         }).save({ validateModifiedOnly: true });
+
+        const userId = user._id;
+
+          const api_key="3r4n3gwpmk7y";
+          const api_secret="egscsww6rnky7aetrx7tpuct6zavms6cn6m7acrfqt6jvjrt8stxaay9ynrgvz9a";
+          const app_id="1158257"
+
+          const streamServerClient = connect(api_key, api_secret, app_id);
+          const streamToken = streamServerClient.createUserToken(userId.toString());
+
+          user.streamToken = streamToken;
+          await user.save({new: true, validateModifiedOnly: true});
 
         const name = `${firstName} ${lastName}`;
         await MailList.create({
@@ -6627,9 +6705,9 @@ io.on("connect", (socket) => {
 
         const msg = {
           to: user.email, // Change to your recipient
-          from: "welcome@bluemeet.in", // Change to your verified sender
-          subject: `Welcome to Bluemeet`,
-          text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
+          from: "welcome@letstream.live", // Change to your verified sender
+          subject: `Welcome to LetStream`,
+          text: ` We are glad to have you on LetStream. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of LetStream platform. Cheers!`,
           html: WelcomeToBluemeet(user.firstName),
         };
 

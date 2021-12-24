@@ -180,7 +180,7 @@ module.exports = (userName) => {
 
                               <div style="color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 22px; line-height: 30.799999999999997px;"><strong><span style="line-height: 30.799999999999997px; font-size: 22px;">Your Bluemeet Account has been Deactivated</span></strong>
+                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 22px; line-height: 30.799999999999997px;"><strong><span style="line-height: 30.799999999999997px; font-size: 22px;">Your LetStream Account has been Deactivated</span></strong>
                                   </span>
                                 </p>
                               </div>
@@ -222,9 +222,9 @@ module.exports = (userName) => {
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Hi, ${userName}</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We are so sad to see you go. Your Bluemeet user account has been deactivated and all the information related to your account will be deleted after 14 days from today. You can get back your account by just signing in again. </span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">We are so sad to see you go. Your LetStream user account has been deactivated and all the information related to your account will be deleted after 14 days from today. You can get back your account by just signing in again. </span></p>
                                 <p style="line-height: 160%; font-size: 14px;">&nbsp;</p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">Hope to see you back soon on Bluemeet.</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">Hope to see you back soon on LetStream.</span></p>
                               </div>
 
                             </td>
@@ -240,7 +240,7 @@ module.exports = (userName) => {
                               <div align="center">
                                 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:36px; v-text-anchor:middle; width:168px;" arcsize="11%" stroke="f" fillcolor="#169179"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
                                 <a href="" target="_blank" style="box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #169179; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
-                                  <span style="display:block;padding:10px 20px;line-height:120%;"><strong><span style="font-size: 14px; line-height: 16.8px;"> <a href="https://www.bluemeet.in/signin" style="color: #ffffff; text-decoration: 'none'"> Get Back My Account</a></span></strong>
+                                  <span style="display:block;padding:10px 20px;line-height:120%;"><strong><span style="font-size: 14px; line-height: 16.8px;"> <a href="https://www.letstream.live/signin" style="color: #ffffff; text-decoration: 'none'"> Get Back My Account</a></span></strong>
                                   </span>
                                 </a>
                                 <!--[if mso]></center></v:roundrect></td></tr></table><![endif]-->
@@ -258,7 +258,7 @@ module.exports = (userName) => {
 
                               <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
                                 <p dir="ltr" style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">Thanks,</span></p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">The Bluemeet Team</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 18px; line-height: 28.8px;">The LetStream Team</span></p>
                               </div>
 
                             </td>
@@ -298,7 +298,7 @@ module.exports = (userName) => {
 
                               <div style="color: #003399; line-height: 160%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;"><strong>Get in touch</strong></span></p>
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;">Info@bluemeet.in</span></p>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 25.6px; color: #000000;">Info@letstream.live</span></p>
                               </div>
 
                             </td>
@@ -335,7 +335,7 @@ module.exports = (userName) => {
                                     <tbody>
                                       <tr style="vertical-align: top">
                                         <td align="left" valign="middle" style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-                                          <a href="https://linkedin.com/company/bluemeet-in/" title="LinkedIn" target="_blank">
+                                          <a href="https://linkedin.com/company/letstream-in/" title="LinkedIn" target="_blank">
                                             <img src="https://cdn.tools.unlayer.com/social/icons/rounded-black/linkedin.png" alt="LinkedIn" title="LinkedIn" width="32" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
                                           </a>
                                         </td>
@@ -441,7 +441,7 @@ module.exports = (userName) => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="color: #fafafa; line-height: 180%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy;Bluemeet. &nbsp;All Rights Reserved</span></p>
+                                <p style="font-size: 14px; line-height: 180%;"><span style="font-size: 16px; line-height: 28.8px;">Copyrights &copy;LetStream. &nbsp;All Rights Reserved</span></p>
                               </div>
 
                             </td>

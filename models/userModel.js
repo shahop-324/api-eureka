@@ -264,6 +264,9 @@ const userSchema = new mongoose.Schema(
         ref: "Community",
       },
     ],
+    streamToken: {
+      type: String,
+    },
   },
   {
     toJSON: { virtuals: true },

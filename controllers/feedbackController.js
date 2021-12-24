@@ -27,8 +27,8 @@ exports.createFeedback = catchAsync(async (req, res, next) => {
   // Send thanks mail for providing feedback
   const msg = {
     to: req.user.email, // Change to your recipient
-    from: "feedback@bluemeet.in", // Change to your verified sender
-    subject: "feedback@bluemeet.in",
+    from: "feedback@letstream.live", // Change to your verified sender
+    subject: "feedback@letstream.live",
     text: `Hey, we just wanna say thank you for helping us get better by providing your valuable feedback.`,
     html: FeedbackReceived(req.user.firstName),
   };

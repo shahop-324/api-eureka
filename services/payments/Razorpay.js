@@ -601,12 +601,12 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
           ticket_name: ticketBeingPurchased.name,
           registration_amount: amount / 100,
           currency: "USD",
-          event_picture: `https://bluemeet.s3.us-west-1.amazonaws.com/${eventGettingEventTransaction.image}`,
-          community_picture: `https://bluemeet.s3.us-west-1.amazonaws.com/${communityGettingEventTransaction.image}`,
+          event_picture: `https://letstream.s3.us-west-1.amazonaws.com/${eventGettingEventTransaction.image}`,
+          community_picture: `https://letstream.s3.us-west-1.amazonaws.com/${communityGettingEventTransaction.image}`,
         });
 
-        newlyCreatedRegistration.invitationLink = `https://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`;
-        newlyCreatedRegistration.magic_link = `https://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`;
+        newlyCreatedRegistration.invitationLink = `https://letstream.live/event/link/attendee/${newlyCreatedRegistration._id}`;
+        newlyCreatedRegistration.magic_link = `https://letstream.live/event/link/attendee/${newlyCreatedRegistration._id}`;
         await newlyCreatedRegistration.save({
           new: true,
           validateModifiedOnly: true,
@@ -814,7 +814,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
           mailChimpFormValues.merge_fields = {
             FNAME: user.firstName,
             LNAME: user.lastName,
-            MAGIC_LINK: `http://bluemeet/event/link/attendee/${newlyCreatedRegistration._id}`,
+            MAGIC_LINK: `http://letstream/event/link/attendee/${newlyCreatedRegistration._id}`,
           };
           mailChimpFormValues.status = "subscribed";
           for (let element of event.mailChimpAudienceTag) {
@@ -830,13 +830,13 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
         const msg = {
           to: userDoingEventTransaction.email, // Change to your recipient
-          from: "payment@bluemeet.in", // Change to your verified sender
+          from: "payment@letstream.live", // Change to your verified sender
           subject: "Your Event Registration Confirmation.",
-          text: `You have just successfully registered in an event. Checkout your Bluemeet user dashboard for more information. Thanks! Here is your magic link http://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`,
+          text: `You have just successfully registered in an event. Checkout your LetStream user dashboard for more information. Thanks! Here is your magic link http://letstream.live/event/link/attendee/${newlyCreatedRegistration._id}`,
           html: EventRegistrationConfirmation(
             userDoingEventTransaction.firstName,
             eventGettingEventTransaction.eventName,
-            `http://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`
+            `http://letstream.live/event/link/attendee/${newlyCreatedRegistration._id}`
           ),
         };
 
@@ -1135,9 +1135,9 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
         const planSwitchMsg = {
           to: communityDoc.superAdminEmail, // Change to your recipient
-          from: "payments@bluemeet.in", // Change to your verified sender
-          subject: `Your Bluemeet plan has been changed!`,
-          text: `We have successfully processed your request to change your Bluemeet plan. Please visit your community dashboard to get more details.`,
+          from: "payments@letstream.live", // Change to your verified sender
+          subject: `Your LetStream plan has been changed!`,
+          text: `We have successfully processed your request to change your LetStream plan. Please visit your community dashboard to get more details.`,
           html: CommunityBillingPlanChanged(
             communityDoc.superAdminName,
             communityDoc.name
@@ -1210,11 +1210,11 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
           const registrationMsg = {
             to: communityDoc.superAdminEmail, // Change to your recipient
-            from: "payments@bluemeet.in", // Change to your verified sender
+            from: "payments@letstream.live", // Change to your verified sender
             subject: `Registration add added to your ${communityDoc.name} community.`,
             text: `We have successfully processed your request to add ${
               numOfRegistrations * 1
-            } extra registrations to your community. You can use this add on till 60 days from today. Thanks, From Bluemeet Team.`,
+            } extra registrations to your community. You can use this add on till 60 days from today. Thanks, From LetStream Team.`,
             html: RegistrationAddOnApplied(
               communityDoc.superAdminName,
               communityDoc.name,
@@ -1261,11 +1261,11 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
           const organiserSeatMsg = {
             to: communityDoc.superAdminEmail, // Change to your recipient
-            from: "payments@bluemeet.in", // Change to your verified sender
+            from: "payments@letstream.live", // Change to your verified sender
             subject: `Extra Organiser seats added to your ${communityDoc.name} community.`,
             text: `We have successfully processed your request to add ${
               numOfOrganiserSeats * 1
-            } extra organsiser seats to your community. You can use this add on till 30 days from today. Thanks, From Bluemeet Team.`,
+            } extra organsiser seats to your community. You can use this add on till 30 days from today. Thanks, From LetStream Team.`,
             html: OrganiserSeatAddon(
               communityDoc.superAdminName,
               communityDoc.name,
@@ -1312,11 +1312,11 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
           const streamingHourMsg = {
             to: communityDoc.superAdminEmail, // Change to your recipient
-            from: "payments@bluemeet.in", // Change to your verified sender
+            from: "payments@letstream.live", // Change to your verified sender
             subject: `Extra Streaming hours added to your ${communityDoc.name} community.`,
             text: `We have successfully processed your request to add ${
               streamingHours * 1
-            } extra streaming hours to your community. You can use this add on till 60 days from today. Thanks, From Bluemeet Team.`,
+            } extra streaming hours to your community. You can use this add on till 60 days from today. Thanks, From LetStream Team.`,
             html: StreamingHourAddon(
               communityDoc.superAdminName,
               communityDoc.name,
@@ -1363,11 +1363,11 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
           const emailCreditsMsg = {
             to: communityDoc.superAdminEmail, // Change to your recipient
-            from: "payments@bluemeet.in", // Change to your verified sender
+            from: "payments@letstream.live", // Change to your verified sender
             subject: `Extra Email credits added to your ${communityDoc.name} community.`,
             text: `We have successfully processed your request to add ${
               emailCredits * 1
-            } extra email credits to your community. You can use this add on till 60 days from today. Thanks, From Bluemeet Team.`,
+            } extra email credits to your community. You can use this add on till 60 days from today. Thanks, From LetStream Team.`,
             html: EmailCreditsAddon(
               communityDoc.superAdminName,
               communityDoc.name,
@@ -1414,11 +1414,11 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
           const cloudStorageMsg = {
             to: communityDoc.superAdminEmail, // Change to your recipient
-            from: "payments@bluemeet.in", // Change to your verified sender
+            from: "payments@letstream.live", // Change to your verified sender
             subject: `Extra Cloud storage added to your ${communityDoc.name} community.`,
             text: `We have successfully processed your request to add ${
               cloudStorage * 1
-            } extra cloud storage to your community. You can use this add on till 30 days from today. Thanks, From Bluemeet Team.`,
+            } extra cloud storage to your community. You can use this add on till 30 days from today. Thanks, From LetStream Team.`,
             html: CloudStorageAddOn(
               communityDoc.superAdminName,
               communityDoc.name,
@@ -1575,12 +1575,12 @@ exports.registerFreeTicket = catchAsync(async (req, res, next) => {
       ticket_name: ticketBeingPurchased.name,
       registration_amount: amount / 100,
       currency: "USD",
-      event_picture: `https://bluemeet.s3.us-west-1.amazonaws.com/${eventGettingEventTransaction.image}`,
-      community_picture: `https://bluemeet.s3.us-west-1.amazonaws.com/${communityGettingEventTransaction.image}`,
+      event_picture: `https://letstream.s3.us-west-1.amazonaws.com/${eventGettingEventTransaction.image}`,
+      community_picture: `https://letstream.s3.us-west-1.amazonaws.com/${communityGettingEventTransaction.image}`,
     });
 
-    newlyCreatedRegistration.invitationLink = `https://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`;
-    newlyCreatedRegistration.magic_link = `https://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`;
+    newlyCreatedRegistration.invitationLink = `https://letstream.live/event/link/attendee/${newlyCreatedRegistration._id}`;
+    newlyCreatedRegistration.magic_link = `https://letstream.live/event/link/attendee/${newlyCreatedRegistration._id}`;
     await newlyCreatedRegistration.save({
       new: true,
       validateModifiedOnly: true,
@@ -1775,7 +1775,7 @@ exports.registerFreeTicket = catchAsync(async (req, res, next) => {
       mailChimpFormValues.merge_fields = {
         FNAME: user.firstName,
         LNAME: user.lastName,
-        MAGIC_LINK: `http://bluemeet/event/link/attendee/${newlyCreatedRegistration._id}`,
+        MAGIC_LINK: `http://letstream/event/link/attendee/${newlyCreatedRegistration._id}`,
       };
       mailChimpFormValues.status = "subscribed";
       for (let element of event.mailChimpAudienceTag) {
@@ -1791,13 +1791,13 @@ exports.registerFreeTicket = catchAsync(async (req, res, next) => {
 
     const msg = {
       to: userDoingEventTransaction.email, // Change to your recipient
-      from: "payments@bluemeet.in", // Change to your verified sender
+      from: "payments@letstream.live", // Change to your verified sender
       subject: "Your Event Registration Confirmation.",
-      text: `You have just successfully registered in an event. Checkout your Bluemeet user dashboard for more information. Thanks! Here is your magic link http://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`,
+      text: `You have just successfully registered in an event. Checkout your LetStream user dashboard for more information. Thanks! Here is your magic link http://letstream.live/event/link/attendee/${newlyCreatedRegistration._id}`,
       html: EventRegistrationConfirmation(
         userDoingEventTransaction.firstName,
         eventGettingEventTransaction.eventName,
-        `http://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`
+        `http://letstream.live/event/link/attendee/${newlyCreatedRegistration._id}`
       ),
     };
 
